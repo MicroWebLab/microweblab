@@ -1,286 +1,599 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EVChargeWise | Find Your Home EV Charging Setup</title>
-<meta name="description" content="Find a practical home EV charging setup based on your daily driving and available electrical service.">
+<head>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5J05KH0J6"></script>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+
+function gtag(){
+    dataLayer.push(arguments);
+}
+
+gtag('js', new Date());
+
+gtag('config', 'G-Q5J05KH0J6');
+</script>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EVChargeWise | Home EV Charger Finder</title>
+
+<meta name="description"
+content="Answer a few simple questions and get a starting recommendation for your home EV charging setup.">
 
 <style>
-* {
-    box-sizing: border-box;
+
+*{
+    box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f7fa;
-    color: #172033;
+html{
+    scroll-behavior:smooth;
 }
 
-header {
-    background: #111827;
-    color: white;
-    padding: 20px 8%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f7fa;
+    color:#172033;
+    line-height:1.6;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
+header{
+    background:#111827;
+    color:white;
+    padding:20px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-header a {
-    color: white;
-    text-decoration: none;
+.logo{
+    font-size:24px;
+    font-weight:bold;
 }
 
-.hero {
-    text-align: center;
-    padding: 70px 20px 35px;
+header a{
+    color:white;
+    text-decoration:none;
 }
 
-.hero h1 {
-    font-size: 46px;
-    margin-bottom: 12px;
+.hero{
+    text-align:center;
+    padding:70px 20px 35px;
 }
 
-.hero p {
-    color: #5b6475;
-    font-size: 19px;
-    max-width: 680px;
-    margin: auto;
+.hero .tag{
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#667085;
 }
 
-.finder {
-    background: white;
-    max-width: 720px;
-    margin: 30px auto 70px;
-    padding: 35px;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+.hero h1{
+    max-width:850px;
+    margin:10px auto 15px;
+    font-size:48px;
+    line-height:1.12;
 }
 
-.finder h2 {
-    margin-top: 0;
+.hero p{
+    max-width:700px;
+    margin:auto;
+    font-size:19px;
+    color:#667085;
 }
 
-.question {
-    margin-bottom: 25px;
+.finder{
+    max-width:750px;
+    margin:30px auto 70px;
+    background:white;
+    padding:38px;
+    border-radius:16px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
 }
 
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
+.finder h2{
+    margin-top:0;
 }
 
-select {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #ccd2dc;
-    border-radius: 8px;
-    font-size: 16px;
-    background: white;
+.finder-intro{
+    color:#667085;
+    margin-bottom:30px;
 }
 
-button {
-    width: 100%;
-    padding: 15px;
-    border: 0;
-    border-radius: 8px;
-    background: #111827;
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
+.question{
+    margin-bottom:25px;
 }
 
-button:hover {
-    opacity: .9;
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:8px;
 }
 
-#result {
-    display: none;
-    margin-top: 30px;
-    padding: 25px;
-    background: #eef7f1;
-    border-radius: 10px;
+select{
+    width:100%;
+    padding:14px;
+    border:1px solid #ccd2dc;
+    border-radius:8px;
+    background:white;
+    font-size:16px;
 }
 
-#result h3 {
-    margin-top: 0;
+button{
+    width:100%;
+    padding:16px;
+    border:0;
+    border-radius:9px;
+    background:#111827;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.notice {
-    margin-top: 20px;
-    font-size: 13px;
-    color: #687386;
+button:hover{
+    opacity:.9;
 }
 
-.info {
-    background: #111827;
-    color: white;
-    padding: 55px 8%;
-    text-align: center;
+#result{
+    display:none;
+    margin-top:30px;
+    padding:25px;
+    background:#edf7f1;
+    border-radius:10px;
+    border:1px solid #d5eadc;
 }
 
-.info h2 {
-    margin-top: 0;
+#result h3{
+    margin-top:0;
 }
 
-.info p {
-    max-width: 760px;
-    margin: auto;
-    color: #d1d5db;
+.next{
+    font-weight:bold;
 }
 
-footer {
-    padding: 25px;
-    text-align: center;
-    color: #687386;
+.notice{
+    margin-top:20px;
+    font-size:13px;
+    color:#667085;
 }
 
-@media(max-width:700px) {
-    .hero h1 {
-        font-size: 34px;
+.explain{
+    background:white;
+    padding:70px 8%;
+    text-align:center;
+}
+
+.explain h2{
+    font-size:32px;
+}
+
+.explain-intro{
+    max-width:720px;
+    margin:0 auto 40px;
+    color:#667085;
+}
+
+.cards{
+    max-width:900px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.card{
+    padding:30px;
+    background:#f6f8fb;
+    border-radius:12px;
+    text-align:left;
+}
+
+.card h3{
+    margin-top:0;
+}
+
+.card p{
+    color:#667085;
+}
+
+.future{
+    padding:65px 20px;
+    background:#111827;
+    color:white;
+    text-align:center;
+}
+
+.future p{
+    max-width:700px;
+    margin:auto;
+    color:#d1d5db;
+}
+
+footer{
+    padding:28px 20px;
+    text-align:center;
+    color:#667085;
+}
+
+@media(max-width:700px){
+
+    header{
+        padding:18px 20px;
     }
 
-    .finder {
-        margin: 20px 15px 50px;
-        padding: 25px;
+    .hero h1{
+        font-size:35px;
     }
+
+    .finder{
+        margin:20px 15px 50px;
+        padding:25px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <header>
-    <div class="logo">EVChargeWise</div>
-    <a href="index.html">MicroWebLab</a>
+
+<div class="logo">
+EVChargeWise
+</div>
+
+<a href="index.html">
+MicroWebLab
+</a>
+
 </header>
 
+
+<main>
+
+
 <section class="hero">
-    <h1>Find the right home charging setup for your EV</h1>
-    <p>
-        Answer three quick questions and get a simple starting
-        recommendation for charging your electric vehicle at home.
-    </p>
+
+<div class="tag">
+Free Home EV Charging Guide
+</div>
+
+<h1>
+What kind of home charging setup fits your driving?
+</h1>
+
+<p>
+Answer three quick questions to get a simple starting
+recommendation for charging your electric vehicle at home.
+</p>
+
 </section>
+
 
 <section class="finder">
 
-    <h2>Home EV Charger Finder</h2>
+<h2>
+Home EV Charger Finder
+</h2>
 
-    <div class="question">
-        <label for="vehicle">What do you drive?</label>
-        <select id="vehicle">
-            <option value="bev">Battery electric vehicle (BEV)</option>
-            <option value="phev">Plug-in hybrid (PHEV)</option>
-        </select>
-    </div>
+<p class="finder-intro">
+Takes less than a minute.
+</p>
 
-    <div class="question">
-        <label for="miles">How many miles do you normally drive per day?</label>
-        <select id="miles">
-            <option value="20">Less than 20 miles</option>
-            <option value="40">20–40 miles</option>
-            <option value="70">40–70 miles</option>
-            <option value="100">More than 70 miles</option>
-        </select>
-    </div>
 
-    <div class="question">
-        <label for="power">What power is available near your parking space?</label>
-        <select id="power">
-            <option value="unknown">I'm not sure</option>
-            <option value="120">Standard 120V outlet</option>
-            <option value="240">240V service/outlet</option>
-        </select>
-    </div>
+<div class="question">
 
-    <button onclick="recommendCharger()">Get my recommendation</button>
+<label for="vehicle">
+What type of plug-in vehicle do you drive?
+</label>
 
-    <div id="result"></div>
+<select id="vehicle">
+
+<option value="bev">
+Battery electric vehicle (BEV)
+</option>
+
+<option value="phev">
+Plug-in hybrid (PHEV)
+</option>
+
+</select>
+
+</div>
+
+
+<div class="question">
+
+<label for="miles">
+How far do you normally drive each day?
+</label>
+
+<select id="miles">
+
+<option value="15">
+Less than 20 miles
+</option>
+
+<option value="30">
+20–40 miles
+</option>
+
+<option value="55">
+40–70 miles
+</option>
+
+<option value="85">
+More than 70 miles
+</option>
+
+</select>
+
+</div>
+
+
+<div class="question">
+
+<label for="power">
+What electrical power is available near your parking space?
+</label>
+
+<select id="power">
+
+<option value="unknown">
+I'm not sure
+</option>
+
+<option value="120">
+Standard 120V outlet
+</option>
+
+<option value="240">
+240V service or outlet
+</option>
+
+</select>
+
+</div>
+
+
+<button onclick="recommendCharger()">
+Get My Recommendation
+</button>
+
+
+<div id="result">
+</div>
+
 
 </section>
 
-<section class="info">
-    <h2>Why home charging?</h2>
-    <p>
-        Home charging can be one of the most convenient ways to keep
-        an EV ready for everyday driving. EVChargeWise helps drivers
-        understand whether Level 1 or Level 2 charging may better fit
-        their daily driving needs.
-    </p>
+
+<section class="explain">
+
+<h2>
+Level 1 or Level 2?
+</h2>
+
+<p class="explain-intro">
+The right choice depends on your vehicle, daily driving,
+available electrical service and how quickly you need to recharge.
+</p>
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+Level 1
+</h3>
+
+<p>
+Uses a standard 120V household outlet.
+It can work for drivers with relatively low daily mileage
+or some plug-in hybrids, but charging is slower.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Level 2
+</h3>
+
+<p>
+Uses 240V electrical service and provides substantially
+faster home charging. Installation requirements vary by home.
+</p>
+
+</div>
+
+
+</div>
+
 </section>
+
+
+<section class="future">
+
+<h2>
+EVChargeWise is just getting started.
+</h2>
+
+<p>
+Future versions can include vehicle-specific recommendations,
+charger comparisons, installation guidance and options for
+connecting drivers with qualified installers.
+</p>
+
+</section>
+
+
+</main>
+
 
 <footer>
-    © 2026 EVChargeWise · A MicroWebLab project
+
+<p>
+© 2026 EVChargeWise · A MicroWebLab project
+</p>
+
 </footer>
 
-<script>
-function recommendCharger() {
 
-    const vehicle = document.getElementById("vehicle").value;
-    const miles = Number(document.getElementById("miles").value);
-    const power = document.getElementById("power").value;
-    const result = document.getElementById("result");
+<script>
+
+function recommendCharger(){
+
+    const vehicle =
+        document.getElementById("vehicle").value;
+
+    const miles =
+        Number(document.getElementById("miles").value);
+
+    const power =
+        document.getElementById("power").value;
+
+    const result =
+        document.getElementById("result");
+
 
     let title = "";
     let text = "";
 
-    if (vehicle === "phev" && miles <= 40 && power !== "240") {
 
-        title = "Level 1 charging may cover your needs";
+    if(
+        vehicle === "phev" &&
+        miles <= 30 &&
+        power !== "240"
+    ){
 
-        text =
-        "For relatively short daily driving, overnight charging from a standard 120V outlet may be sufficient. " +
-        "A Level 2 setup can still provide substantially faster charging.";
-
-    } else if (miles <= 20 && power === "120") {
-
-        title = "Start by evaluating Level 1";
+        title =
+        "Level 1 may be worth evaluating first.";
 
         text =
-        "Your daily mileage is relatively low, so Level 1 charging may replenish enough range overnight. " +
-        "If you want faster recovery or drive more on some days, consider Level 2.";
-
-    } else {
-
-        title = "Level 2 is likely the better starting point";
-
-        text =
-        "For regular EV driving, a 240V Level 2 setup generally provides much faster overnight charging " +
-        "and more flexibility than a standard 120V outlet.";
+        "For a plug-in hybrid with relatively short daily driving, " +
+        "overnight Level 1 charging may be sufficient for many drivers. " +
+        "Level 2 remains an option if you want faster charging.";
 
     }
 
-    if (power === "unknown") {
+    else if(
+        miles <= 15 &&
+        power === "120"
+    ){
+
+        title =
+        "Your driving may be compatible with Level 1 charging.";
+
+        text =
+        "Because your typical daily mileage is relatively low, " +
+        "a standard 120V charging setup may replenish enough energy overnight. " +
+        "Level 2 can provide more flexibility and faster recovery.";
+
+    }
+
+    else{
+
+        title =
+        "Level 2 is likely worth evaluating.";
+
+        text =
+        "For regular battery-electric driving or higher daily mileage, " +
+        "240V Level 2 charging generally offers substantially faster " +
+        "home charging than a standard 120V outlet.";
+
+    }
+
+
+    if(power === "unknown"){
+
         text +=
-        " Because you are unsure what electrical service is available near the vehicle, have a qualified electrician evaluate the location before purchasing or installing equipment.";
+        " Since you are not sure what electrical service is available, " +
+        "a qualified electrician should evaluate the parking location " +
+        "and electrical panel before equipment is purchased or installed.";
+
     }
 
-    if (power === "120" && miles >= 40) {
+
+    if(
+        power === "120" &&
+        miles >= 30
+    ){
+
         text +=
-        " With your daily mileage, it is worth asking an electrician whether a suitable 240V Level 2 circuit can be installed.";
+        " Given your daily driving, it may be useful to ask a qualified " +
+        "electrician whether an appropriate 240V charging circuit can be installed.";
+
     }
+
 
     result.innerHTML =
+
         "<h3>" + title + "</h3>" +
+
         "<p>" + text + "</p>" +
-        "<p><strong>Next step:</strong> We will soon add vehicle-specific charger matching and installation options.</p>" +
-        "<p class='notice'>This tool provides general educational guidance, not an electrical installation plan. Vehicle charging limits, wiring, panel capacity, permits and local electrical codes vary. Electrical work should be evaluated and performed by a qualified professional.</p>";
+
+        "<p class='next'>Next step: Future versions of EVChargeWise will add vehicle-specific charger matching and installation options.</p>" +
+
+        "<p class='notice'>" +
+        "Educational guidance only. This tool does not determine electrical " +
+        "panel capacity, wiring, breaker size, permits, vehicle charging limits " +
+        "or compliance with local electrical codes. Electrical installations " +
+        "should be evaluated and performed by qualified professionals." +
+        "</p>";
+
 
     result.style.display = "block";
+
+
+    if(typeof gtag === "function"){
+
+        gtag(
+            "event",
+            "ev_charger_recommendation",
+            {
+                vehicle_type: vehicle,
+                daily_miles_group: miles,
+                available_power: power
+            }
+        );
+
+    }
+
+    result.scrollIntoView({
+        behavior:"smooth",
+        block:"nearest"
+    });
+
 }
+
 </script>
+
 
 </body>
 </html>
 
-Ovo je namjerno MVP, ne konačni stručni kalkulator. Neć
+Ovaj drugi kod radi još jednu vrlo važnu stvar: kada korisnik klikne Get My Recommendation, šalje Analyticsu event:
