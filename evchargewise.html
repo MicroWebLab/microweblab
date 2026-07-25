@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EVChargeWise | Find Your Home EV Charging Setup</title>
+<meta name="description" content="Find a practical home EV charging setup based on your daily driving and available electrical service.">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    color: #172033;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 20px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+.hero {
+    text-align: center;
+    padding: 70px 20px 35px;
+}
+
+.hero h1 {
+    font-size: 46px;
+    margin-bottom: 12px;
+}
+
+.hero p {
+    color: #5b6475;
+    font-size: 19px;
+    max-width: 680px;
+    margin: auto;
+}
+
+.finder {
+    background: white;
+    max-width: 720px;
+    margin: 30px auto 70px;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+}
+
+.finder h2 {
+    margin-top: 0;
+}
+
+.question {
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ccd2dc;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border: 0;
+    border-radius: 8px;
+    background: #111827;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+#result {
+    display: none;
+    margin-top: 30px;
+    padding: 25px;
+    background: #eef7f1;
+    border-radius: 10px;
+}
+
+#result h3 {
+    margin-top: 0;
+}
+
+.notice {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #687386;
+}
+
+.info {
+    background: #111827;
+    color: white;
+    padding: 55px 8%;
+    text-align: center;
+}
+
+.info h2 {
+    margin-top: 0;
+}
+
+.info p {
+    max-width: 760px;
+    margin: auto;
+    color: #d1d5db;
+}
+
+footer {
+    padding: 25px;
+    text-align: center;
+    color: #687386;
+}
+
+@media(max-width:700px) {
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .finder {
+        margin: 20px 15px 50px;
+        padding: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">EVChargeWise</div>
+    <a href="index.html">MicroWebLab</a>
+</header>
+
+<section class="hero">
+    <h1>Find the right home charging setup for your EV</h1>
+    <p>
+        Answer three quick questions and get a simple starting
+        recommendation for charging your electric vehicle at home.
+    </p>
+</section>
+
+<section class="finder">
+
+    <h2>Home EV Charger Finder</h2>
+
+    <div class="question">
+        <label for="vehicle">What do you drive?</label>
+        <select id="vehicle">
+            <option value="bev">Battery electric vehicle (BEV)</option>
+            <option value="phev">Plug-in hybrid (PHEV)</option>
+        </select>
+    </div>
+
+    <div class="question">
+        <label for="miles">How many miles do you normally drive per day?</label>
+        <select id="miles">
+            <option value="20">Less than 20 miles</option>
+            <option value="40">20–40 miles</option>
+            <option value="70">40–70 miles</option>
+            <option value="100">More than 70 miles</option>
+        </select>
+    </div>
+
+    <div class="question">
+        <label for="power">What power is available near your parking space?</label>
+        <select id="power">
+            <option value="unknown">I'm not sure</option>
+            <option value="120">Standard 120V outlet</option>
+            <option value="240">240V service/outlet</option>
+        </select>
+    </div>
+
+    <button onclick="recommendCharger()">Get my recommendation</button>
+
+    <div id="result"></div>
+
+</section>
+
+<section class="info">
+    <h2>Why home charging?</h2>
+    <p>
+        Home charging can be one of the most convenient ways to keep
+        an EV ready for everyday driving. EVChargeWise helps drivers
+        understand whether Level 1 or Level 2 charging may better fit
+        their daily driving needs.
+    </p>
+</section>
+
+<footer>
+    © 2026 EVChargeWise · A MicroWebLab project
+</footer>
+
+<script>
+function recommendCharger() {
+
+    const vehicle = document.getElementById("vehicle").value;
+    const miles = Number(document.getElementById("miles").value);
+    const power = document.getElementById("power").value;
+    const result = document.getElementById("result");
+
+    let title = "";
+    let text = "";
+
+    if (vehicle === "phev" && miles <= 40 && power !== "240") {
+
+        title = "Level 1 charging may cover your needs";
+
+        text =
+        "For relatively short daily driving, overnight charging from a standard 120V outlet may be sufficient. " +
+        "A Level 2 setup can still provide substantially faster charging.";
+
+    } else if (miles <= 20 && power === "120") {
+
+        title = "Start by evaluating Level 1";
+
+        text =
+        "Your daily mileage is relatively low, so Level 1 charging may replenish enough range overnight. " +
+        "If you want faster recovery or drive more on some days, consider Level 2.";
+
+    } else {
+
+        title = "Level 2 is likely the better starting point";
+
+        text =
+        "For regular EV driving, a 240V Level 2 setup generally provides much faster overnight charging " +
+        "and more flexibility than a standard 120V outlet.";
+
+    }
+
+    if (power === "unknown") {
+        text +=
+        " Because you are unsure what electrical service is available near the vehicle, have a qualified electrician evaluate the location before purchasing or installing equipment.";
+    }
+
+    if (power === "120" && miles >= 40) {
+        text +=
+        " With your daily mileage, it is worth asking an electrician whether a suitable 240V Level 2 circuit can be installed.";
+    }
+
+    result.innerHTML =
+        "<h3>" + title + "</h3>" +
+        "<p>" + text + "</p>" +
+        "<p><strong>Next step:</strong> We will soon add vehicle-specific charger matching and installation options.</p>" +
+        "<p class='notice'>This tool provides general educational guidance, not an electrical installation plan. Vehicle charging limits, wiring, panel capacity, permits and local electrical codes vary. Electrical work should be evaluated and performed by a qualified professional.</p>";
+
+    result.style.display = "block";
+}
+</script>
+
+</body>
+</html>
+
+Ovo je namjerno MVP, ne konačni stručni kalkulator. Neć
