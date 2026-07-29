@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ResellWise | Reseller Profit & Inventory App</title>
+  <meta name="description" content="Calculate resale profit, ROI and margins, track inventory and sales, and manage your reselling business with ResellWise.">
+
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --primary: #2563eb;
+      --primary2: #1d4ed8;
+      --border: #e4e7ec;
+      --good: #15803d;
+      --bad: #b42318;
+      --input: #ffffff;
+    }
+
+    body.dark {
+      --bg: #0f172a;
+      --card: #172033;
+      --text: #f8fafc;
+      --muted: #a7b0c0;
+      --border: #334155;
+      --input: #111827;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    button, select, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .theme-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 9px 13px;
+      border-radius: 10px;
+    }
+
+    main {
+      width: min(1150px, 92%);
+      margin: 30px auto 70px;
+    }
+
+    .hero {
+      margin-bottom: 25px;
+    }
+
+    .hero h1 {
+      margin-bottom: 8px;
+      font-size: clamp(28px, 5vw, 45px);
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 750px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stat-value {
+      font-size: 27px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--input);
+      color: var(--text);
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .primary-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 13px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+    }
+
+    .primary-btn:hover {
+      background: var(--primary2);
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 12px;
+      background: var(--bg);
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-row:last-child {
+      border-bottom: 0;
+    }
+
+    .profit {
+      font-size: 23px;
+      font-weight: 800;
+    }
+
+    .marketplaces {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .marketplace {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 13px;
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .inventory-item {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+
+    .small-btn {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      padding: 7px 9px;
+      border-radius: 8px;
+    }
+
+    .future-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .future-card {
+      opacity: .8;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      margin-bottom: 10px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 30px;
+    }
+
+    @media (max-width: 850px) {
+      .stats,
+      .future-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .stats,
+      .future-grid,
+      .two {
+        grid-template-columns: 1fr;
+      }
+
+      .inventory-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Resell<span>Wise</span></div>
+  <button class="theme-btn" onclick="toggleTheme()">Light / Dark</button>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>Know your profit before you sell.</h1>
+    <p>
+      Calculate real resale profit, margins and ROI. Track inventory,
+      sales and expenses across your favorite marketplaces.
+    </p>
+  </section>
+
+  <section class="stats">
+    <div class="card">
+      <div class="stat-label">Total Revenue</div>
+      <div class="stat-value" id="totalRevenue">$0.00</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-label">Total Profit</div>
+      <div class="stat-value" id="totalProfit">$0.00</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-label">Items Tracked</div>
+      <div class="stat-value" id="itemsTracked">0</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-label">Average ROI</div>
+      <div class="stat-value" id="averageROI">0%</div>
+    </div>
+  </section>
+
+  <section class="grid">
+
+    <div class="card">
+      <h2>Profit Calculator</h2>
+
+      <label>Item name</label>
+      <input id="itemName" placeholder="Example: Nike Air Jordan">
+
+      <label>Marketplace</label>
+      <select id="marketplace">
+        <option>eBay</option>
+        <option>Amazon</option>
+        <option>Walmart Marketplace</option>
+        <option>Facebook Marketplace</option>
+        <option>Etsy</option>
+        <option>Poshmark</option>
+        <option>Mercari</option>
+        <option>Depop</option>
+        <option>Vinted</option>
+        <option>Temu</option>
+        <option>AliExpress</option>
+        <option>Other</option>
+      </select>
+
+      <div class="two">
+        <div>
+          <label>Purchase price</label>
+          <input id="purchase" type="number" min="0" step="0.01" placeholder="40.00">
+        </div>
+
+        <div>
+          <label>Sale price</label>
+          <input id="sale" type="number" min="0" step="0.01" placeholder="75.00">
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <label>Shipping cost</label>
+          <input id="shipping" type="number" min="0" step="0.01" value="0">
+        </div>
+
+        <div>
+          <label>Other costs</label>
+          <input id="otherCosts" type="number" min="0" step="0.01" value="0">
+        </div>
+      </div>
+
+      <label>Marketplace fee (%)</label>
+      <input id="fee" type="number" min="0" step="0.01" value="0">
+
+      <button class="primary-btn" onclick="calculateProfit()">
+        Calculate Profit
+      </button>
+
+      <div class="result">
+        <div class="result-row">
+          <span>Marketplace fee</span>
+          <strong id="feeResult">$0.00</strong>
+        </div>
+
+        <div class="result-row">
+          <span>Total costs</span>
+          <strong id="costResult">$0.00</strong>
+        </div>
+
+        <div class="result-row">
+          <span>Net profit</span>
+          <strong class="profit" id="profitResult">$0.00</strong>
+        </div>
+
+        <div class="result-row">
+          <span>Profit margin</span>
+          <strong id="marginResult">0%</strong>
+        </div>
+
+        <div class="result-row">
+          <span>ROI</span>
+          <strong id="roiResult">0%</strong>
+        </div>
+      </div>
+
+      <button class="primary-btn" onclick="saveItem()">
+        Save Item
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>Marketplace Tools</h2>
+      <p style="color:var(--muted)">
+        ResellWise is being prepared for the world's major resale marketplaces.
+        Fee presets and deeper integrations can be updated independently.
+      </p>
+
+      <div class="marketplaces">
+        <span class="marketplace">eBay</span>
+        <span class="marketplace">Amazon</span>
+        <span class="marketplace">Walmart</span>
+        <span class="marketplace">Facebook</span>
+        <span class="marketplace">Etsy</span>
+        <span class="marketplace">Poshmark</span>
+        <span class="marketplace">Mercari</span>
+        <span class="marketplace">Depop</span>
+        <span class="marketplace">Vinted</span>
+        <span class="marketplace">Temu</span>
+        <span class="marketplace">AliExpress</span>
+      </div>
+
+      <div class="section">
+        <h2>Settings</h2>
+
+        <label>Currency</label>
+        <select id="currency" onchange="changeCurrency()">
+          <option value="$">USD ($)</option>
+          <option value="€">EUR (€)</option>
+          <option value="£">GBP (£)</option>
+          <option value="C$">CAD (C$)</option>
+          <option value="A$">AUD (A$)</option>
+        </select>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="card section">
+    <h2>Inventory & Sales</h2>
+
+    <div id="inventory">
+      <p id="emptyInventory" style="color:var(--muted)">
+        No items yet. Calculate a deal and save your first item.
+      </p>
+    </div>
+  </section>
+
+  <section class="future-grid">
+
+    <div class="card future-card">
+      <span class="badge">COMING SOON</span>
+      <h2>AI Deal Analyzer</h2>
+      <p>Analyze potential deals, expected profit and resale opportunities.</p>
+    </div>
+
+    <div class="card future-card">
+      <span class="badge">COMING SOON</span>
+      <h2>Receipt Scanner</h2>
+      <p>Scan receipts and automatically add purchase costs to your inventory.</p>
+    </div>
+
+    <div class="card future-card">
+      <span class="badge">PRO</span>
+      <h2>Advanced Analytics</h2>
+      <p>Monthly profit, marketplace performance, expenses and sales trends.</p>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  ResellWise — A MicroWebLab Project
+</footer>
+
+<script>
+  let currency = localStorage.getItem("rwCurrency") || "$";
+  let items = JSON.parse(localStorage.getItem("rwItems") || "[]");
+  let lastCalculation = null;
+
+  document.getElementById("currency").value = currency;
+
+  const savedTheme = localStorage.getItem("rwTheme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+  }
+
+  function money(value) {
+    return currency + Number(value).toFixed(2);
+  }
+
+  function numberValue(id) {
+    return parseFloat(document.getElementById(id).value) || 0;
+  }
+
+  function calculateProfit() {
+    const purchase = numberValue("purchase");
+    const sale = numberValue("sale");
+    const shipping = numberValue("shipping");
+    const other = numberValue("otherCosts");
+    const feePercent = numberValue("fee");
+
+    const marketplaceFee = sale * (feePercent / 100);
+    const totalCosts = purchase + shipping + other + marketplaceFee;
+    const profit = sale - totalCosts;
+
+    const margin = sale > 0 ? (profit / sale) * 100 : 0;
+    const roi = purchase > 0 ? (profit / purchase) * 100 : 0;
+
+    document.getElementById("feeResult").textContent = money(marketplaceFee);
+    document.getElementById("costResult").textContent = money(totalCosts);
+
+    const profitElement = document.getElementById("profitResult");
+    profitElement.textContent = money(profit);
+    profitElement.style.color = profit >= 0 ? "var(--good)" : "var(--bad)";
+
+    document.getElementById("marginResult").textContent = margin.toFixed(1) + "%";
+    document.getElementById("roiResult").textContent = roi.toFixed(1) + "%";
+
+    lastCalculation = {
+      name: document.getElementById("itemName").value || "Unnamed item",
+      marketplace: document.getElementById("marketplace").value,
+      purchase,
+      sale,
+      shipping,
+      other,
+      feePercent,
+      marketplaceFee,
+      totalCosts,
+      profit,
+      margin,
+      roi,
+      status: "Tracked",
+      createdAt: new Date().toISOString()
+    };
+
+    trackEvent("profit_calculation", {
+      marketplace: lastCalculation.marketplace
+    });
+  }
+
+  function saveItem() {
+    if (!lastCalculation) {
+      calculateProfit();
+    }
+
+    items.unshift(lastCalculation);
+    localStorage.setItem("rwItems", JSON.stringify(items));
+
+    trackEvent("item_added", {
+      marketplace: lastCalculation.marketplace
+    });
+
+    renderInventory();
+    updateDashboard();
+  }
+
+  function deleteItem(index) {
+    items.splice(index, 1);
+    localStorage.setItem("rwItems", JSON.stringify(items));
+
+    renderInventory();
+    updateDashboard();
+  }
+
+  function renderInventory() {
+    const container = document.getElementById("inventory");
+
+    if (!items.length) {
+      container.innerHTML =
+        '<p style="color:var(--muted)">No items yet. Calculate a deal and save your first item.</p>';
+      return;
+    }
+
+    container.innerHTML = items.map((item, index) => `
+      <div class="inventory-item">
+        <strong>${escapeHTML(item.name)}</strong>
+        <span>${escapeHTML(item.marketplace)}</span>
+        <span>${money(item.sale)}</span>
+        <span style="color:${item.profit >= 0 ? 'var(--good)' : 'var(--bad)'}">
+          ${money(item.profit)}
+        </span>
+        <button class="small-btn" onclick="deleteItem(${index})">Delete</button>
+      </div>
+    `).join("");
+  }
+
+  function updateDashboard() {
+    const revenue = items.reduce((sum, item) => sum + item.sale, 0);
+    const profit = items.reduce((sum, item) => sum + item.profit, 0);
+
+    const averageROI = items.length
+      ? items.reduce((sum, item) => sum + item.roi, 0) / items.length
+      : 0;
+
+    document.getElementById("totalRevenue").textContent = money(revenue);
+    document.getElementById("totalProfit").textContent = money(profit);
+    document.getElementById("itemsTracked").textContent = items.length;
+    document.getElementById("averageROI").textContent =
+      averageROI.toFixed(1) + "%";
+  }
+
+  function changeCurrency() {
+    currency = document.getElementById("currency").value;
+    localStorage.setItem("rwCurrency", currency);
+
+    renderInventory();
+    updateDashboard();
+
+    if (lastCalculation) {
+      calculateProfit();
+    }
+  }
+
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+      "rwTheme",
+      document.body.classList.contains("dark") ? "dark" : "light"
+    );
+  }
+
+  function escapeHTML(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  /*
+    GOOGLE ANALYTICS READY
+
+    Later we will insert the GA4 tag in <head>.
+    These events are already prepared:
+    - profit_calculation
+    - item_added
+    - marketplace_selected (future)
+    - item_sold (future)
+    - csv_export (future)
+    - receipt_scan (future)
+    - ai_deal_analysis (future)
+    - pro_upgrade_click (future)
+  */
+
+  function trackEvent(eventName, parameters = {}) {
+    if (typeof gtag === "function") {
+      gtag("event", eventName, parameters);
+    }
+  }
+
+  renderInventory();
+  updateDashboard();
+</script>
+
+</body>
+</html>
+
