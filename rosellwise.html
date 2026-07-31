@@ -341,8 +341,25 @@
         <option>Vinted</option>
         <option>Temu</option>
         <option>AliExpress</option>
+        <option>eBay Motors</option>
+        <option>AutoScout24</option>
+        <option>Mobile.de</option>
+        <option>Temu</option>
         <option>Other</option>
       </select>
+
+      <label>Category</label>
+      <select id="category">
+        <option>Auto Parts</option>
+        <option>Cars</option>
+        <option>Motorcycles</option>
+        <option>Electronics</option>
+        <option>Fashion</option>
+        <option>Other</option>
+      </select>
+
+      <label>OEM / Part Number</label>
+      <input id="partNumber" placeholder="e.g. 06H103495AH">
 
       <div class="two">
         <div>
@@ -378,7 +395,9 @@
       <div class="result">
         <div class="result-row">
           <span>Marketplace fee</span>
-          <strong id="feeResult">$0.00</strong>
+        <label>Quantity</label>
+<input id="quantity" type="number" min="1" value="1">  
+         <strong id="feeResult">$0.00</strong>
         </div>
 
         <div class="result-row">
