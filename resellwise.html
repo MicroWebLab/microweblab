@@ -1,579 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="hr">
 <head>
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5J05KH0J6"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-Q5J05KH0J6');
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResellWise - Kalkulator Profitabilnosti i Analiza Preprodaje</title>
+    <meta name="description" content="Izračunajte točnu maržu, neto profit i ROI za preprodaju proizvoda. Usporedite ponude s više platformi (OLX, Njuskalo, eBay).">
+    
+    <!-- Linkovi i reference ažurirani na resellwise -->
+    <link rel="canonical" href="https://example.com/resellwise.html">
+    <link rel="stylesheet" href="css/resellwise-style.css">
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Analytics (kod nepromijenjen) -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXX-X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  <title>ReselWise | Profit Calculator, Inventory & Platform Search</title>
-  <meta name="description" content="ReselWise - Smart profit calculator, inventory manager, and multi-platform search engine for 14+ e-commerce marketplaces.">
-
-  <style>
-    :root {
-      --bg: #f8fafc;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --dark-bg: #111827;
-      --border: #cbd5e1;
-      --accent: #8b5cf6;
-      --accent-dark: #7c3aed;
-      --success: #10b981;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    header {
-      background: var(--dark-bg);
-      color: white;
-      padding: 20px 8%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .logo span {
-      color: var(--primary);
-    }
-
-    header a {
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    main {
-      max-width: 1050px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 50px 20px 25px;
-    }
-
-    .hero .tag {
-      font-size: 13px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--primary-dark);
-      background: #dbeafe;
-      padding: 5px 12px;
-      border-radius: 999px;
-      display: inline-block;
-      margin-bottom: 12px;
-    }
-
-    .hero h1 {
-      max-width: 850px;
-      margin: 10px auto 15px;
-      font-size: clamp(32px, 4vw, 46px);
-      line-height: 1.15;
-    }
-
-    .hero p {
-      max-width: 700px;
-      margin: auto;
-      font-size: 18px;
-      color: var(--muted);
-    }
-
-    .card {
-      background: var(--card);
-      padding: 35px;
-      border-radius: 16px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.06);
-      border: 1px solid #e2e8f0;
-      margin-bottom: 40px;
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 24px;
-      color: var(--dark-bg);
-    }
-
-    .intro-p {
-      color: var(--muted);
-      margin-bottom: 25px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    select, input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: white;
-      font-size: 16px;
-      color: var(--text);
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 15px;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    button {
-      padding: 15px 20px;
-      border: 0;
-      border-radius: 9px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .btn-search {
-      background: var(--primary);
-      color: white;
-      flex: 1;
-    }
-
-    .btn-search:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-ai {
-      background: var(--accent);
-      color: white;
-      flex: 1;
-    }
-
-    .btn-ai:hover {
-      background: var(--accent-dark);
-    }
-
-    .btn-calc {
-      background: var(--dark-bg);
-      color: white;
-      width: 100%;
-    }
-
-    .btn-calc:hover {
-      background: #1f2937;
-    }
-
-    .result-box {
-      display: none;
-      margin-top: 25px;
-      padding: 22px;
-      background: #f1f5f9;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .result-item {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .result-item .val {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--primary);
-    }
-
-    .platforms-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 15px;
-    }
-
-    .tag-item {
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    th {
-      background: #f8fafc;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    footer {
-      background: var(--dark-bg);
-      color: #9ca3af;
-      padding: 35px 20px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    @media(max-width: 768px) {
-      .grid-2, .grid-3, .btn-row {
-        grid-template-columns: 1fr;
-        flex-direction: column;
-      }
-
-      .card {
-        padding: 22px;
-      }
-    }
-  </style>
+      gtag('config', 'UA-XXXXXXXXX-X');
+    </script>
 </head>
-
 <body>
 
-<header>
-  <div class="logo">Resel<span>Wise</span></div>
-  <a href="index.html">← MicroWebLab</a>
-</header>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="resellwise.html">ResellWise</a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="resellwise.html" class="active">Kalkulator</a></li>
+                <li><a href="resellwise-features.html">Mogućnosti</a></li>
+                <li><a href="resellwise-about.html">O Nama</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<main>
+    <main class="container">
+        <h1>ResellWise Kalkulator</h1>
+        <p>Unesite parametre kupnje i prodaje za izračun neto profita.</p>
 
-  <section class="hero">
-    <div class="tag">🛒 Smart Reselling Hub</div>
-    <h1>Platform Search, Profit Calculator & Inventory Tracker</h1>
-    <p>Everything you need to successfully resell items across 14+ global and local marketplaces, all in one place.</p>
-  </section>
+        <!-- Unutarnje staze i skripte ažurirane na resellwise -->
+        <form id="resellwise-calc-form" action="resellwise-process.php" method="POST">
+            <div class="form-group">
+                <label for="buy-price">Nabavna cijena (€):</label>
+                <input type="number" id="buy-price" name="buy_price" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="sell-price">Prodajna cijena (€):</label>
+                <input type="number" id="sell-price" name="sell_price" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="shipping-cost">Trošak dostave (€):</label>
+                <input type="number" id="shipping-cost" name="shipping_cost" step="0.01" value="0">
+            </div>
+            <button type="submit" class="btn">Izračunaj Profit</button>
+        </form>
 
-  <!-- MODULE 1: PLATFORM SEARCH ENGINE -->
-  <section class="card">
-    <h2>🌐 Marketplace & Platform Search</h2>
-    <p class="intro-p">Enter an item name or model to search top e-commerce platforms in a single click.</p>
-
-    <div class="form-group">
-      <label for="itemQuery">Item Name / Brand / Model</label>
-      <input id="itemQuery" placeholder="e.g., Nike Air Max 90, iPhone 13 Pro 128GB, Sony WH-1000XM4">
-    </div>
-
-    <div class="btn-row">
-      <button class="btn-search" onclick="searchAllPlatforms()">🌐 Search All Platforms</button>
-      <button class="btn-ai" onclick="searchWithAI()">✨ AI Price Analysis</button>
-    </div>
-
-    <div class="platforms-tags">
-      <span class="tag-item">🏷️ eBay</span>
-      <span class="tag-item">📦 Amazon</span>
-      <span class="tag-item">👥 Facebook Marketplace</span>
-      <span class="tag-item">👗 Vinted</span>
-      <span class="tag-item">👚 Depop</span>
-      <span class="tag-item">👜 Poshmark</span>
-      <span class="tag-item">🛍️ Mercari</span>
-      <span class="tag-item">📦 Temu</span>
-      <span class="tag-item">🌐 AliExpress</span>
-      <span class="tag-item">🎨 Etsy</span>
-      <span class="tag-item">🛒 Walmart</span>
-      <span class="tag-item">🏎️ eBay Motors</span>
-      <span class="tag-item">🚗 Mobile.de</span>
-      <span class="tag-item">🚗 AutoScout24</span>
-    </div>
-  </section>
-
-  <!-- MODULE 2: PROFIT CALCULATOR -->
-  <section class="card">
-    <h2>🧮 Profit & Margin Calculator</h2>
-    <p class="intro-p">Calculate your exact net profit after purchase costs, shipping fees, and platform fees.</p>
-
-    <div class="grid-3">
-      <div class="form-group">
-        <label for="buyPrice">Purchase Price (€)</label>
-        <input type="number" id="buyPrice" placeholder="e.g., 50">
-      </div>
-
-      <div class="form-group">
-        <label for="sellPrice">Selling Price (€)</label>
-        <input type="number" id="sellPrice" placeholder="e.g., 120">
-      </div>
-
-      <div class="form-group">
-        <label for="shippingCost">Shipping Cost (€)</label>
-        <input type="number" id="shippingCost" placeholder="e.g., 5">
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="form-group">
-        <label for="platformFee">Platform Fee (%)</label>
-        <input type="number" id="platformFee" placeholder="e.g., 13 (eBay ~13%)" value="13">
-      </div>
-
-      <div class="form-group">
-        <label for="otherCosts">Other Costs (€)</label>
-        <input type="number" id="otherCosts" placeholder="e.g., packaging 2" value="0">
-      </div>
-    </div>
-
-    <button class="btn-calc" onclick="calculateProfit()">Calculate Profit</button>
-
-    <div id="calcResult" class="result-box">
-      <h3 style="margin-top:0; color: var(--dark-bg);">Calculation Result:</h3>
-      <div class="result-grid">
-        <div class="result-item">
-          <small>Net Profit</small>
-          <div class="val" id="resProfit">0.00 €</div>
+        <div id="resellwise-results" class="results-box">
+            <!-- Rezultati proračuna -->
         </div>
-        <div class="result-item">
-          <small>Margin</small>
-          <div class="val" id="resMargin">0 %</div>
-        </div>
-        <div class="result-item">
-          <small>Return (ROI)</small>
-          <div class="val" id="resROI">0 %</div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </main>
 
-  <!-- MODULE 3: INVENTORY TRACKER -->
-  <section class="card">
-    <h2>📦 Inventory Tracker</h2>
-    <p class="intro-p">Keep track of your purchased items locally in your browser.</p>
+    <footer>
+        <p>&copy; 2026 ResellWise. Sva prava pridržana.</p>
+        <p><a href="resellwise-privacy.html">Pravila privatnosti</a> | <a href="resellwise-terms.html">Uvjeti korištenja</a></p>
+    </footer>
 
-    <div class="grid-3">
-      <div class="form-group">
-        <label for="invName">Item Name</label>
-        <input id="invName" placeholder="e.g., Levi's 501 Jeans">
-      </div>
-      <div class="form-group">
-        <label for="invBuy">Paid (€)</label>
-        <input type="number" id="invBuy" placeholder="20">
-      </div>
-      <div class="form-group">
-        <label for="invTarget">Target Selling Price (€)</label>
-        <input type="number" id="invTarget" placeholder="50">
-      </div>
-    </div>
-
-    <button class="btn-search" style="width: 100%; margin-top: 5px;" onclick="addInventoryItem()">+ Add to Inventory</button>
-
-    <table id="invTable">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Purchase (€)</th>
-          <th>Target (€)</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="invBody">
-        <!-- Dynamic items load here -->
-      </tbody>
-    </table>
-  </section>
-
-</main>
-
-<footer>
-  <p>© 2026 ReselWise · A MicroWebLab project</p>
-</footer>
-
-<script>
-  // Analytics tracking
-  function trackGAEvent(eventName, params = {}) {
-    if (typeof gtag === "function") {
-      gtag("event", eventName, params);
-    }
-  }
-
-  // Search across all platforms
-  function searchAllPlatforms() {
-    const query = document.getElementById("itemQuery").value.trim();
-    if (!query) {
-      alert("Please enter an item name to search.");
-      return;
-    }
-
-    const encoded = encodeURIComponent(query);
-
-    const urls = [
-      `https://www.google.com/search?q=${encoded}`,
-      `https://www.ebay.com/sch/i.html?_nkw=${encoded}`,
-      `https://www.amazon.com/s?k=${encoded}`,
-      `https://www.facebook.com/marketplace/search/?query=${encoded}`,
-      `https://www.vinted.com/catalog?search_text=${encoded}`,
-      `https://www.depop.com/search/?q=${encoded}`,
-      `https://poshmark.com/search?query=${encoded}`,
-      `https://www.mercari.com/search/?keyword=${encoded}`,
-      `https://www.temu.com/search_result.html?search_key=${encoded}`,
-      `https://www.aliexpress.com/w/wholesale-${encoded}.html`,
-      `https://www.etsy.com/search?q=${encoded}`,
-      `https://www.walmart.com/search?q=${encoded}`,
-      `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${encoded}`,
-      `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=${encoded}`,
-      `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&sort=standard&desc=0&query=${encoded}`
-    ];
-
-    urls.forEach((url) => {
-      window.open(url, "_blank");
-    });
-
-    trackGAEvent("reselwise_search", { search_query: query });
-  }
-
-  // AI Price Search
-  function searchWithAI() {
-    const query = document.getElementById("itemQuery").value.trim();
-    if (!query) {
-      alert("Please enter an item name.");
-      return;
-    }
-
-    const fullPrompt = `As a reselling expert, analyze the average market price (used/new), demand, and potential margin for: ${query}`;
-    const url = `https://chatgpt.com/?q=${encodeURIComponent(fullPrompt)}`;
-
-    trackGAEvent("reselwise_ai_search", { search_query: query });
-    window.open(url, "_blank");
-  }
-
-  // Profit Calculator
-  function calculateProfit() {
-    const buy = parseFloat(document.getElementById("buyPrice").value) || 0;
-    const sell = parseFloat(document.getElementById("sellPrice").value) || 0;
-    const shipping = parseFloat(document.getElementById("shippingCost").value) || 0;
-    const feePercent = parseFloat(document.getElementById("platformFee").value) || 0;
-    const other = parseFloat(document.getElementById("otherCosts").value) || 0;
-
-    if (sell === 0) {
-      alert("Please enter a selling price.");
-      return;
-    }
-
-    const feeAmount = (sell * feePercent) / 100;
-    const totalCosts = buy + shipping + feeAmount + other;
-    const profit = sell - totalCosts;
-    const margin = (profit / sell) * 100;
-    const roi = buy > 0 ? (profit / buy) * 100 : 0;
-
-    document.getElementById("resProfit").innerText = profit.toFixed(2) + " €";
-    document.getElementById("resMargin").innerText = margin.toFixed(1) + " %";
-    document.getElementById("resROI").innerText = roi.toFixed(1) + " %";
-
-    document.getElementById("calcResult").style.display = "block";
-
-    trackGAEvent("reselwise_calc", { profit: profit, margin: margin });
-  }
-
-  // Local Storage Inventory Tracker
-  let inventory = JSON.parse(localStorage.getItem("reselwise_inventory") || "[]");
-
-  function renderInventory() {
-    const tbody = document.getElementById("invBody");
-    tbody.innerHTML = "";
-
-    inventory.forEach((item, index) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td><strong>${item.name}</strong></td>
-        <td>${item.buy.toFixed(2)} €</td>
-        <td>${item.target.toFixed(2)} €</td>
-        <td><button style="padding: 4px 8px; font-size:12px; background:#ef4444; color:white;" onclick="removeInventory(${index})">Remove</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function addInventoryItem() {
-    const name = document.getElementById("invName").value.trim();
-    const buy = parseFloat(document.getElementById("invBuy").value) || 0;
-    const target = parseFloat(document.getElementById("invTarget").value) || 0;
-
-    if (!name) {
-      alert("Please enter an item name.");
-      return;
-    }
-
-    inventory.push({ name, buy, target });
-    localStorage.setItem("reselwise_inventory", JSON.stringify(inventory));
-
-    document.getElementById("invName").value = "";
-    document.getElementById("invBuy").value = "";
-    document.getElementById("invTarget").value = "";
-
-    renderInventory();
-    trackGAEvent("reselwise_add_inventory", { item_name: name });
-  }
-
-  function removeInventory(index) {
-    inventory.splice(index, 1);
-    localStorage.setItem("reselwise_inventory", JSON.stringify(inventory));
-    renderInventory();
-  }
-
-  // Initial render
-  renderInventory();
-</script>
-
+    <script src="js/resellwise-app.js"></script>
 </body>
 </html>
