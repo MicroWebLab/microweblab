@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hr">
+<html lang="en">
 
 <head>
   <!-- Google Analytics -->
@@ -14,8 +14,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>ResellWise | Kalkulator Dobiti, Zalihe i Pretraga Platformi</title>
-  <meta name="description" content="ResellWise - Pametni kalkulator dobiti, menadžer zaliha i brzi pretraživač za 14+ e-commerce platformi.">
+  <title>ReselWise | Profit Calculator, Inventory & Platform Search</title>
+  <meta name="description" content="ReselWise - Smart profit calculator, inventory manager, and multi-platform search engine for 14+ e-commerce marketplaces.">
 
   <style>
     :root {
@@ -296,31 +296,31 @@
 <body>
 
 <header>
-  <div class="logo">Resell<span>Wise</span></div>
+  <div class="logo">Resel<span>Wise</span></div>
   <a href="index.html">← MicroWebLab</a>
 </header>
 
 <main>
 
   <section class="hero">
-    <div class="tag">🛒 Pametni Reseller Hub</div>
-    <h1>Pretraga platformi, kalkulator dobiti i upravljanje zalihama</h1>
-    <p>Sve što vam je potrebno za uspješno preprodavanje artikala na više od 14 globalnih i lokalnih tržnica na jednom mjestu.</p>
+    <div class="tag">🛒 Smart Reselling Hub</div>
+    <h1>Platform Search, Profit Calculator & Inventory Tracker</h1>
+    <p>Everything you need to successfully resell items across 14+ global and local marketplaces, all in one place.</p>
   </section>
 
-  <!-- MODUL 1: PRETRAŽIVAČ PLATFORMI -->
+  <!-- MODULE 1: PLATFORM SEARCH ENGINE -->
   <section class="card">
-    <h2>🌐 Pretraživač Tržišta & Platformi</h2>
-    <p class="intro-p">Upišite naziv artikla ili model i pretražite sve vodeće e-commerce platforme jednim klikom.</p>
+    <h2>🌐 Marketplace & Platform Search</h2>
+    <p class="intro-p">Enter an item name or model to search top e-commerce platforms in a single click.</p>
 
     <div class="form-group">
-      <label for="itemQuery">Naziv Artikla / Brand / Model</label>
-      <input id="itemQuery" placeholder="npr. Nike Air Max 90, iPhone 13 Pro 128GB, Sony WH-1000XM4">
+      <label for="itemQuery">Item Name / Brand / Model</label>
+      <input id="itemQuery" placeholder="e.g., Nike Air Max 90, iPhone 13 Pro 128GB, Sony WH-1000XM4">
     </div>
 
     <div class="btn-row">
-      <button class="btn-search" onclick="searchAllPlatforms()">🌐 Pretraži Sve Platforme</button>
-      <button class="btn-ai" onclick="searchWithAI()">✨ AI Analiza Cijene</button>
+      <button class="btn-search" onclick="searchAllPlatforms()">🌐 Search All Platforms</button>
+      <button class="btn-ai" onclick="searchWithAI()">✨ AI Price Analysis</button>
     </div>
 
     <div class="platforms-tags">
@@ -341,94 +341,94 @@
     </div>
   </section>
 
-  <!-- MODUL 2: KALKULATOR PROFITA -->
+  <!-- MODULE 2: PROFIT CALCULATOR -->
   <section class="card">
-    <h2>🧮 Kalkulator Dobiti i Marže</h2>
-    <p class="intro-p">Izračunajte točnu zaradu nakon troškova nabave, dostave i naknada platforme.</p>
+    <h2>🧮 Profit & Margin Calculator</h2>
+    <p class="intro-p">Calculate your exact net profit after purchase costs, shipping fees, and platform fees.</p>
 
     <div class="grid-3">
       <div class="form-group">
-        <label for="buyPrice">Nabavna Cijena (€)</label>
-        <input type="number" id="buyPrice" placeholder="npr. 50">
+        <label for="buyPrice">Purchase Price (€)</label>
+        <input type="number" id="buyPrice" placeholder="e.g., 50">
       </div>
 
       <div class="form-group">
-        <label for="sellPrice">Prodajna Cijena (€)</label>
-        <input type="number" id="sellPrice" placeholder="npr. 120">
+        <label for="sellPrice">Selling Price (€)</label>
+        <input type="number" id="sellPrice" placeholder="e.g., 120">
       </div>
 
       <div class="form-group">
-        <label for="shippingCost">Trošak Dostave (€)</label>
-        <input type="number" id="shippingCost" placeholder="npr. 5">
+        <label for="shippingCost">Shipping Cost (€)</label>
+        <input type="number" id="shippingCost" placeholder="e.g., 5">
       </div>
     </div>
 
     <div class="grid-2">
       <div class="form-group">
-        <label for="platformFee">Naknada Platforme (%)</label>
-        <input type="number" id="platformFee" placeholder="npr. 13 (eBay ~13%)" value="13">
+        <label for="platformFee">Platform Fee (%)</label>
+        <input type="number" id="platformFee" placeholder="e.g., 13 (eBay ~13%)" value="13">
       </div>
 
       <div class="form-group">
-        <label for="otherCosts">Ostali Troškovi (€)</label>
-        <input type="number" id="otherCosts" placeholder="npr. pakiranje 2" value="0">
+        <label for="otherCosts">Other Costs (€)</label>
+        <input type="number" id="otherCosts" placeholder="e.g., packaging 2" value="0">
       </div>
     </div>
 
-    <button class="btn-calc" onclick="calculateProfit()">Izračunaj Dobit</button>
+    <button class="btn-calc" onclick="calculateProfit()">Calculate Profit</button>
 
     <div id="calcResult" class="result-box">
-      <h3 style="margin-top:0; color: var(--dark-bg);">Rezultat Izračuna:</h3>
+      <h3 style="margin-top:0; color: var(--dark-bg);">Calculation Result:</h3>
       <div class="result-grid">
         <div class="result-item">
-          <small>Čista Dobit</small>
+          <small>Net Profit</small>
           <div class="val" id="resProfit">0.00 €</div>
         </div>
         <div class="result-item">
-          <small>Marža (Margin)</small>
+          <small>Margin</small>
           <div class="val" id="resMargin">0 %</div>
         </div>
         <div class="result-item">
-          <small>Povrat (ROI)</small>
+          <small>Return (ROI)</small>
           <div class="val" id="resROI">0 %</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- MODUL 3: EVIDENCIJA ZALIHA (INVENTORY) -->
+  <!-- MODULE 3: INVENTORY TRACKER -->
   <section class="card">
-    <h2>📦 Evidencija Zaliha (Inventory Tracker)</h2>
-    <p class="intro-p">Vodite evidenciju kupljenih artikala lokalno u vašem pregledniku.</p>
+    <h2>📦 Inventory Tracker</h2>
+    <p class="intro-p">Keep track of your purchased items locally in your browser.</p>
 
     <div class="grid-3">
       <div class="form-group">
-        <label for="invName">Naziv Artikla</label>
-        <input id="invName" placeholder="npr. Levi's 501 Jeans">
+        <label for="invName">Item Name</label>
+        <input id="invName" placeholder="e.g., Levi's 501 Jeans">
       </div>
       <div class="form-group">
-        <label for="invBuy">Plaćeno (€)</label>
+        <label for="invBuy">Paid (€)</label>
         <input type="number" id="invBuy" placeholder="20">
       </div>
       <div class="form-group">
-        <label for="invTarget">Ciljana Prodaja (€)</label>
+        <label for="invTarget">Target Selling Price (€)</label>
         <input type="number" id="invTarget" placeholder="50">
       </div>
     </div>
 
-    <button class="btn-search" style="width: 100%; margin-top: 5px;" onclick="addInventoryItem()">+ Dodaj na Listu Zaliha</button>
+    <button class="btn-search" style="width: 100%; margin-top: 5px;" onclick="addInventoryItem()">+ Add to Inventory</button>
 
     <table id="invTable">
       <thead>
         <tr>
-          <th>Artikal</th>
-          <th>Nabavno (€)</th>
-          <th>Cilj (€)</th>
-          <th>Akcija</th>
+          <th>Item</th>
+          <th>Purchase (€)</th>
+          <th>Target (€)</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody id="invBody">
-        <!-- Stavke se dinamički učitavaju -->
+        <!-- Dynamic items load here -->
       </tbody>
     </table>
   </section>
@@ -436,22 +436,22 @@
 </main>
 
 <footer>
-  <p>© 2026 ResellWise · A MicroWebLab project</p>
+  <p>© 2026 ReselWise · A MicroWebLab project</p>
 </footer>
 
 <script>
-  // Analytics praćenje
+  // Analytics tracking
   function trackGAEvent(eventName, params = {}) {
     if (typeof gtag === "function") {
       gtag("event", eventName, params);
     }
   }
 
-  // Pretraga svih platformi
+  // Search across all platforms
   function searchAllPlatforms() {
     const query = document.getElementById("itemQuery").value.trim();
     if (!query) {
-      alert("Molimo unesite naziv artikla za pretragu.");
+      alert("Please enter an item name to search.");
       return;
     }
 
@@ -479,25 +479,25 @@
       window.open(url, "_blank");
     });
 
-    trackGAEvent("resellwise_search", { search_query: query });
+    trackGAEvent("reselwise_search", { search_query: query });
   }
 
-  // AI pretraga cijene
+  // AI Price Search
   function searchWithAI() {
     const query = document.getElementById("itemQuery").value.trim();
     if (!query) {
-      alert("Molimo unesite naziv artikla.");
+      alert("Please enter an item name.");
       return;
     }
 
-    const fullPrompt = `Kao stručnjak za reselling, analiziraj prosječnu tržišnu cijenu (rabljeno/novo), potražnju i potencijalnu maržu za artikl: ${query}`;
+    const fullPrompt = `As a reselling expert, analyze the average market price (used/new), demand, and potential margin for: ${query}`;
     const url = `https://chatgpt.com/?q=${encodeURIComponent(fullPrompt)}`;
 
-    trackGAEvent("resellwise_ai_search", { search_query: query });
+    trackGAEvent("reselwise_ai_search", { search_query: query });
     window.open(url, "_blank");
   }
 
-  // Kalkulator dobiti
+  // Profit Calculator
   function calculateProfit() {
     const buy = parseFloat(document.getElementById("buyPrice").value) || 0;
     const sell = parseFloat(document.getElementById("sellPrice").value) || 0;
@@ -506,7 +506,7 @@
     const other = parseFloat(document.getElementById("otherCosts").value) || 0;
 
     if (sell === 0) {
-      alert("Unesite prodajnu cijenu.");
+      alert("Please enter a selling price.");
       return;
     }
 
@@ -522,11 +522,11 @@
 
     document.getElementById("calcResult").style.display = "block";
 
-    trackGAEvent("resellwise_calc", { profit: profit, margin: margin });
+    trackGAEvent("reselwise_calc", { profit: profit, margin: margin });
   }
 
-  // Inventar (zalihe) lokalno spremanje
-  let inventory = JSON.parse(localStorage.getItem("resellwise_inventory") || "[]");
+  // Local Storage Inventory Tracker
+  let inventory = JSON.parse(localStorage.getItem("reselwise_inventory") || "[]");
 
   function renderInventory() {
     const tbody = document.getElementById("invBody");
@@ -538,7 +538,7 @@
         <td><strong>${item.name}</strong></td>
         <td>${item.buy.toFixed(2)} €</td>
         <td>${item.target.toFixed(2)} €</td>
-        <td><button style="padding: 4px 8px; font-size:12px; background:#ef4444; color:white;" onclick="removeInventory(${index})">Ukloni</button></td>
+        <td><button style="padding: 4px 8px; font-size:12px; background:#ef4444; color:white;" onclick="removeInventory(${index})">Remove</button></td>
       `;
       tbody.appendChild(tr);
     });
@@ -550,28 +550,28 @@
     const target = parseFloat(document.getElementById("invTarget").value) || 0;
 
     if (!name) {
-      alert("Unesite naziv artikla.");
+      alert("Please enter an item name.");
       return;
     }
 
     inventory.push({ name, buy, target });
-    localStorage.setItem("resellwise_inventory", JSON.stringify(inventory));
+    localStorage.setItem("reselwise_inventory", JSON.stringify(inventory));
 
     document.getElementById("invName").value = "";
     document.getElementById("invBuy").value = "";
     document.getElementById("invTarget").value = "";
 
     renderInventory();
-    trackGAEvent("resellwise_add_inventory", { item_name: name });
+    trackGAEvent("reselwise_add_inventory", { item_name: name });
   }
 
   function removeInventory(index) {
     inventory.splice(index, 1);
-    localStorage.setItem("resellwise_inventory", JSON.stringify(inventory));
+    localStorage.setItem("reselwise_inventory", JSON.stringify(inventory));
     renderInventory();
   }
 
-  // Inicijalno učitavanje
+  // Initial render
   renderInventory();
 </script>
 
