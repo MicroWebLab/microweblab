@@ -1,34 +1,35 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hr">
+
 <head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5J05KH0J6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-Q5J05KH0J6');
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>ResellWise | Reseller Profit & Inventory App</title>
-  <meta name="description" content="Calculate resale profit, ROI and margins, track inventory and sales, and manage your reselling business with ResellWise.">
+  <title>ResellWise | Kalkulator Dobiti, Zalihe i Pretraga Platformi</title>
+  <meta name="description" content="ResellWise - Pametni kalkulator dobiti, menadžer zaliha i brzi pretraživač za 14+ e-commerce platformi.">
 
   <style>
     :root {
-      --bg: #f4f7fb;
+      --bg: #f8fafc;
       --card: #ffffff;
-      --text: #172033;
-      --muted: #667085;
+      --text: #0f172a;
+      --muted: #64748b;
       --primary: #2563eb;
-      --primary2: #1d4ed8;
-      --border: #e4e7ec;
-      --good: #15803d;
-      --bad: #b42318;
-      --input: #ffffff;
-    }
-
-    body.dark {
-      --bg: #0f172a;
-      --card: #172033;
-      --text: #f8fafc;
-      --muted: #a7b0c0;
-      --border: #334155;
-      --input: #111827;
+      --primary-dark: #1d4ed8;
+      --dark-bg: #111827;
+      --border: #cbd5e1;
+      --accent: #8b5cf6;
+      --accent-dark: #7c3aed;
+      --success: #10b981;
     }
 
     * {
@@ -37,246 +38,256 @@
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
       color: var(--text);
+      line-height: 1.6;
     }
 
     header {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 18px 5%;
+      background: var(--dark-bg);
+      color: white;
+      padding: 20px 8%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
     }
 
     .logo {
       font-size: 24px;
-      font-weight: 800;
+      font-weight: bold;
     }
 
     .logo span {
       color: var(--primary);
     }
 
-    button, select, input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .theme-btn {
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-      padding: 9px 13px;
-      border-radius: 10px;
+    header a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      opacity: 0.9;
     }
 
     main {
-      width: min(1150px, 92%);
-      margin: 30px auto 70px;
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
 
     .hero {
-      margin-bottom: 25px;
+      text-align: center;
+      padding: 50px 20px 25px;
+    }
+
+    .hero .tag {
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary-dark);
+      background: #dbeafe;
+      padding: 5px 12px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-bottom: 12px;
     }
 
     .hero h1 {
-      margin-bottom: 8px;
-      font-size: clamp(28px, 5vw, 45px);
+      max-width: 850px;
+      margin: 10px auto 15px;
+      font-size: clamp(32px, 4vw, 46px);
+      line-height: 1.15;
     }
 
     .hero p {
+      max-width: 700px;
+      margin: auto;
+      font-size: 18px;
       color: var(--muted);
-      max-width: 750px;
-      line-height: 1.6;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 25px;
     }
 
     .card {
       background: var(--card);
-      border: 1px solid var(--border);
+      padding: 35px;
       border-radius: 16px;
-      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.06);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 40px;
     }
 
-    .stat-label {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .stat-value {
-      font-size: 27px;
-      font-weight: 800;
-      margin-top: 8px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 20px;
-    }
-
-    h2 {
+    .card h2 {
       margin-top: 0;
+      font-size: 24px;
+      color: var(--dark-bg);
+    }
+
+    .intro-p {
+      color: var(--muted);
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
     }
 
     label {
       display: block;
-      margin-top: 14px;
-      margin-bottom: 6px;
-      font-weight: 600;
+      font-weight: bold;
+      margin-bottom: 8px;
     }
 
-    input, select {
+    select, input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--input);
+      border-radius: 8px;
+      background: white;
+      font-size: 16px;
       color: var(--text);
     }
 
-    .two {
+    .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 15px;
     }
 
-    .primary-btn {
-      width: 100%;
-      margin-top: 18px;
-      padding: 13px;
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 15px 20px;
       border: 0;
-      border-radius: 10px;
+      border-radius: 9px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-search {
       background: var(--primary);
       color: white;
-      font-weight: 700;
+      flex: 1;
     }
 
-    .primary-btn:hover {
-      background: var(--primary2);
+    .btn-search:hover {
+      background: var(--primary-dark);
     }
 
-    .result {
-      margin-top: 20px;
-      padding: 18px;
-      border-radius: 12px;
-      background: var(--bg);
+    .btn-ai {
+      background: var(--accent);
+      color: white;
+      flex: 1;
     }
 
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
+    .btn-ai:hover {
+      background: var(--accent-dark);
     }
 
-    .result-row:last-child {
-      border-bottom: 0;
+    .btn-calc {
+      background: var(--dark-bg);
+      color: white;
+      width: 100%;
     }
 
-    .profit {
-      font-size: 23px;
-      font-weight: 800;
+    .btn-calc:hover {
+      background: #1f2937;
     }
 
-    .marketplaces {
+    .result-box {
+      display: none;
+      margin-top: 25px;
+      padding: 22px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .result-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .result-item .val {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .platforms-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 15px;
     }
 
-    .marketplace {
-      background: var(--bg);
-      border: 1px solid var(--border);
+    .tag-item {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      padding: 6px 12px;
       border-radius: 999px;
-      padding: 8px 11px;
       font-size: 13px;
+      font-weight: 500;
     }
 
-    .section {
-      margin-top: 22px;
-    }
-
-    .inventory-item {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr auto;
-      gap: 10px;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      padding: 12px 0;
-    }
-
-    .small-btn {
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      padding: 7px 9px;
-      border-radius: 8px;
-    }
-
-    .future-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
       margin-top: 20px;
     }
 
-    .future-card {
-      opacity: .8;
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
     }
 
-    .badge {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      margin-bottom: 10px;
+    th {
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     footer {
+      background: var(--dark-bg);
+      color: #9ca3af;
+      padding: 35px 20px;
       text-align: center;
-      color: var(--muted);
-      padding: 30px;
+      font-size: 14px;
     }
 
-    @media (max-width: 850px) {
-      .stats,
-      .future-grid {
-        grid-template-columns: 1fr 1fr;
+    @media(max-width: 768px) {
+      .grid-2, .grid-3, .btn-row {
+        grid-template-columns: 1fr;
+        flex-direction: column;
       }
 
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .stats,
-      .future-grid,
-      .two {
-        grid-template-columns: 1fr;
-      }
-
-      .inventory-item {
-        grid-template-columns: 1fr;
+      .card {
+        padding: 22px;
       }
     }
   </style>
@@ -286,402 +297,282 @@
 
 <header>
   <div class="logo">Resell<span>Wise</span></div>
-  <button class="theme-btn" onclick="toggleTheme()">Light / Dark</button>
+  <a href="index.html">← MicroWebLab</a>
 </header>
 
 <main>
 
   <section class="hero">
-    <h1>Know your profit before you sell.</h1>
-    <p>
-      Calculate real resale profit, margins and ROI. Track inventory,
-      sales and expenses across your favorite marketplaces.
-    </p>
+    <div class="tag">🛒 Pametni Reseller Hub</div>
+    <h1>Pretraga platformi, kalkulator dobiti i upravljanje zalihama</h1>
+    <p>Sve što vam je potrebno za uspješno preprodavanje artikala na više od 14 globalnih i lokalnih tržnica na jednom mjestu.</p>
   </section>
 
-  <section class="stats">
-    <div class="card">
-      <div class="stat-label">Total Revenue</div>
-      <div class="stat-value" id="totalRevenue">$0.00</div>
+  <!-- MODUL 1: PRETRAŽIVAČ PLATFORMI -->
+  <section class="card">
+    <h2>🌐 Pretraživač Tržišta & Platformi</h2>
+    <p class="intro-p">Upišite naziv artikla ili model i pretražite sve vodeće e-commerce platforme jednim klikom.</p>
+
+    <div class="form-group">
+      <label for="itemQuery">Naziv Artikla / Brand / Model</label>
+      <input id="itemQuery" placeholder="npr. Nike Air Max 90, iPhone 13 Pro 128GB, Sony WH-1000XM4">
     </div>
 
-    <div class="card">
-      <div class="stat-label">Total Profit</div>
-      <div class="stat-value" id="totalProfit">$0.00</div>
+    <div class="btn-row">
+      <button class="btn-search" onclick="searchAllPlatforms()">🌐 Pretraži Sve Platforme</button>
+      <button class="btn-ai" onclick="searchWithAI()">✨ AI Analiza Cijene</button>
     </div>
 
-    <div class="card">
-      <div class="stat-label">Items Tracked</div>
-      <div class="stat-value" id="itemsTracked">0</div>
-    </div>
-
-    <div class="card">
-      <div class="stat-label">Average ROI</div>
-      <div class="stat-value" id="averageROI">0%</div>
-    </div>
-  </section>
-
-  <section class="grid">
-
-    <div class="card">
-      <h2>Profit Calculator</h2>
-
-      <label>Item name</label>
-      <input id="itemName" placeholder="Example: Nike Air Jordan">
-
-      <label>Marketplace</label>
-      <select id="marketplace">
-        <option>eBay</option>
-        <option>Amazon</option>
-        <option>Walmart Marketplace</option>
-        <option>Facebook Marketplace</option>
-        <option>Etsy</option>
-        <option>Poshmark</option>
-        <option>Mercari</option>
-        <option>Depop</option>
-        <option>Vinted</option>
-        <option>Temu</option>
-        <option>AliExpress</option>
-        <option>eBay Motors</option>
-        <option>AutoScout24</option>
-        <option>Mobile.de</option>
-        <option>Temu</option>
-        <option>Other</option>
-      </select>
-
-      <label>Category</label>
-      <select id="category">
-        <option>Auto Parts</option>
-        <option>Cars</option>
-        <option>Motorcycles</option>
-        <option>Electronics</option>
-        <option>Fashion</option>
-        <option>Other</option>
-      </select>
-
-      <label>OEM / Part Number</label>
-      <input id="partNumber" placeholder="e.g. 06H103495AH">
-
-      <div class="two">
-        <div>
-          <label>Purchase price</label>
-          <input id="purchase" type="number" min="0" step="0.01" placeholder="40.00">
-        </div>
-
-        <div>
-          <label>Sale price</label>
-          <input id="sale" type="number" min="0" step="0.01" placeholder="75.00">
-        </div>
-      </div>
-
-      <div class="two">
-        <div>
-          <label>Shipping cost</label>
-          <input id="shipping" type="number" min="0" step="0.01" value="0">
-        </div>
-
-        <div>
-          <label>Other costs</label>
-          <input id="otherCosts" type="number" min="0" step="0.01" value="0">
-        </div>
-      </div>
-
-      <label>Marketplace fee (%)</label>
-      <input id="fee" type="number" min="0" step="0.01" value="0">
-
-      <button class="primary-btn" onclick="calculateProfit()">
-        Calculate Profit
-      </button>
-
-      <div class="result">
-        <div class="result-row">
-          <span>Marketplace fee</span>
-        <label>Quantity</label>
-<input id="quantity" type="number" min="1" value="1">  
-         <strong id="feeResult">$0.00</strong>
-        </div>
-
-        <div class="result-row">
-          <span>Total costs</span>
-          <strong id="costResult">$0.00</strong>
-        </div>
-
-        <div class="result-row">
-          <span>Net profit</span>
-          <strong class="profit" id="profitResult">$0.00</strong>
-        </div>
-
-        <div class="result-row">
-          <span>Profit margin</span>
-          <strong id="marginResult">0%</strong>
-        </div>
-
-        <div class="result-row">
-          <span>ROI</span>
-          <strong id="roiResult">0%</strong>
-        </div>
-      </div>
-
-      <button class="primary-btn" onclick="saveItem()">
-        Save Item
-      </button>
-    </div>
-
-    <div class="card">
-      <h2>Marketplace Tools</h2>
-      <p style="color:var(--muted)">
-        ResellWise is being prepared for the world's major resale marketplaces.
-        Fee presets and deeper integrations can be updated independently.
-      </p>
-
-      <div class="marketplaces">
-        <span class="marketplace">eBay</span>
-        <span class="marketplace">Amazon</span>
-        <span class="marketplace">Walmart</span>
-        <span class="marketplace">Facebook</span>
-        <span class="marketplace">Etsy</span>
-        <span class="marketplace">Poshmark</span>
-        <span class="marketplace">Mercari</span>
-        <span class="marketplace">Depop</span>
-        <span class="marketplace">Vinted</span>
-        <span class="marketplace">Temu</span>
-        <span class="marketplace">AliExpress</span>
-      </div>
-
-      <div class="section">
-        <h2>Settings</h2>
-
-        <label>Currency</label>
-        <select id="currency" onchange="changeCurrency()">
-          <option value="$">USD ($)</option>
-          <option value="€">EUR (€)</option>
-          <option value="£">GBP (£)</option>
-          <option value="C$">CAD (C$)</option>
-          <option value="A$">AUD (A$)</option>
-        </select>
-      </div>
-    </div>
-
-  </section>
-
-  <section class="card section">
-    <h2>Inventory & Sales</h2>
-
-    <div id="inventory">
-      <p id="emptyInventory" style="color:var(--muted)">
-        No items yet. Calculate a deal and save your first item.
-      </p>
+    <div class="platforms-tags">
+      <span class="tag-item">🏷️ eBay</span>
+      <span class="tag-item">📦 Amazon</span>
+      <span class="tag-item">👥 Facebook Marketplace</span>
+      <span class="tag-item">👗 Vinted</span>
+      <span class="tag-item">👚 Depop</span>
+      <span class="tag-item">👜 Poshmark</span>
+      <span class="tag-item">🛍️ Mercari</span>
+      <span class="tag-item">📦 Temu</span>
+      <span class="tag-item">🌐 AliExpress</span>
+      <span class="tag-item">🎨 Etsy</span>
+      <span class="tag-item">🛒 Walmart</span>
+      <span class="tag-item">🏎️ eBay Motors</span>
+      <span class="tag-item">🚗 Mobile.de</span>
+      <span class="tag-item">🚗 AutoScout24</span>
     </div>
   </section>
 
-  <section class="future-grid">
+  <!-- MODUL 2: KALKULATOR PROFITA -->
+  <section class="card">
+    <h2>🧮 Kalkulator Dobiti i Marže</h2>
+    <p class="intro-p">Izračunajte točnu zaradu nakon troškova nabave, dostave i naknada platforme.</p>
 
-    <div class="card future-card">
-      <span class="badge">COMING SOON</span>
-      <h2>AI Deal Analyzer</h2>
-      <p>Analyze potential deals, expected profit and resale opportunities.</p>
+    <div class="grid-3">
+      <div class="form-group">
+        <label for="buyPrice">Nabavna Cijena (€)</label>
+        <input type="number" id="buyPrice" placeholder="npr. 50">
+      </div>
+
+      <div class="form-group">
+        <label for="sellPrice">Prodajna Cijena (€)</label>
+        <input type="number" id="sellPrice" placeholder="npr. 120">
+      </div>
+
+      <div class="form-group">
+        <label for="shippingCost">Trošak Dostave (€)</label>
+        <input type="number" id="shippingCost" placeholder="npr. 5">
+      </div>
     </div>
 
-    <div class="card future-card">
-      <span class="badge">COMING SOON</span>
-      <h2>Receipt Scanner</h2>
-      <p>Scan receipts and automatically add purchase costs to your inventory.</p>
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="platformFee">Naknada Platforme (%)</label>
+        <input type="number" id="platformFee" placeholder="npr. 13 (eBay ~13%)" value="13">
+      </div>
+
+      <div class="form-group">
+        <label for="otherCosts">Ostali Troškovi (€)</label>
+        <input type="number" id="otherCosts" placeholder="npr. pakiranje 2" value="0">
+      </div>
     </div>
 
-    <div class="card future-card">
-      <span class="badge">PRO</span>
-      <h2>Advanced Analytics</h2>
-      <p>Monthly profit, marketplace performance, expenses and sales trends.</p>
+    <button class="btn-calc" onclick="calculateProfit()">Izračunaj Dobit</button>
+
+    <div id="calcResult" class="result-box">
+      <h3 style="margin-top:0; color: var(--dark-bg);">Rezultat Izračuna:</h3>
+      <div class="result-grid">
+        <div class="result-item">
+          <small>Čista Dobit</small>
+          <div class="val" id="resProfit">0.00 €</div>
+        </div>
+        <div class="result-item">
+          <small>Marža (Margin)</small>
+          <div class="val" id="resMargin">0 %</div>
+        </div>
+        <div class="result-item">
+          <small>Povrat (ROI)</small>
+          <div class="val" id="resROI">0 %</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODUL 3: EVIDENCIJA ZALIHA (INVENTORY) -->
+  <section class="card">
+    <h2>📦 Evidencija Zaliha (Inventory Tracker)</h2>
+    <p class="intro-p">Vodite evidenciju kupljenih artikala lokalno u vašem pregledniku.</p>
+
+    <div class="grid-3">
+      <div class="form-group">
+        <label for="invName">Naziv Artikla</label>
+        <input id="invName" placeholder="npr. Levi's 501 Jeans">
+      </div>
+      <div class="form-group">
+        <label for="invBuy">Plaćeno (€)</label>
+        <input type="number" id="invBuy" placeholder="20">
+      </div>
+      <div class="form-group">
+        <label for="invTarget">Ciljana Prodaja (€)</label>
+        <input type="number" id="invTarget" placeholder="50">
+      </div>
     </div>
 
+    <button class="btn-search" style="width: 100%; margin-top: 5px;" onclick="addInventoryItem()">+ Dodaj na Listu Zaliha</button>
+
+    <table id="invTable">
+      <thead>
+        <tr>
+          <th>Artikal</th>
+          <th>Nabavno (€)</th>
+          <th>Cilj (€)</th>
+          <th>Akcija</th>
+        </tr>
+      </thead>
+      <tbody id="invBody">
+        <!-- Stavke se dinamički učitavaju -->
+      </tbody>
+    </table>
   </section>
 
 </main>
 
 <footer>
-  ResellWise — A MicroWebLab Project
+  <p>© 2026 ResellWise · A MicroWebLab project</p>
 </footer>
 
 <script>
-  let currency = localStorage.getItem("rwCurrency") || "$";
-  let items = JSON.parse(localStorage.getItem("rwItems") || "[]");
-  let lastCalculation = null;
-
-  document.getElementById("currency").value = currency;
-
-  const savedTheme = localStorage.getItem("rwTheme");
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark");
-  }
-
-  function money(value) {
-    return currency + Number(value).toFixed(2);
-  }
-
-  function numberValue(id) {
-    return parseFloat(document.getElementById(id).value) || 0;
-  }
-
-  function calculateProfit() {
-    const purchase = numberValue("purchase");
-    const sale = numberValue("sale");
-    const shipping = numberValue("shipping");
-    const other = numberValue("otherCosts");
-    const feePercent = numberValue("fee");
-
-    const marketplaceFee = sale * (feePercent / 100);
-    const totalCosts = purchase + shipping + other + marketplaceFee;
-    const profit = sale - totalCosts;
-
-    const margin = sale > 0 ? (profit / sale) * 100 : 0;
-    const roi = purchase > 0 ? (profit / purchase) * 100 : 0;
-
-    document.getElementById("feeResult").textContent = money(marketplaceFee);
-    document.getElementById("costResult").textContent = money(totalCosts);
-
-    const profitElement = document.getElementById("profitResult");
-    profitElement.textContent = money(profit);
-    profitElement.style.color = profit >= 0 ? "var(--good)" : "var(--bad)";
-
-    document.getElementById("marginResult").textContent = margin.toFixed(1) + "%";
-    document.getElementById("roiResult").textContent = roi.toFixed(1) + "%";
-
-    lastCalculation = {
-      name: document.getElementById("itemName").value || "Unnamed item",
-      marketplace: document.getElementById("marketplace").value,
-      purchase,
-      sale,
-      shipping,
-      other,
-      feePercent,
-      marketplaceFee,
-      totalCosts,
-      profit,
-      margin,
-      roi,
-      status: "Tracked",
-      createdAt: new Date().toISOString()
-    };
-
-    trackEvent("profit_calculation", {
-      marketplace: lastCalculation.marketplace
-    });
-  }
-
-  function saveItem() {
-    if (!lastCalculation) {
-      calculateProfit();
+  // Analytics praćenje
+  function trackGAEvent(eventName, params = {}) {
+    if (typeof gtag === "function") {
+      gtag("event", eventName, params);
     }
-
-    items.unshift(lastCalculation);
-    localStorage.setItem("rwItems", JSON.stringify(items));
-
-    trackEvent("item_added", {
-      marketplace: lastCalculation.marketplace
-    });
-
-    renderInventory();
-    updateDashboard();
   }
 
-  function deleteItem(index) {
-    items.splice(index, 1);
-    localStorage.setItem("rwItems", JSON.stringify(items));
-
-    renderInventory();
-    updateDashboard();
-  }
-
-  function renderInventory() {
-    const container = document.getElementById("inventory");
-
-    if (!items.length) {
-      container.innerHTML =
-        '<p style="color:var(--muted)">No items yet. Calculate a deal and save your first item.</p>';
+  // Pretraga svih platformi
+  function searchAllPlatforms() {
+    const query = document.getElementById("itemQuery").value.trim();
+    if (!query) {
+      alert("Molimo unesite naziv artikla za pretragu.");
       return;
     }
 
-    container.innerHTML = items.map((item, index) => `
-      <div class="inventory-item">
-        <strong>${escapeHTML(item.name)}</strong>
-        <span>${escapeHTML(item.marketplace)}</span>
-        <span>${money(item.sale)}</span>
-        <span style="color:${item.profit >= 0 ? 'var(--good)' : 'var(--bad)'}">
-          ${money(item.profit)}
-        </span>
-        <button class="small-btn" onclick="deleteItem(${index})">Delete</button>
-      </div>
-    `).join("");
+    const encoded = encodeURIComponent(query);
+
+    const urls = [
+      `https://www.google.com/search?q=${encoded}`,
+      `https://www.ebay.com/sch/i.html?_nkw=${encoded}`,
+      `https://www.amazon.com/s?k=${encoded}`,
+      `https://www.facebook.com/marketplace/search/?query=${encoded}`,
+      `https://www.vinted.com/catalog?search_text=${encoded}`,
+      `https://www.depop.com/search/?q=${encoded}`,
+      `https://poshmark.com/search?query=${encoded}`,
+      `https://www.mercari.com/search/?keyword=${encoded}`,
+      `https://www.temu.com/search_result.html?search_key=${encoded}`,
+      `https://www.aliexpress.com/w/wholesale-${encoded}.html`,
+      `https://www.etsy.com/search?q=${encoded}`,
+      `https://www.walmart.com/search?q=${encoded}`,
+      `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${encoded}`,
+      `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=${encoded}`,
+      `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&sort=standard&desc=0&query=${encoded}`
+    ];
+
+    urls.forEach((url) => {
+      window.open(url, "_blank");
+    });
+
+    trackGAEvent("resellwise_search", { search_query: query });
   }
 
-  function updateDashboard() {
-    const revenue = items.reduce((sum, item) => sum + item.sale, 0);
-    const profit = items.reduce((sum, item) => sum + item.profit, 0);
+  // AI pretraga cijene
+  function searchWithAI() {
+    const query = document.getElementById("itemQuery").value.trim();
+    if (!query) {
+      alert("Molimo unesite naziv artikla.");
+      return;
+    }
 
-    const averageROI = items.length
-      ? items.reduce((sum, item) => sum + item.roi, 0) / items.length
-      : 0;
+    const fullPrompt = `Kao stručnjak za reselling, analiziraj prosječnu tržišnu cijenu (rabljeno/novo), potražnju i potencijalnu maržu za artikl: ${query}`;
+    const url = `https://chatgpt.com/?q=${encodeURIComponent(fullPrompt)}`;
 
-    document.getElementById("totalRevenue").textContent = money(revenue);
-    document.getElementById("totalProfit").textContent = money(profit);
-    document.getElementById("itemsTracked").textContent = items.length;
-    document.getElementById("averageROI").textContent =
-      averageROI.toFixed(1) + "%";
+    trackGAEvent("resellwise_ai_search", { search_query: query });
+    window.open(url, "_blank");
   }
 
-  function changeCurrency() {
-    currency = document.getElementById("currency").value;
-    localStorage.setItem("rwCurrency", currency);
+  // Kalkulator dobiti
+  function calculateProfit() {
+    const buy = parseFloat(document.getElementById("buyPrice").value) || 0;
+    const sell = parseFloat(document.getElementById("sellPrice").value) || 0;
+    const shipping = parseFloat(document.getElementById("shippingCost").value) || 0;
+    const feePercent = parseFloat(document.getElementById("platformFee").value) || 0;
+    const other = parseFloat(document.getElementById("otherCosts").value) || 0;
+
+    if (sell === 0) {
+      alert("Unesite prodajnu cijenu.");
+      return;
+    }
+
+    const feeAmount = (sell * feePercent) / 100;
+    const totalCosts = buy + shipping + feeAmount + other;
+    const profit = sell - totalCosts;
+    const margin = (profit / sell) * 100;
+    const roi = buy > 0 ? (profit / buy) * 100 : 0;
+
+    document.getElementById("resProfit").innerText = profit.toFixed(2) + " €";
+    document.getElementById("resMargin").innerText = margin.toFixed(1) + " %";
+    document.getElementById("resROI").innerText = roi.toFixed(1) + " %";
+
+    document.getElementById("calcResult").style.display = "block";
+
+    trackGAEvent("resellwise_calc", { profit: profit, margin: margin });
+  }
+
+  // Inventar (zalihe) lokalno spremanje
+  let inventory = JSON.parse(localStorage.getItem("resellwise_inventory") || "[]");
+
+  function renderInventory() {
+    const tbody = document.getElementById("invBody");
+    tbody.innerHTML = "";
+
+    inventory.forEach((item, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><strong>${item.name}</strong></td>
+        <td>${item.buy.toFixed(2)} €</td>
+        <td>${item.target.toFixed(2)} €</td>
+        <td><button style="padding: 4px 8px; font-size:12px; background:#ef4444; color:white;" onclick="removeInventory(${index})">Ukloni</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addInventoryItem() {
+    const name = document.getElementById("invName").value.trim();
+    const buy = parseFloat(document.getElementById("invBuy").value) || 0;
+    const target = parseFloat(document.getElementById("invTarget").value) || 0;
+
+    if (!name) {
+      alert("Unesite naziv artikla.");
+      return;
+    }
+
+    inventory.push({ name, buy, target });
+    localStorage.setItem("resellwise_inventory", JSON.stringify(inventory));
+
+    document.getElementById("invName").value = "";
+    document.getElementById("invBuy").value = "";
+    document.getElementById("invTarget").value = "";
 
     renderInventory();
-    updateDashboard();
-
-    if (lastCalculation) {
-      calculateProfit();
-    }
+    trackGAEvent("resellwise_add_inventory", { item_name: name });
   }
 
-  function toggleTheme() {
-    document.body.classList.toggle("dark");
-
-    localStorage.setItem(
-      "rwTheme",
-      document.body.classList.contains("dark") ? "dark" : "light"
-    );
+  function removeInventory(index) {
+    inventory.splice(index, 1);
+    localStorage.setItem("resellwise_inventory", JSON.stringify(inventory));
+    renderInventory();
   }
 
-  function escapeHTML(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  /*
-    GOOGLE ANALYTICS READY
-
-    Later we will insert the GA4 tag in <head>.
-    These events are already prepared:
-    - profit_calculation
-    - item_added
-    - marketplace_selected (future)
-    - item_sold (future)
-    - csv_export (future)
-    - receipt_scan (future)
-    - ai_deal_analysis (future)
-    - pro_upgrade_click (future)
-  */
-
-  function trackEvent(eventName, parameters = {}) {
-    if (typeof gtag === "function") {
-      gtag("event", eventName, parameters);
-    }
-  }
-
+  // Inicijalno učitavanje
   renderInventory();
-  updateDashboard();
 </script>
 
 </body>
