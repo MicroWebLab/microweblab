@@ -1,280 +1,287 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hr">
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5J05KH0J6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-Q5J05KH0J6');
+  </script>
 
-<title>MicroWebLab | Smart Web Tools for Everyday Problems</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="MicroWebLab develops practical web applications including ResellWise, EVChargeWise and future productivity tools.">
+  <title>MicroWebLab | Pametni Web Alati za Svakodnevne Potrebe</title>
 
-<style>
+  <meta name="description" content="MicroWebLab razvija praktične web aplikacije uključujući ResellWise, EVChargeWise i alate za produktivnost.">
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+  <style>
 
-body{
-font-family:Arial,Helvetica,sans-serif;
-background:#f4f7fb;
-color:#222;
-line-height:1.6;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-header{
-background:#111827;
-color:white;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 8%;
-position:sticky;
-top:0;
-}
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #222;
+      line-height: 1.6;
+    }
 
-.logo{
-font-size:28px;
-font-weight:bold;
-}
+    header {
+      background: #111827;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 8%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-nav a{
-color:white;
-text-decoration:none;
-margin-left:25px;
-font-weight:bold;
-}
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-.hero{
-background:linear-gradient(135deg,#2563eb,#0f172a);
-color:white;
-padding:100px 20px;
-text-align:center;
-}
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 25px;
+      font-weight: bold;
+      transition: opacity 0.2s;
+    }
 
-.hero h1{
-font-size:56px;
-margin-bottom:20px;
-}
+    nav a:hover {
+      opacity: 0.8;
+    }
 
-.hero p{
-font-size:22px;
-max-width:700px;
-margin:auto;
-opacity:.9;
-margin-bottom:35px;
-}
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #0f172a);
+      color: white;
+      padding: 100px 20px;
+      text-align: center;
+    }
 
-.btn{
-display:inline-block;
-background:white;
-color:#111827;
-padding:16px 30px;
-border-radius:10px;
-text-decoration:none;
-font-weight:bold;
-transition:.25s;
-}
+    .hero h1 {
+      font-size: 56px;
+      margin-bottom: 20px;
+    }
 
-.btn:hover{
-transform:translateY(-2px);
-}
+    .hero p {
+      font-size: 22px;
+      max-width: 700px;
+      margin: auto;
+      opacity: .9;
+      margin-bottom: 35px;
+    }
 
-section{
-padding:80px 8%;
-}
+    .btn {
+      display: inline-block;
+      background: white;
+      color: #111827;
+      padding: 16px 30px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: .25s;
+    }
 
-h2{
-text-align:center;
-font-size:38px;
-margin-bottom:15px;
-}
+    .btn:hover {
+      transform: translateY(-2px);
+    }
 
-.subtitle{
-text-align:center;
-color:#666;
-margin-bottom:50px;
-}
+    section {
+      padding: 80px 8%;
+    }
 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:30px;
-}
+    h2 {
+      text-align: center;
+      font-size: 38px;
+      margin-bottom: 15px;
+    }
 
-.card{
-background:white;
-padding:30px;
-border-radius:18px;
-box-shadow:0 8px 30px rgba(0,0,0,.08);
-transition:.3s;
-}
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 50px;
+    }
 
-.card:hover{
-transform:translateY(-8px);
-}
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
 
-.card h3{
-margin-bottom:15px;
-font-size:25px;
-}
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+      transition: .3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-.card p{
-color:#666;
-margin-bottom:25px;
-}
+    .card:hover {
+      transform: translateY(-8px);
+    }
 
-.button{
-display:inline-block;
-background:#2563eb;
-color:white;
-padding:12px 20px;
-border-radius:8px;
-text-decoration:none;
-font-weight:bold;
-}
+    .card h3 {
+      margin-bottom: 15px;
+      font-size: 25px;
+    }
 
-.about{
-background:white;
-text-align:center;
-}
+    .card p {
+      color: #666;
+      margin-bottom: 25px;
+    }
 
-.about p{
-max-width:700px;
-margin:auto;
-color:#666;
-font-size:18px;
-}
+    .button {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      text-align: center;
+    }
 
-footer{
-background:#111827;
-color:white;
-text-align:center;
-padding:35px;
-margin-top:40px;
-}
+    .button-ev {
+      background: #10b981;
+    }
 
-@media(max-width:700px){
+    .about {
+      background: white;
+      text-align: center;
+    }
 
-.hero h1{
-font-size:38px;
-}
+    .about p {
+      max-width: 700px;
+      margin: auto;
+      color: #666;
+      font-size: 18px;
+    }
 
-.hero p{
-font-size:18px;
-}
+    footer {
+      background: #111827;
+      color: white;
+      text-align: center;
+      padding: 35px;
+      margin-top: 40px;
+    }
 
-nav{
-display:none;
-}
+    @media(max-width:700px){
+      .hero h1 {
+        font-size: 38px;
+      }
 
-}
+      .hero p {
+        font-size: 18px;
+      }
 
-</style>
+      nav {
+        display: none;
+      }
+    }
+
+  </style>
 
 </head>
 
 <body>
 
 <header>
-
-<div class="logo">MicroWebLab</div>
-
-<nav>
-<a href="#projects">Projects</a>
-<a href="#about">About</a>
-</nav>
-
+  <div class="logo">MicroWebLab</div>
+  <nav>
+    <a href="#projects">Projekti</a>
+    <a href="#about">O nama</a>
+  </nav>
 </header>
 
 <section class="hero">
-
-<h1>Simple Tools.<br>Real Solutions.</h1>
-
-<p>
-Building lightweight web apps that solve everyday problems.
-Focused, practical and constantly improving.
-</p>
-
-<a class="btn" href="#projects">
-Explore Projects
-</a>
-
+  <h1>Jednostavni Alati.<br>Prava Rješenja.</h1>
+  <p>
+    Izrađujemo brze i praktične web aplikacije koje rješavaju svakodnevne izazove.
+  </p>
+  <a class="btn" href="#projects">Istraži Projekte</a>
 </section>
 
 <section id="projects">
+  <h2>Projekti</h2>
+  <p class="subtitle">Trenutne i nadolazeće aplikacije iz MicroWebLab radionice.</p>
 
-<h2>Projects</h2>
+  <div class="cards">
 
-<p class="subtitle">
-Current and upcoming applications from MicroWebLab.
-</p>
+    <!-- CARD 1: RESELLWISE -->
+    <div class="card">
+      <div>
+        <h3>ResellWise</h3>
+        <p>
+          Kalkulator čiste dobiti i marže, pretraživač više od 14 e-commerce platformi jednim klikom, praćenje zaliha i AI analiza cijena.
+        </p>
+      </div>
+      <a class="button" href="resellwise.html" onclick="trackProjectClick('ResellWise')">
+        Otvori ResellWise
+      </a>
+    </div>
 
-<div class="cards">
+    <!-- CARD 2: EVCHARGEWISE -->
+    <div class="card">
+      <div>
+        <h3>EVChargeWise</h3>
+        <p>
+          Preporuka kućnog punjača (Level 1 / Level 2) te pretraživač limarije, baterija, kablova i dijelova za sve električne i hibridne modele.
+        </p>
+      </div>
+      <a class="button button-ev" href="evchargewise.html" onclick="trackProjectClick('EVChargeWise')">
+        Otvori EVChargeWise
+      </a>
+    </div>
 
-<div class="card">
+    <!-- CARD 3: COMING SOON -->
+    <div class="card">
+      <div>
+        <h3>Novi Alati</h3>
+        <p>
+          Nove specijalizirane web aplikacije i pametni alati trenutno su u fazi razvoja.
+        </p>
+      </div>
+      <span style="font-weight:bold; color: #888;">Uskoro dostupno</span>
+    </div>
 
-<h3>ResellWise</h3>
-
-<p>
-Profit calculator, inventory management and analytics for resellers.
-</p>
-
-<a class="button" href="rosellwise.html">
-Open ResellWise
-</a>
-
-</div>
-
-<div class="card">
-
-<h3>EVChargeWise</h3>
-
-<p>
-Estimate home EV charging options and compare installation costs.
-</p>
-
-<a class="button" href="evchargewise.html">
-Open EVChargeWise
-</a>
-
-</div>
-
-<div class="card">
-
-<h3>More Tools</h3>
-
-<p>
-New niche web applications are currently under development.
-</p>
-
-<span style="font-weight:bold;">Coming Soon</span>
-
-</div>
-
-</div>
-
+  </div>
 </section>
 
 <section class="about" id="about">
-
-<h2>About MicroWebLab</h2>
-
-<p>
-MicroWebLab develops focused web applications designed around real user needs.
-Every project starts small, launches quickly, gathers feedback, and evolves based on real-world usage.
-</p>
-
+  <h2>O MicroWebLab-u</h2>
+  <p>
+    MicroWebLab razvija fokusirane web aplikacije prilagođene stvarnim potrebama korisnika.
+    Svaki projekt započinje jednostavno, brzo se lansira i kontinuirano unapređuje.
+  </p>
 </section>
 
 <footer>
-
-<p>© 2025 MicroWebLab • Built with ❤️ for practical web solutions.</p>
-
+  <p>© 2026 MicroWebLab • Razvijeno za jednostavnija i pametnija web rješenja.</p>
 </footer>
+
+<script>
+  function trackProjectClick(projectName) {
+    if (typeof gtag === "function") {
+      gtag("event", "open_project", {
+        project_name: projectName
+      });
+    }
+  }
+</script>
 
 </body>
 </html>
-
