@@ -1,599 +1,561 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hr">
 
 <head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5J05KH0J6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-Q5J05KH0J6');
+  </script>
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5J05KH0J6"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script>
-window.dataLayer = window.dataLayer || [];
+  <title>EVChargeWise & EV Auto Parts | Pronađi Punjač i Dijelove za EV</title>
+  <meta name="description" content="Pronađite idealan kućni punjač i pretražite sve dijelove (limarija, baterije, motori, oprema) za sve električne i hibridne automobile na vodećim platformama.">
 
-function gtag(){
-    dataLayer.push(arguments);
-}
-
-gtag('js', new Date());
-
-gtag('config', 'G-Q5J05KH0J6');
-</script>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>EVChargeWise | Home EV Charger Finder</title>
-
-<meta name="description"
-content="Answer a few simple questions and get a starting recommendation for your home EV charging setup.">
-
-<style>
-
-*{
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f5f7fa;
-    color:#172033;
-    line-height:1.6;
-}
-
-header{
-    background:#111827;
-    color:white;
-    padding:20px 8%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.logo{
-    font-size:24px;
-    font-weight:bold;
-}
-
-header a{
-    color:white;
-    text-decoration:none;
-}
-
-.hero{
-    text-align:center;
-    padding:70px 20px 35px;
-}
-
-.hero .tag{
-    font-size:14px;
-    font-weight:bold;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    color:#667085;
-}
-
-.hero h1{
-    max-width:850px;
-    margin:10px auto 15px;
-    font-size:48px;
-    line-height:1.12;
-}
-
-.hero p{
-    max-width:700px;
-    margin:auto;
-    font-size:19px;
-    color:#667085;
-}
-
-.finder{
-    max-width:750px;
-    margin:30px auto 70px;
-    background:white;
-    padding:38px;
-    border-radius:16px;
-    box-shadow:0 8px 30px rgba(0,0,0,.08);
-}
-
-.finder h2{
-    margin-top:0;
-}
-
-.finder-intro{
-    color:#667085;
-    margin-bottom:30px;
-}
-
-.question{
-    margin-bottom:25px;
-}
-
-label{
-    display:block;
-    font-weight:bold;
-    margin-bottom:8px;
-}
-
-select{
-    width:100%;
-    padding:14px;
-    border:1px solid #ccd2dc;
-    border-radius:8px;
-    background:white;
-    font-size:16px;
-}
-
-button{
-    width:100%;
-    padding:16px;
-    border:0;
-    border-radius:9px;
-    background:#111827;
-    color:white;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:.9;
-}
-
-#result{
-    display:none;
-    margin-top:30px;
-    padding:25px;
-    background:#edf7f1;
-    border-radius:10px;
-    border:1px solid #d5eadc;
-}
-
-#result h3{
-    margin-top:0;
-}
-
-.next{
-    font-weight:bold;
-}
-
-.notice{
-    margin-top:20px;
-    font-size:13px;
-    color:#667085;
-}
-
-.explain{
-    background:white;
-    padding:70px 8%;
-    text-align:center;
-}
-
-.explain h2{
-    font-size:32px;
-}
-
-.explain-intro{
-    max-width:720px;
-    margin:0 auto 40px;
-    color:#667085;
-}
-
-.cards{
-    max-width:900px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-}
-
-.card{
-    padding:30px;
-    background:#f6f8fb;
-    border-radius:12px;
-    text-align:left;
-}
-
-.card h3{
-    margin-top:0;
-}
-
-.card p{
-    color:#667085;
-}
-
-.future{
-    padding:65px 20px;
-    background:#111827;
-    color:white;
-    text-align:center;
-}
-
-.future p{
-    max-width:700px;
-    margin:auto;
-    color:#d1d5db;
-}
-
-footer{
-    padding:28px 20px;
-    text-align:center;
-    color:#667085;
-}
-
-@media(max-width:700px){
-
-    header{
-        padding:18px 20px;
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --dark-bg: #111827;
+      --border: #ccd2dc;
+      --accent: #8b5cf6;
+      --accent-dark: #7c3aed;
     }
 
-    .hero h1{
-        font-size:35px;
+    * {
+      box-sizing: border-box;
     }
 
-    .finder{
-        margin:20px 15px 50px;
-        padding:25px;
+    html {
+      scroll-behavior: smooth;
     }
 
-    .cards{
-        grid-template-columns:1fr;
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
     }
 
-}
+    header {
+      background: var(--dark-bg);
+      color: white;
+      padding: 20px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-</style>
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
 
+    .logo span {
+      color: var(--primary);
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 50px 20px 25px;
+    }
+
+    .hero .tag {
+      font-size: 13px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary-dark);
+      background: #d1fae5;
+      padding: 5px 12px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      max-width: 850px;
+      margin: 10px auto 15px;
+      font-size: clamp(32px, 4vw, 46px);
+      line-height: 1.15;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.06);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 40px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 24px;
+      color: var(--dark-bg);
+    }
+
+    .intro-p {
+      color: var(--muted);
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 15px 20px;
+      border: 0;
+      border-radius: 99px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-main {
+      background: var(--dark-bg);
+      color: white;
+      width: 100%;
+      border-radius: 9px;
+    }
+
+    .btn-main:hover {
+      background: #1f2937;
+    }
+
+    .btn-search {
+      background: var(--primary);
+      color: white;
+      flex: 1;
+      border-radius: 9px;
+    }
+
+    .btn-search:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-ai {
+      background: var(--accent);
+      color: white;
+      flex: 1;
+      border-radius: 9px;
+    }
+
+    .btn-ai:hover {
+      background: var(--accent-dark);
+    }
+
+    #result {
+      display: none;
+      margin-top: 25px;
+      padding: 22px;
+      background: #edf7f1;
+      border-radius: 10px;
+      border: 1px solid #d5eadc;
+    }
+
+    #result h3 {
+      margin-top: 0;
+      color: #065f46;
+    }
+
+    .notice {
+      margin-top: 15px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .platforms-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .tag-item {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .explain {
+      background: white;
+      padding: 50px 20px;
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .sub-card {
+      padding: 25px;
+      background: #f9fafb;
+      border-radius: 12px;
+      border: 1px solid #f3f4f6;
+    }
+
+    .sub-card h3 {
+      margin-top: 0;
+    }
+
+    .sub-card p {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    footer {
+      background: var(--dark-bg);
+      color: #9ca3af;
+      padding: 35px 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media(max-width: 768px) {
+      .grid-2, .cards-grid, .btn-row {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+      }
+
+      .card {
+        padding: 22px;
+      }
+    }
+  </style>
 </head>
-
 
 <body>
 
-
 <header>
-
-<div class="logo">
-EVChargeWise
-</div>
-
-<a href="index.html">
-MicroWebLab
-</a>
-
+  <div class="logo">EVCharge<span>Wise</span></div>
+  <a href="index.html">← MicroWebLab</a>
 </header>
-
 
 <main>
 
-
-<section class="hero">
-
-<div class="tag">
-Free Home EV Charging Guide
-</div>
-
-<h1>
-What kind of home charging setup fits your driving?
-</h1>
-
-<p>
-Answer three quick questions to get a simple starting
-recommendation for charging your electric vehicle at home.
-</p>
-
-</section>
-
-
-<section class="finder">
-
-<h2>
-Home EV Charger Finder
-</h2>
-
-<p class="finder-intro">
-Takes less than a minute.
-</p>
-
-
-<div class="question">
-
-<label for="vehicle">
-What type of plug-in vehicle do you drive?
-</label>
-
-<select id="vehicle">
-
-<option value="bev">
-Battery electric vehicle (BEV)
-</option>
-
-<option value="phev">
-Plug-in hybrid (PHEV)
-</option>
-
-</select>
-
-</div>
-
-
-<div class="question">
-
-<label for="miles">
-How far do you normally drive each day?
-</label>
-
-<select id="miles">
-
-<option value="15">
-Less than 20 miles
-</option>
-
-<option value="30">
-20–40 miles
-</option>
-
-<option value="55">
-40–70 miles
-</option>
-
-<option value="85">
-More than 70 miles
-</option>
-
-</select>
-
-</div>
-
-
-<div class="question">
-
-<label for="power">
-What electrical power is available near your parking space?
-</label>
-
-<select id="power">
-
-<option value="unknown">
-I'm not sure
-</option>
-
-<option value="120">
-Standard 120V outlet
-</option>
-
-<option value="240">
-240V service or outlet
-</option>
-
-</select>
-
-</div>
-
-
-<button onclick="recommendCharger()">
-Get My Recommendation
-</button>
-
-
-<div id="result">
-</div>
-
-
-</section>
-
-
-<section class="explain">
-
-<h2>
-Level 1 or Level 2?
-</h2>
-
-<p class="explain-intro">
-The right choice depends on your vehicle, daily driving,
-available electrical service and how quickly you need to recharge.
-</p>
-
-
-<div class="cards">
-
-
-<div class="card">
-
-<h3>
-Level 1
-</h3>
-
-<p>
-Uses a standard 120V household outlet.
-It can work for drivers with relatively low daily mileage
-or some plug-in hybrids, but charging is slower.
-</p>
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Level 2
-</h3>
-
-<p>
-Uses 240V electrical service and provides substantially
-faster home charging. Installation requirements vary by home.
-</p>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-<section class="future">
-
-<h2>
-EVChargeWise is just getting started.
-</h2>
-
-<p>
-Future versions can include vehicle-specific recommendations,
-charger comparisons, installation guidance and options for
-connecting drivers with qualified installers.
-</p>
-
-</section>
-
+  <section class="hero">
+    <div class="tag">⚡ Sve za Električna Vozila na Jednom Mjestu</div>
+    <h1>Pronađite kućni punjač i rezervne dijelove za vaš EV</h1>
+    <p>Odaberite odgovarajući sustav punjenja ili pretražite limariju, baterije, kablove i dijelove za sve modele električnih i hibridnih automobila.</p>
+  </section>
+
+  <!-- MODUL 1: DIJELOVI I OPREMA ZA EV -->
+  <section class="card">
+    <h2>🔍 Pretraživač EV Dijelova & Limarije</h2>
+    <p class="intro-p">Pretražite sve vodeće platforme odjednom za novu/rabljenu limariju, OEM komponente, punjače ili baterije.</p>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="evModel">Marka i Model EV Automobila</label>
+        <input id="evModel" placeholder="npr. Tesla Model 3, Nissan Leaf, BMW i4, VW ID.4">
+      </div>
+
+      <div class="form-group">
+        <label for="partType">Kategorija / Dio</label>
+        <select id="partType">
+          <option value="Limarija i karoserija (Branik, vrata, blatobran, hauba)">Limarija i karoserija</option>
+          <option value="Svjetla i farovi (LED, Matrix)">Svjetla i Farovi</option>
+          <option value="Kabel za punjenje i Adapter (Type 2, CCS, Wallbox)">Kabel za punjenje / Wallbox</option>
+          <option value="Pogonska Baterija i Inverter">Baterija / Inverter / Elektronika</option>
+          <option value="Elektromotor i Pogon">Elektromotor i Pogon</option>
+          <option value="Ovjes, kočnice i kotači">Ovjes, Kočnice i Kotači</option>
+          <option value="Unutrašnjost i Oprema">Unutrašnjost i Dodatna oprema</option>
+          <option value="Ostalo / Svi dijelovi">Svi dijelovi</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="partNumber">OEM Broj dijela ili Kataloški Broj (opcionalno)</label>
+      <input id="partNumber" placeholder="npr. 1084170-00-E ili 1EA941035">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-search" onclick="searchEVParts()">🌐 Pretraži Sve Platforme</button>
+      <button class="btn-ai" onclick="searchEVWithAI()">✨ AI Analiza i Pronalaženje</button>
+    </div>
+
+    <div class="platforms-tags">
+      <span class="tag-item">🚗 AutoScout24</span>
+      <span class="tag-item">🚗 Mobile.de</span>
+      <span class="tag-item">🏎️ eBay Motors</span>
+      <span class="tag-item">🛒 Walmart</span>
+      <span class="tag-item">👗 Vinted</span>
+      <span class="tag-item">👚 Depop</span>
+      <span class="tag-item">📦 Temu</span>
+      <span class="tag-item">🌐 AliExpress</span>
+      <span class="tag-item">🏷️ eBay</span>
+      <span class="tag-item">📦 Amazon</span>
+      <span class="tag-item">👥 Facebook Marketplace</span>
+      <span class="tag-item">👜 Poshmark</span>
+      <span class="tag-item">🛍️ Mercari</span>
+      <span class="tag-item">🎨 Etsy</span>
+    </div>
+  </section>
+
+  <!-- MODUL 2: FINDER KUĆNOG PUNJAČA -->
+  <section class="card">
+    <h2>🔌 Home EV Charger Finder</h2>
+    <p class="intro-p">Odgovorite na tri brza pitanja i saznajte koja opcija kućnog punjača najbolje odgovara vašim dnevnim potrebama.</p>
+
+    <div class="form-group">
+      <label for="vehicle">Koju vrstu vozila vozite?</label>
+      <select id="vehicle">
+        <option value="bev">Potpuno električno vozilo (BEV)</option>
+        <option value="phev">Plug-in hibrid (PHEV)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="miles">Koliko kilometara prosječno prelazite dnevno?</label>
+      <select id="miles">
+        <option value="15">Manje od 30 km (spora vožnja)</option>
+        <option value="30">30 – 65 km (prosječna gradska vožnja)</option>
+        <option value="55">65 – 110 km (duža putovanja)</option>
+        <option value="85">Više od 110 km (intenzivna vožnja)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="power">Kakav priključak imate u blizini parkirnog mjesta?</label>
+      <select id="power">
+        <option value="unknown">Nisam siguran / Sigurna</option>
+        <option value="120">Standardna kućna utičnica (230V / 16A monofazna)</option>
+        <option value="240">Trofazni priključak ili namjenska stanica (400V / Wallbox)</option>
+      </select>
+    </div>
+
+    <button class="btn-main" onclick="recommendCharger()">Saznaj Preporuku za Punjač</button>
+
+    <div id="result"></div>
+  </section>
+
+  <!-- VODIČ I OBJAŠNJENJA -->
+  <section class="explain">
+    <h2 style="margin-top:0; text-align:center;">Level 1 ili Level 2 Punjenje?</h2>
+    <p style="text-align:center; color: var(--muted);">Izbor punjača ovisi o vrsti baterije, dnevnoj kilometraži i elektroinstalaciji objekta.</p>
+
+    <div class="cards-grid">
+      <div class="sub-card">
+        <h3>Level 1 (Standardni priključak)</h3>
+        <p>Koristi standardnu kućnu utičnicu. Odlično rješenje za plug-in hibride ili vozače koji rade manje dnevne kilometraže te punim kapacitetom pune automobil preko noći.</p>
+      </div>
+
+      <div class="sub-card">
+        <h3>Level 2 (Wallbox / Trofazna struja)</h3>
+        <p>Zahtijeva 240V/400V instalaciju ili namjensku Wallbox stanicu. Omogućuje znatno brže punjenje i idealno je za potpuno električna vozila (BEV) s većim baterijama.</p>
+      </div>
+    </div>
+  </section>
 
 </main>
 
-
 <footer>
-
-<p>
-© 2026 EVChargeWise · A MicroWebLab project
-</p>
-
+  <p>© 2026 EVChargeWise & EV Auto Parts · A MicroWebLab project</p>
 </footer>
 
-
 <script>
+  // Google Analytics slanje evenata
+  function trackGAEvent(eventName, params = {}) {
+    if (typeof gtag === "function") {
+      gtag("event", eventName, params);
+    }
+  }
 
-function recommendCharger(){
+  // Funkcija za spajanje modela, kategorije i OEM broja
+  function getPartsQuery() {
+    const model = document.getElementById("evModel").value.trim();
+    const part = document.getElementById("partType").value;
+    const partNum = document.getElementById("partNumber").value.trim();
 
-    const vehicle =
-        document.getElementById("vehicle").value;
+    if (!model && !partNum) {
+      alert("Molimo unesite model automobila ili OEM broj dijela.");
+      return null;
+    }
 
-    const miles =
-        Number(document.getElementById("miles").value);
+    let queryParts = [];
+    if (model) queryParts.push(model);
+    if (partNum) queryParts.push(partNum);
+    if (!partNum && part) queryParts.push(part);
 
-    const power =
-        document.getElementById("power").value;
+    return queryParts.join(" ");
+  }
 
-    const result =
-        document.getElementById("result");
+  // Pretraživanje svih 14 platformi + Google odjednom
+  function searchEVParts() {
+    const query = getPartsQuery();
+    if (!query) return;
 
+    const encoded = encodeURIComponent(query);
+
+    const urls = [
+      `https://www.google.com/search?q=${encoded}`,
+      `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&sort=standard&desc=0&query=${encoded}`,
+      `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=${encoded}`,
+      `https://www.ebay.com/sch/i.html?_nkw=${encoded}`,
+      `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${encoded}`,
+      `https://www.amazon.com/s?k=${encoded}`,
+      `https://www.aliexpress.com/w/wholesale-${encoded}.html`,
+      `https://www.temu.com/search_result.html?search_key=${encoded}`,
+      `https://www.facebook.com/marketplace/search/?query=${encoded}`,
+      `https://www.etsy.com/search?q=${encoded}`,
+      `https://www.walmart.com/search?q=${encoded}`,
+      `https://www.vinted.com/catalog?search_text=${encoded}`,
+      `https://www.depop.com/search/?q=${encoded}`,
+      `https://poshmark.com/search?query=${encoded}`,
+      `https://www.mercari.com/search/?keyword=${encoded}`
+    ];
+
+    urls.forEach((url) => {
+      window.open(url, "_blank");
+    });
+
+    // GA Event Praćenje
+    trackGAEvent("ev_part_search", {
+      search_query: query,
+      model: document.getElementById("evModel").value,
+      part_type: document.getElementById("partType").value
+    });
+  }
+
+  // AI pretraživanje
+  function searchEVWithAI() {
+    const query = getPartsQuery();
+    if (!query) return;
+
+    const fullPrompt = `Pronađi dijelove, kompatibilnost, OEM zamjenske opcije i ponude na tržištu za električni auto: ${query}`;
+    const url = `https://chatgpt.com/?q=${encodeURIComponent(fullPrompt)}`;
+
+    trackGAEvent("ai_part_search", {
+      search_query: query
+    });
+
+    window.open(url, "_blank");
+  }
+
+  // Logika i preporuka za kućni punjač
+  function recommendCharger() {
+    const vehicle = document.getElementById("vehicle").value;
+    const miles = Number(document.getElementById("miles").value);
+    const power = document.getElementById("power").value;
+    const result = document.getElementById("result");
 
     let title = "";
     let text = "";
 
-
-    if(
-        vehicle === "phev" &&
-        miles <= 30 &&
-        power !== "240"
-    ){
-
-        title =
-        "Level 1 may be worth evaluating first.";
-
-        text =
-        "For a plug-in hybrid with relatively short daily driving, " +
-        "overnight Level 1 charging may be sufficient for many drivers. " +
-        "Level 2 remains an option if you want faster charging.";
-
+    if (vehicle === "phev" && miles <= 30 && power !== "240") {
+      title = "Level 1 punjenje može biti sasvim dovoljno.";
+      text = "Za plug-in hibride s kraćom dnevnom kilometražom, punjenje preko standardne kućne utičnice tijekom noći obično zadovoljava sve potrebe. Level 2 ostaje opcija ako želite znatno brže punjenje.";
+    } else if (miles <= 15 && power === "120") {
+      title = "Standardno Level 1 punjenje odgovara vašim potrebama.";
+      text = "S obzirom na to da prelazite manju dnevnu kilometražu, standardna utičnica stiže nadoknaditi potrošenu energiju tijekom noći. Level 2 nudi dodatnu fleksibilnost.";
+    } else {
+      title = "Preporučuje se ugradnja Level 2 (Wallbox) punjača.";
+      text = "Za potpuno električna vozila (BEV) i veće dnevne kilometraže, trofazni ili namjenski Level 2 punjač osigurava višestruko brže i sigurnije punjenje kod kuće.";
     }
 
-    else if(
-        miles <= 15 &&
-        power === "120"
-    ){
-
-        title =
-        "Your driving may be compatible with Level 1 charging.";
-
-        text =
-        "Because your typical daily mileage is relatively low, " +
-        "a standard 120V charging setup may replenish enough energy overnight. " +
-        "Level 2 can provide more flexibility and faster recovery.";
-
+    if (power === "unknown") {
+      text += " Budući da niste sigurni u vrstu instalacije, preporučujemo da ovlašteni električar provjeri vaše osigurače i priključak prije kupnje opreme.";
     }
 
-    else{
-
-        title =
-        "Level 2 is likely worth evaluating.";
-
-        text =
-        "For regular battery-electric driving or higher daily mileage, " +
-        "240V Level 2 charging generally offers substantially faster " +
-        "home charging than a standard 120V outlet.";
-
+    if (power === "120" && miles >= 30) {
+      text += " S obzirom na vašu dnevnu kilometražu, bilo bi korisno provjeriti s električarem mogućnost izvedbe jačeg 240V/400V strujnog kruga.";
     }
 
-
-    if(power === "unknown"){
-
-        text +=
-        " Since you are not sure what electrical service is available, " +
-        "a qualified electrician should evaluate the parking location " +
-        "and electrical panel before equipment is purchased or installed.";
-
-    }
-
-
-    if(
-        power === "120" &&
-        miles >= 30
-    ){
-
-        text +=
-        " Given your daily driving, it may be useful to ask a qualified " +
-        "electrician whether an appropriate 240V charging circuit can be installed.";
-
-    }
-
-
-    result.innerHTML =
-
-        "<h3>" + title + "</h3>" +
-
-        "<p>" + text + "</p>" +
-
-        "<p class='next'>Next step: Future versions of EVChargeWise will add vehicle-specific charger matching and installation options.</p>" +
-
-        "<p class='notice'>" +
-        "Educational guidance only. This tool does not determine electrical " +
-        "panel capacity, wiring, breaker size, permits, vehicle charging limits " +
-        "or compliance with local electrical codes. Electrical installations " +
-        "should be evaluated and performed by qualified professionals." +
-        "</p>";
-
+    result.innerHTML = `
+      <h3>${title}</h3>
+      <p>${text}</p>
+      <p class="notice">
+        <strong>Napomena:</strong> Preporuka je edukativnog karaktera. Provjeru električnih instalacija, snage priključka i ugradnju opreme uvijek treba prepustiti kvalificiranom električaru.
+      </p>
+    `;
 
     result.style.display = "block";
 
-
-    if(typeof gtag === "function"){
-
-        gtag(
-            "event",
-            "ev_charger_recommendation",
-            {
-                vehicle_type: vehicle,
-                daily_miles_group: miles,
-                available_power: power
-            }
-        );
-
-    }
-
-    result.scrollIntoView({
-        behavior:"smooth",
-        block:"nearest"
+    // Slati analytics događaj
+    trackGAEvent("ev_charger_recommendation", {
+      vehicle_type: vehicle,
+      daily_miles_group: miles,
+      available_power: power
     });
 
-}
-
+    result.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+  }
 </script>
-
 
 </body>
 </html>
-
-Ovaj drugi kod radi još jednu vrlo važnu stvar: kada korisnik klikne Get My Recommendation, šalje Analyticsu event:
