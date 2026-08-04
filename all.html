@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALL Engine | ResellWise Unified Multi-Platform Aggregator</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-card: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #475569;
+            --gold: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+            color: white;
+            font-weight: 900;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .brand-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand-title span {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-banner h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .hero-banner p {
+            color: var(--text-muted);
+            max-width: 750px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .search-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-input-wrapper input {
+            width: 100%;
+            padding: 16px 20px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), #059669);
+            color: white;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, var(--accent-purple), #6d28d9);
+            color: white;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .cat-chip {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+
+        .cat-chip.active, .cat-chip:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .grid-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .card-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .platform-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-ebay { background: rgba(235, 67, 53, 0.2); color: #f87171; border: 1px solid #ef4444; }
+        .tag-amazon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+        .tag-vinted { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
+        .tag-depop { background: rgba(236, 72, 153, 0.2); color: #f472b6; border: 1px solid #ec4899; }
+        .tag-etsy { background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid #f97316; }
+        .tag-auto { background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid #8b5cf6; }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .item-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .price-val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .price-est {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-card {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+
+        .btn-open {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-calc-direct {
+            background: var(--surface-card);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-card:hover {
+            opacity: 0.85;
+        }
+
+        /* Preset Queries */
+        .preset-section {
+            margin-top: 15px;
+        }
+        .preset-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .preset-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .preset-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .preset-btn:hover {
+            background: var(--surface-card);
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <span class="brand-badge">ALL</span>
+            <div class="brand-title">Resell<span>Wise</span> Aggregator</div>
+        </div>
+        <div>
+            <span style="font-size: 13px; color: var(--text-muted);">Unified Multi-Platform Reselling Hub</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero-banner">
+            <h1>🚀 ALL Engine — Potpuni Sustav Pretraživanja Marketplacea</h1>
+            <p>Unesite naziv artikla, model ili marku. ALL Engine spaja i pretražuje sve vodeće globalne i lokalne platforme (eBay, Amazon, Vinted, Depop, Etsy, Mobile.de i druge) te generira izravne poveznice i analizu marži.</p>
+        </div>
+
+        <div class="search-section">
+            <div class="search-box">
+                <div class="search-input-wrapper">
+                    <input type="text" id="allSearchInput" placeholder="Npr. Nike Air Jordan 1 High, iPhone 14 Pro 128GB, Sony WH-1000XM5..." value="Nike Air Max 90">
+                </div>
+                <button class="btn btn-primary" onclick="runAllEngine()">⚡ Pokreni ALL Pretragu</button>
+                <button class="btn btn-accent" onclick="openAllTabsBulk()">🌐 Otvori Sve Kartice</button>
+                <button class="btn btn-purple" onclick="runAIAssistant()">✨ AI Analiza</button>
+            </div>
+
+            <div class="preset-section">
+                <div class="preset-title">Brzi primjeri pretraživanja:</div>
+                <div class="preset-tags">
+                    <button class="preset-btn" onclick="setSearch('iPhone 13 Pro 128GB')">📱 iPhone 13 Pro</button>
+                    <button class="preset-btn" onclick="setSearch('Nike Dunks Low')">👟 Nike Dunks Low</button>
+                    <button class="preset-btn" onclick="setSearch('PlayStation 5 Console')">🎮 PS5 Console</button>
+                    <button class="preset-btn" onclick="setSearch('Levi 501 Vintage Jeans')">👖 Levi's 501</button>
+                    <button class="preset-btn" onclick="setSearch('BMW E46 M3')">🚗 BMW E46 M3</button>
+                </div>
+            </div>
+
+            <div class="category-filter">
+                <div class="cat-chip active" onclick="filterCategory('all', this)">Sve Platforme (14+)</div>
+                <div class="cat-chip" onclick="filterCategory('fashion', this)">Odjeća & Obuća</div>
+                <div class="cat-chip" onclick="filterCategory('tech', this)">Tehnologija & Elektronika</div>
+                <div class="cat-chip" onclick="filterCategory('auto', this)">Automobili & Dijelovi</div>
+                <div class="cat-chip" onclick="filterCategory('global', this)">Globalni E-Commerce</div>
+            </div>
+        </div>
+
+        <div class="results-header">
+            <h2 id="resultsHeading" style="font-size: 20px;">Rezultati ALL pretraživanja</h2>
+            <span id="resultsCount" style="color: var(--text-muted); font-size: 14px;">Generirano 14 marketplace kartica</span>
+        </div>
+
+        <div id="resultsGrid" class="grid-results">
+            <!-- Dynamic cards rendered here -->
+        </div>
+    </div>
+
+    <script>
+        const platformsData = [
+            { id: 'ebay', name: 'eBay Global', cat: 'global', tagClass: 'tag-ebay', icon: '🏷️', url: (q) => `https://www.ebay.com/sch/i.html?_nkw=${q}`, estPrice: 'Procjena: €40 - €180' },
+            { id: 'amazon', name: 'Amazon', cat: 'global', tagClass: 'tag-amazon', icon: '📦', url: (q) => `https://www.amazon.com/s?k=${q}`, estPrice: 'Novi / Refurbished' },
+            { id: 'vinted', name: 'Vinted', cat: 'fashion', tagClass: 'tag-vinted', icon: '👗', url: (q) => `https://www.vinted.com/catalog?search_text=${q}`, estPrice: 'Rabljeno / Vintage' },
+            { id: 'depop', name: 'Depop', cat: 'fashion', tagClass: 'tag-depop', icon: '👚', url: (q) => `https://www.depop.com/search/?q=${q}`, estPrice: 'Streetwear / Custom' },
+            { id: 'poshmark', name: 'Poshmark', cat: 'fashion', tagClass: 'tag-depop', icon: '👜', url: (q) => `https://poshmark.com/search?query=${q}`, estPrice: 'Moda & Modni dodaci' },
+            { id: 'mercari', name: 'Mercari', cat: 'global', tagClass: 'tag-ebay', icon: '🛍️', url: (q) => `https://www.mercari.com/search/?keyword=${q}`, estPrice: 'Direktni prodavači' },
+            { id: 'etsy', name: 'Etsy', cat: 'fashion', tagClass: 'tag-etsy', icon: '🎨', url: (q) => `https://www.etsy.com/search?q=${q}`, estPrice: 'Handmade / Collectibles' },
+            { id: 'facebook', name: 'FB Marketplace', cat: 'global', tagClass: 'tag-amazon', icon: '👥', url: (q) => `https://www.facebook.com/marketplace/search/?query=${q}`, estPrice: 'Lokalna ponuda' },
+            { id: 'temu', name: 'Temu', cat: 'global', tagClass: 'tag-etsy', icon: '📦', url: (q) => `https://www.temu.com/search_result.html?search_key=${q}`, estPrice: 'Niske cijene' },
+            { id: 'aliexpress', name: 'AliExpress', cat: 'global', tagClass: 'tag-amazon', icon: '🌐', url: (q) => `https://www.aliexpress.com/w/wholesale-${q}.html`, estPrice: 'Tvorničke cijene' },
+            { id: 'walmart', name: 'Walmart', cat: 'tech', tagClass: 'tag-ebay', icon: '🛒', url: (q) => `https://www.walmart.com/search?q=${q}`, estPrice: 'Maloprodaja' },
+            { id: 'ebay_motors', name: 'eBay Motors', cat: 'auto', tagClass: 'tag-auto', icon: '🏎️', url: (q) => `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${q}`, estPrice: 'Auto dijelovi' },
+            { id: 'mobile_de', name: 'Mobile.de', cat: 'auto', tagClass: 'tag-auto', icon: '🚗', url: (q) => `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=${q}`, estPrice: 'Vozila (EU)' },
+            { id: 'autoscout24', name: 'AutoScout24', cat: 'auto', tagClass: 'tag-auto', icon: '🚗', url: (q) => `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&sort=standard&desc=0&query=${q}`, estPrice: 'Vozila & Oprema' }
+        ];
+
+        let currentCategory = 'all';
+
+        function setSearch(term) {
+            document.getElementById('allSearchInput').value = term;
+            runAllEngine();
+        }
+
+        function filterCategory(cat, element) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            runAllEngine();
+        }
+
+        function runAllEngine() {
+            const query = document.getElementById('allSearchInput').value.trim();
+            const grid = document.getElementById('resultsGrid');
+            const countEl = document.getElementById('resultsCount');
+
+            if (!query) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">Molimo unesite pojam za pretraživanje.</p>';
+                return;
+            }
+
+            const encoded = encodeURIComponent(query);
+            const filtered = platformsData.filter(p => currentCategory === 'all' || p.cat === currentCategory);
+
+            grid.innerHTML = '';
+            countEl.innerText = `Prikazano ${filtered.length} marketplace kartica za "${query}"`;
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'card-item';
+                card.innerHTML = `
+                    <div>
+                        <div class="card-top">
+                            <span class="platform-tag ${p.tagClass}">${p.icon} ${p.name}</span>
+                        </div>
+                        <div class="item-title">${query}</div>
+                        <div class="item-meta">Kategorija: ${p.cat.toUpperCase()}</div>
+                    </div>
+                    <div>
+                        <div class="price-row">
+                            <span class="price-est">${p.estPrice}</span>
+                            <span class="price-val">Pretraži live →</span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="${p.url(encoded)}" target="_blank" class="btn-card btn-open">Otvori na ${p.name}</a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openAllTabsBulk() {
+            const query = document.getElementById('allSearchInput').value.trim();
+            if (!query) {
+                alert('Molimo unesite pojam za pretraživanje.');
+                return;
+            }
+            const encoded = encodeURIComponent(query);
+            platformsData.forEach(p => {
+                window.open(p.url(encoded), '_blank');
+            });
+        }
+
+        function runAIAssistant() {
+            const query = document.getElementById('allSearchInput').value.trim();
+            if (!query) {
+                alert('Molimo unesite pojam.');
+                return;
+            }
+            const prompt = `Kao stručnjak za reselling, napravi detaljnu analizu tržišnih cijena (rabljeno vs novo), potražnje i procjene profita za: ${query}`;
+            window.open(`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`, '_blank');
+        }
+
+        // Run initial engine view
+        window.onload = runAllEngine;
+    </script>
+</body>
+</html>
