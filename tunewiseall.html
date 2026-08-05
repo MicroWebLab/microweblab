@@ -457,17 +457,18 @@
                     }
 
                     // 3. Slanje snimljenog audija na AudD API
-                    const formData = new FormData();
-                    formData.append('file', audioBlob);
-                    formData.append('api_token', AUDD_API_KEY);
-                    formData.append('return', 'apple_music,spotify');
+                   try {
+    const response = await startTuneWiseRecognition(audioBlob);
 
-                    try {
-                        const response = await fetch('https://api.audd.io/', {
-                            method: 'POST',
-                            body: formData
-                        });
-                        const result = await response.json();
+    if (!response.success) {
+        throw new Error("Song recognition failed");
+    }
+
+    const result = {
+        status: "success",
+        result: response.song
+    };
+}
 
                         if (result.status === 'success' && result.result) {
                             const song = result.result;
@@ -486,10 +487,7 @@
                             speak("Nažalost, nisam uspio prepoznati pjesmu. Pokušajte ponovno.");
                             updateVoiceUI("Pjesma nije pronađena.");
                         }
-                    } catch (apiErr) {
-                        console.error("AudD API Greška:", apiErr);
-                        speak("Došlo je do greške u povezivanju s poslužiteljem.");
-                        updateVoiceUI("Greška s poslužiteljem.");
+                    } 
                     }
                 };
 
