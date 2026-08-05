@@ -299,7 +299,7 @@
 
 <header>
   <div class="logo">EVCharge<span>Wise</span></div>
-  <a href="index.html">← MicroWebLab</a>
+  <a href="all_hub_engine.html">← Povratak na ALL HUB</a>
 </header>
 
 <main>
@@ -350,17 +350,14 @@
       <span class="tag-item">🚗 AutoScout24</span>
       <span class="tag-item">🚗 Mobile.de</span>
       <span class="tag-item">🏎️ eBay Motors</span>
+      <span class="tag-item">🏎️ CarGurus</span>
       <span class="tag-item">🛒 Walmart</span>
       <span class="tag-item">👗 Vinted</span>
-      <span class="tag-item">👚 Depop</span>
       <span class="tag-item">📦 Temu</span>
       <span class="tag-item">🌐 AliExpress</span>
       <span class="tag-item">🏷️ eBay</span>
       <span class="tag-item">📦 Amazon</span>
       <span class="tag-item">👥 Facebook Marketplace</span>
-      <span class="tag-item">👜 Poshmark</span>
-      <span class="tag-item">🛍️ Mercari</span>
-      <span class="tag-item">🎨 Etsy</span>
     </div>
   </section>
 
@@ -452,7 +449,7 @@
     return queryParts.join(" ");
   }
 
-  // Search across platforms
+  // Search across platforms s popravljenim i pouzdanim URL-ovima
   function searchEVParts() {
     const query = getPartsQuery();
     if (!query) return;
@@ -461,20 +458,22 @@
 
     const urls = [
       `https://www.google.com/search?q=${encoded}`,
-      `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&sort=standard&desc=0&query=${encoded}`,
-      `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=${encoded}`,
+      // AutoScout24 EV pretraga
+      `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&fuel=E&desc=0&query=${encoded}`,
+      // Mobile.de EV točna pretraga
+      `https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&vc=Car&ft=ELECTRICITY&q=${encoded}`,
+      // eBay opća pretraga
       `https://www.ebay.com/sch/i.html?_nkw=${encoded}`,
-      `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${encoded}`,
+      // eBay Motors auto dijelovi (izravna točna lista umjesto landing stranice)
+      `https://www.ebay.com/sch/6000/i.html?_nkw=${encoded}`,
+      // CarGurus izravan parametar pretraživanja
+      `https://www.cargurus.com/Cars/inventorylisting/viewDetailsFilterViewInventoryListing.action?#zip=02138&searchTerm=${encoded}`,
       `https://www.amazon.com/s?k=${encoded}`,
       `https://www.aliexpress.com/w/wholesale-${encoded}.html`,
       `https://www.temu.com/search_result.html?search_key=${encoded}`,
       `https://www.facebook.com/marketplace/search/?query=${encoded}`,
-      `https://www.etsy.com/search?q=${encoded}`,
       `https://www.walmart.com/search?q=${encoded}`,
-      `https://www.vinted.com/catalog?search_text=${encoded}`,
-      `https://www.depop.com/search/?q=${encoded}`,
-      `https://poshmark.com/search?query=${encoded}`,
-      `https://www.mercari.com/search/?keyword=${encoded}`
+      `https://www.vinted.com/catalog?search_text=${encoded}`
     ];
 
     urls.forEach((url) => {
@@ -553,6 +552,15 @@
       block: "nearest"
     });
   }
+
+  // Automatsko preuzimanje pretrage iz URL-a ako dolazi iz ALL HUB-a
+  window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+    if (searchQuery) {
+      document.getElementById("evModel").value = searchQuery;
+    }
+  };
 </script>
 
 </body>
