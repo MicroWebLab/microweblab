@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALL Unified Hub | ResellWise Central Engine</title>
+    <title>ALL Unified Smart Voice Engine | ResellWise Central</title>
     <style>
         :root {
             --bg: #0b0f19;
@@ -14,6 +14,7 @@
             --accent-green: #10b981;
             --accent-cyan: #06b6d4;
             --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: #334155;
@@ -117,15 +118,18 @@
             display: flex;
             gap: 14px;
             margin-bottom: 20px;
+            align-items: center;
         }
 
         .search-input-wrapper {
             flex: 1;
+            position: relative;
         }
 
         .search-input-wrapper input {
             width: 100%;
             padding: 18px 24px;
+            padding-right: 60px;
             background: #0f172a;
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -138,6 +142,39 @@
         .search-input-wrapper input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-mic {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-mic:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-mic.listening {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.15); }
+            100% { transform: translateY(-50%) scale(1); }
         }
 
         .btn-master {
@@ -153,6 +190,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            white-space: nowrap;
         }
 
         .btn-master:hover {
@@ -161,6 +199,20 @@
 
         .btn-master:active {
             transform: scale(0.98);
+        }
+
+        /* AI DIALOGUE BOX */
+        .ai-dialogue-box {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-top: 15px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: #a5b4fc;
         }
 
         /* MODULE SELECTOR GRID */
@@ -273,6 +325,7 @@
 
         .badge-general { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid #6366f1; }
         .badge-ev { background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid #06b6d4; }
+        .badge-special { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid #8b5cf6; }
 
         .res-title {
             font-size: 15px;
@@ -305,52 +358,59 @@
     <header>
         <div class="brand">
             <span class="brand-badge">ALL HUB</span>
-            <div class="brand-title">Resell<span>Wise</span> Master Aggregator</div>
+            <div class="brand-title">Resell<span>Wise</span> Smart Voice Hub</div>
         </div>
         <div>
-            <span style="font-size: 14px; color: var(--text-muted);">Sustav za objedinjeno pretraživanje</span>
+            <span style="font-size: 14px; color: var(--text-muted);">Sustav sa Smart Intent Asistentom</span>
         </div>
     </header>
 
     <div class="container">
         <div class="hero-banner">
-            <h1>🌐 ALL Master Engine — Svi Moduli na Jednom Mjestu</h1>
-            <p>Unesite bilo koji proizvod, automobil, bateriju ili opremu. ALL Master Engine pretražuje sve integrirane sub-module i lansira objedinjene rezultate.</p>
+            <h1>🗣️ ALL Voice Assistant — Reci što tražiš</h1>
+            <p>Izgovori npr.: <i>"ALL, pronađi pjesmu Believer"</i>, <i>"ALL, pronađi Tesla Model Y"</i> ili <i>"ALL, pronađi iPhone 16 Pro"</i>. Asistent prepoznaje namjeru i vodi razgovor s tobom.</p>
         </div>
 
         <!-- MASTER SEARCH -->
         <div class="master-search-card">
             <div class="search-row">
                 <div class="search-input-wrapper">
-                    <input type="text" id="masterInput" placeholder="Npr. iPhone 14 Pro, Tesla Model Y, Nike Dunks, Sony Headset..." value="Tesla Model 3">
+                    <input type="text" id="masterInput" placeholder="Npr. ALL, pronađi pjesmu Believer..." value="ALL, pronađi Tesla Model Y" onkeypress="handleKeyPress(event)">
+                    <button class="btn-mic" id="micBtn" onclick="toggleVoiceRecognition()" title="Glasovno pretraživanje">🎤</button>
                 </div>
-                <button class="btn-master" onclick="executeMasterSearch()">⚡ POKRENI ALL PRETRAGU</button>
+                <button class="btn-master" onclick="processVoiceOrTextCommand(document.getElementById('masterInput').value)">⚡ POKRENI ALL ASISTENTA</button>
             </div>
-            <span style="font-size: 13px; color: var(--text-muted);">* Pokretanjem ALL pretrage automatski se agregiraju rezultati iz General, EV i specijaliziranih modula.</span>
+            <span style="font-size: 13px; color: var(--text-muted);" id="searchStatus">* Recite "ALL, pronađi..." ili kliknite mikrofon.</span>
+            
+            <!-- AI Response Box -->
+            <div class="ai-dialogue-box" id="aiDialogueBox">
+                <span style="font-size: 20px;">🗣️</span>
+                <span id="aiResponseText">Slušam vaše naredbe...</span>
+            </div>
         </div>
 
         <!-- MODULE SELECTORS -->
         <h2 style="font-size: 20px; margin-bottom: 20px;">Dostupni Sub-Moduli</h2>
         <div class="modules-grid">
+            <div class="module-card" onclick="openSubModule('tunewise_all.html')">
+                <span class="module-icon">🎵</span>
+                <div class="module-title">TuneWiseAll Module</div>
+                <div class="module-desc">Glazbena tražilica, pjesme, albumi, izvođači (Spotify, YouTube, Soundcloud...).</div>
+                <a href="tunewise_all.html" target="_blank" class="module-btn">Otvoriti TuneWiseAll →</a>
+            </div>
+
+            <div class="module-card" onclick="openSubModule('evcharge_wise.html')">
+                <span class="module-icon">⚡</span>
+                <div class="module-title">EVChargeWise Module</div>
+                <div class="module-desc">Električna vozila, punjači, baterije, oprema, Mobile.de EV, AutoScout24.</div>
+                <a href="evcharge_wise.html" target="_blank" class="module-btn">Otvoriti EVChargeWise →</a>
+            </div>
+
             <div class="module-card" onclick="openSubModule('resellwise_all_engine.html')">
                 <span class="module-icon">🛒</span>
-                <div class="module-title">General E-Commerce Module</div>
-                <div class="module-desc">eBay, Amazon, Vinted, Depop, Etsy, Poshmark, Mercari, Temu, AliExpress...</div>
-                <a href="resellwise_all_engine.html" target="_blank" class="module-btn">Otvoriti General Modul →</a>
-            </div>
-
-            <div class="module-card" onclick="openSubModule('ev_search_engine.html')">
-                <span class="module-icon">⚡</span>
-                <div class="module-title">EV & Vehicles Module</div>
-                <div class="module-desc">Mobile.de EV, AutoScout24, AutoTrader US, EV baterije, Wallbox punjači & oprema.</div>
-                <a href="ev_search_engine.html" target="_blank" class="module-btn">Otvoriti EV Modul →</a>
-            </div>
-
-            <div class="module-card">
-                <span class="module-icon">✨</span>
-                <div class="module-title">AI Market Intelligence</div>
-                <div class="module-desc">Automatsko slanje promptova za procjenu marži, cijena rabljenog/novog i analiza trendova.</div>
-                <button class="module-btn" style="border:none; cursor:pointer;" onclick="runGlobalAI()">Pokrenuti AI Analizu →</button>
+                <div class="module-title">ResellWise Engine</div>
+                <div class="module-desc">Tehnika, odjeća, mobiteli, eBay, Amazon, Vinted, Depop, Etsy, AliExpress.</div>
+                <a href="resellwise_all_engine.html" target="_blank" class="module-btn">Otvoriti ResellWise →</a>
             </div>
         </div>
 
@@ -366,27 +426,103 @@
 
     <script>
         const masterRegistry = [
-            // General platforms
             { name: "eBay Global", type: "General", badgeClass: "badge-general", url: (q) => `https://www.ebay.com/sch/i.html?_nkw=${q}` },
             { name: "Amazon", type: "General", badgeClass: "badge-general", url: (q) => `https://www.amazon.com/s?k=${q}` },
-            { name: "Vinted", type: "General", badgeClass: "badge-general", url: (q) => `https://www.vinted.com/catalog?search_text=${q}` },
-            { name: "Depop", type: "General", badgeClass: "badge-general", url: (q) => `https://www.depop.com/search/?q=${q}` },
-            { name: "AliExpress", type: "General", badgeClass: "badge-general", url: (q) => `https://www.aliexpress.com/w/wholesale-${q}.html` },
-            // EV & Vehicle platforms
+            { name: "Vinted EU", type: "General", badgeClass: "badge-general", url: (q) => `https://www.vinted.com/catalog?search_text=${q}` },
             { name: "Mobile.de EV", type: "EV / Auto", badgeClass: "badge-ev", url: (q) => `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&ft=ELECTRICITY&q=${q}` },
             { name: "AutoScout24 EV", type: "EV / Auto", badgeClass: "badge-ev", url: (q) => `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&fuel=E&sort=standard&desc=0&query=${q}` },
-            { name: "eBay Motors EV", type: "EV / Auto", badgeClass: "badge-ev", url: (q) => `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${q}+electric` }
+            { name: "YouTube Music", type: "Music", badgeClass: "badge-special", url: (q) => `https://music.youtube.com/search?q=${q}` },
+            { name: "Spotify Search", type: "Music", badgeClass: "badge-special", url: (q) => `https://open.spotify.com/search/${q}` }
         ];
 
-        function executeMasterSearch() {
-            const query = document.getElementById('masterInput').value.trim();
-            const grid = document.getElementById('masterResultsGrid');
-            const countEl = document.getElementById('resCount');
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                processVoiceOrTextCommand(document.getElementById('masterInput').value);
+            }
+        }
 
-            if (!query) {
-                alert('Molimo unesite pojam za pretraživanje.');
+        function speakText(text, callback) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'hr-HR';
+                utterance.rate = 1.0;
+                
+                if (callback) {
+                    utterance.onend = callback;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else if (callback) {
+                callback();
+            }
+        }
+
+        function showAIDialogue(text) {
+            const box = document.getElementById('aiDialogueBox');
+            const txt = document.getElementById('aiResponseText');
+            box.style.display = 'flex';
+            txt.innerText = text;
+        }
+
+        /* -------------------------------------------------------------
+           SMART INTENT CLASSIFIER & DIALOGUE ENGINE
+        ------------------------------------------------------------- */
+        function processVoiceOrTextCommand(rawRawText) {
+            let rawText = rawRawText.trim();
+            if (!rawText) {
+                alert('Molimo unesite ili izgovorite naredbu.');
                 return;
             }
+
+            // Očisti prefikse poput "ALL", "ALL pronađi", "pronađi", "potraži"
+            let cleanedQuery = rawText
+                .replace(/^all,?\s*/i, '')
+                .replace(/^(pronađi|traži|potraži|nađi|otvori)\s*/i, '')
+                .trim();
+
+            const lower = rawText.toLowerCase();
+
+            // 1. INTENT: GLAZBA / PJESME -> TuneWiseAll Modul
+            if (lower.includes('pjesm') || lower.includes('glazb') || lower.includes('pjesmu') || lower.includes('muzika') || lower.includes('pesma')) {
+                let songName = cleanedQuery.replace(/^(pjesmu|pjesma|glazbu|muziku)\s*/i, '').trim();
+                let responseText = `Pronašao sam pjesmu ${songName}. Otvaram TuneWiseAll.`;
+                
+                showAIDialogue(responseText);
+                speakText(responseText, () => {
+                    executeMasterSearch(songName);
+                    // Proširivo s otvaranjem zasebnog sub-modula:
+                    // window.open(`tunewise_all.html?q=${encodeURIComponent(songName)}`, '_blank');
+                });
+                return;
+            }
+
+            // 2. INTENT: EV & VOZILA -> EVChargeWise Modul
+            if (lower.includes('tesla') || lower.includes('auto') || lower.includes('vozilo') || lower.includes('baterij') || lower.includes('punjač') || lower.includes('ev') || lower.includes('bmw i') || lower.includes('porsche taycan')) {
+                let vehicleQuery = cleanedQuery.replace(/^(auto|vozilo|ev)\s*/i, '').trim();
+                let responseText = `Otvaram EVChargeWise i pretražujem ${vehicleQuery}.`;
+                
+                showAIDialogue(responseText);
+                speakText(responseText, () => {
+                    executeMasterSearch(vehicleQuery);
+                    // window.open(`evcharge_wise.html?q=${encodeURIComponent(vehicleQuery)}`, '_blank');
+                });
+                return;
+            }
+
+            // 3. INTENT: GENERAL RESELL (Mobiteli, Odjeća, Tehnika) -> ResellWise Engine
+            let productQuery = cleanedQuery.replace(/^(stvar|proizvod|predmet)\s*/i, '').trim();
+            let responseText = `Otvaram ResellWise i pretražujem ${productQuery}.`;
+
+            showAIDialogue(responseText);
+            speakText(responseText, () => {
+                executeMasterSearch(productQuery);
+            });
+        }
+
+        function executeMasterSearch(query) {
+            const grid = document.getElementById('masterResultsGrid');
+            const countEl = document.getElementById('resCount');
 
             const encoded = encodeURIComponent(query);
             grid.innerHTML = '';
@@ -411,15 +547,72 @@
             window.open(url, '_blank');
         }
 
-        function runGlobalAI() {
-            const query = document.getElementById('masterInput').value.trim();
-            if (!query) return alert('Unesite pojam.');
-            const prompt = `Analiziraj globalno tržište, cijene i reselling profitabilnost za: ${query}`;
-            window.open(`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`, '_blank');
+        /* -------------------------------------------------------------
+           GLASOVNO PREPOZNAVANJE (SPEECH RECOGNITION)
+        ------------------------------------------------------------- */
+        let recognition = null;
+        let isListening = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'hr-HR';
+
+            recognition.onstart = function() {
+                isListening = true;
+                const micBtn = document.getElementById('micBtn');
+                const status = document.getElementById('searchStatus');
+                micBtn.classList.add('listening');
+                status.innerText = '🔴 Slušam... Izgovorite naredbu (npr. "ALL, pronađi Tesla Model Y")';
+                status.style.color = 'var(--accent-cyan)';
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('masterInput').value = transcript;
+                
+                // Pokreni pametnu analizu rečenice
+                processVoiceOrTextCommand(transcript);
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Greška pri slušanju:', event.error);
+                resetMicUI();
+            };
+
+            recognition.onend = function() {
+                resetMicUI();
+            };
+        } else {
+            document.getElementById('micBtn').style.display = 'none';
         }
 
-        // Run default search on load
-        window.onload = executeMasterSearch;
+        function toggleVoiceRecognition() {
+            if (!recognition) {
+                alert('Tvoj preglednik ne podržava glasovne naredbe.');
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function resetMicUI() {
+            isListening = false;
+            const micBtn = document.getElementById('micBtn');
+            const status = document.getElementById('searchStatus');
+            micBtn.classList.remove('listening');
+            status.innerText = '* Recite "ALL, pronađi..." ili kliknite mikrofon.';
+            status.style.color = 'var(--text-muted)';
+        }
+
+        window.onload = () => executeMasterSearch("Tesla Model Y");
     </script>
 </body>
 </html>
