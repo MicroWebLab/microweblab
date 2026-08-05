@@ -652,6 +652,10 @@
             saveFavorites();
             playSong("believer");
         };
-    </script>
+    </script><script type="module">
+import { startTuneWiseRecognition } from "./modules/tunewise/index.js";
+
+window.startTuneWiseRecognition = startTuneWiseRecognition;
+</script>
 </body>
 </html>
