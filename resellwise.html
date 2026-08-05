@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -171,7 +172,7 @@
     button {
       padding: 15px 20px;
       border: 0;
-      border-radius: 9px;
+      border-radius: 999px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
@@ -182,6 +183,7 @@
       background: var(--primary);
       color: white;
       flex: 1;
+      border-radius: 9px;
     }
 
     .btn-search:hover {
@@ -192,6 +194,7 @@
       background: var(--accent);
       color: white;
       flex: 1;
+      border-radius: 9px;
     }
 
     .btn-ai:hover {
@@ -202,6 +205,7 @@
       background: var(--dark-bg);
       color: white;
       width: 100%;
+      border-radius: 9px;
     }
 
     .btn-calc:hover {
@@ -252,6 +256,34 @@
       border-radius: 999px;
       font-size: 13px;
       font-weight: 500;
+    }
+
+    /* Novi stilovi za prikaz rezultata na stranici */
+    .platform-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .platform-btn {
+      display: inline-block;
+      text-align: center;
+      padding: 12px 15px;
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .platform-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
     }
 
     table {
@@ -319,8 +351,15 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn-search" onclick="searchAllPlatforms()">🌐 Search All Platforms</button>
+      <button class="btn-search" onclick="searchAllPlatforms()">🌐 Search Platforms</button>
       <button class="btn-ai" onclick="searchWithAI()">✨ AI Price Analysis</button>
+    </div>
+
+    <!-- REZULTAT NA STRANICI - Korisnik bira platformu umjesto automatskog otvaranja -->
+    <div id="searchResultsCard" class="result-box">
+      <h3 style="margin-top: 0; color: var(--dark-bg);">Choose a platform for: "<span id="searchQueryLabel"></span>"</h3>
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 15px;">Click on any platform below to view listings:</p>
+      <div id="platformLinksContainer" class="platform-links-grid"></div>
     </div>
 
     <div class="platforms-tags">
@@ -416,7 +455,7 @@
       </div>
     </div>
 
-    <button class="btn-search" style="width: 100%; margin-top: 5px;" onclick="addInventoryItem()">+ Add to Inventory</button>
+    <button class="btn-search" style="width: 100%; margin-top: 5px; border-radius: 9px;" onclick="addInventoryItem()">+ Add to Inventory</button>
 
     <table id="invTable">
       <thead>
@@ -447,7 +486,7 @@
     }
   }
 
-  // Search across all platforms
+  // Pretraživanje po platformama - generiranje gumba na stranici bez automatskog otvaranja!
   function searchAllPlatforms() {
     const query = document.getElementById("itemQuery").value.trim();
     if (!query) {
@@ -457,27 +496,41 @@
 
     const encoded = encodeURIComponent(query);
 
-    const urls = [
-      `https://www.google.com/search?q=${encoded}`,
-      `https://www.ebay.com/sch/i.html?_nkw=${encoded}`,
-      `https://www.amazon.com/s?k=${encoded}`,
-      `https://www.facebook.com/marketplace/search/?query=${encoded}`,
-      `https://www.vinted.com/catalog?search_text=${encoded}`,
-      `https://www.depop.com/search/?q=${encoded}`,
-      `https://poshmark.com/search?query=${encoded}`,
-      `https://www.mercari.com/search/?keyword=${encoded}`,
-      `https://www.temu.com/search_result.html?search_key=${encoded}`,
-      `https://www.aliexpress.com/w/wholesale-${encoded}.html`,
-      `https://www.etsy.com/search?q=${encoded}`,
-      `https://www.walmart.com/search?q=${encoded}`,
-      `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${encoded}`,
-      `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=${encoded}`,
-      `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&sort=standard&desc=0&query=${encoded}`
+    const platforms = [
+      { name: "🔍 Google Search", url: `https://www.google.com/search?q=${encoded}` },
+      { name: "🏷️ eBay", url: `https://www.ebay.com/sch/i.html?_nkw=${encoded}` },
+      { name: "📦 Amazon", url: `https://www.amazon.com/s?k=${encoded}` },
+      { name: "👥 FB Marketplace", url: `https://www.facebook.com/marketplace/search/?query=${encoded}` },
+      { name: "👗 Vinted", url: `https://www.vinted.com/catalog?search_text=${encoded}` },
+      { name: "👚 Depop", url: `https://www.depop.com/search/?q=${encoded}` },
+      { name: "👜 Poshmark", url: `https://poshmark.com/search?query=${encoded}` },
+      { name: "🛍️ Mercari", url: `https://www.mercari.com/search/?keyword=${encoded}` },
+      { name: "📦 Temu", url: `https://www.temu.com/search_result.html?search_key=${encoded}` },
+      { name: "🌐 AliExpress", url: `https://www.aliexpress.com/w/wholesale-${encoded}.html` },
+      { name: "🎨 Etsy", url: `https://www.etsy.com/search?q=${encoded}` },
+      { name: "🛒 Walmart", url: `https://www.walmart.com/search?q=${encoded}` },
+      { name: "🏎️ eBay Motors", url: `https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=${encoded}` },
+      { name: "🚗 Mobile.de", url: `https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=${encoded}` },
+      { name: "🚗 AutoScout24", url: `https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&sort=standard&desc=0&query=${encoded}` }
     ];
 
-    urls.forEach((url) => {
-      window.open(url, "_blank");
+    const container = document.getElementById("platformLinksContainer");
+    container.innerHTML = "";
+
+    platforms.forEach((p) => {
+      const a = document.createElement("a");
+      a.className = "platform-btn";
+      a.href = p.url;
+      a.target = "_blank";
+      a.innerText = p.name;
+      a.onclick = () => {
+        trackGAEvent("resellwise_platform_click", { platform: p.name, search_query: query });
+      };
+      container.appendChild(a);
     });
+
+    document.getElementById("searchQueryLabel").innerText = query;
+    document.getElementById("searchResultsCard").style.display = "block";
 
     trackGAEvent("resellwise_search", { search_query: query });
   }
@@ -538,7 +591,7 @@
         <td><strong>${item.name}</strong></td>
         <td>${item.buy.toFixed(2)} €</td>
         <td>${item.target.toFixed(2)} €</td>
-        <td><button style="padding: 4px 8px; font-size:12px; background:#ef4444; color:white;" onclick="removeInventory(${index})">Remove</button></td>
+        <td><button style="padding: 4px 8px; font-size:12px; background:#ef4444; color:white; border-radius:4px;" onclick="removeInventory(${index})">Remove</button></td>
       `;
       tbody.appendChild(tr);
     });
