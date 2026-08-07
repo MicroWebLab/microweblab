@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TuneWise 3.0 | Music Discovery & Player Engine</title>
+    <title>TuneWise 3.1 | Production Music Discovery & Player Engine</title>
 
-    <!-- PWA & Mobile Viewport Options -->
+    <!-- Mobile Viewport & Theme Specs -->
     <meta name="theme-color" content="#070a12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -43,9 +43,9 @@
             overflow-x: hidden;
         }
 
-        /* Top Header */
+        /* Top Header Navigation */
         header {
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(15, 23, 42, 0.94);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
@@ -78,7 +78,7 @@
 
         .search-container {
             flex: 1;
-            max-width: 550px;
+            max-width: 580px;
             display: flex;
             align-items: center;
             background: rgba(255, 255, 255, 0.05);
@@ -106,18 +106,18 @@
             user-select: text;
         }
 
-        .mic-btn {
+        .search-btn, .mic-btn {
             background: transparent;
             border: none;
             cursor: pointer;
             font-size: 18px;
-            opacity: 0.8;
+            opacity: 0.85;
             transition: transform 0.2s, opacity 0.2s;
         }
 
-        .mic-btn:hover { transform: scale(1.1); opacity: 1; }
+        .search-btn:hover, .mic-btn:hover { transform: scale(1.1); opacity: 1; }
 
-        /* Main App Grid Layout */
+        /* App Grid Layout */
         .app-layout {
             display: grid;
             grid-template-columns: 240px 1fr 300px;
@@ -175,7 +175,7 @@
 
         .nav-item.active { border-left: 3px solid var(--primary); }
 
-        /* Main Content View */
+        /* Main View Container */
         .main-content {
             padding: 24px;
             overflow-y: auto;
@@ -223,7 +223,7 @@
             100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
         }
 
-        /* Song List / Spotify Table */
+        /* Song Table View */
         .song-table {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -233,7 +233,7 @@
 
         .table-header {
             display: grid;
-            grid-template-columns: 40px 1fr 120px 100px;
+            grid-template-columns: 40px 1fr 100px 100px;
             padding: 8px 12px;
             color: var(--text-muted);
             font-size: 12px;
@@ -244,7 +244,7 @@
 
         .song-row {
             display: grid;
-            grid-template-columns: 40px 1fr 120px 100px;
+            grid-template-columns: 40px 1fr 100px 100px;
             align-items: center;
             padding: 10px 12px;
             border-radius: 10px;
@@ -274,7 +274,7 @@
 
         .action-btn:hover { color: var(--text-main); }
 
-        /* Right Queue & Playlist Sidebar */
+        /* Right Queue Sidebar */
         .right-sidebar {
             background: var(--surface);
             border-left: 1px solid var(--border);
@@ -285,7 +285,7 @@
             overflow-y: auto;
         }
 
-        /* Toast Banner */
+        /* Toast Popup */
         .toast-banner {
             position: fixed;
             top: 75px;
@@ -304,7 +304,7 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Fixed Bottom Player Bar */
+        /* Fixed Bottom Player */
         .player-bar {
             position: fixed;
             bottom: 0;
@@ -322,7 +322,7 @@
             z-index: 200;
         }
 
-        .player-track { display: flex; align-items: center; gap: 14px; width: 28%; min-width: 180px; }
+        .player-track { display: flex; align-items: center; gap: 14px; width: 30%; min-width: 180px; }
         .player-cover { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); }
 
         .player-controls { flex: 1; max-width: 500px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -378,7 +378,7 @@
     <!-- YouTube IFrame API -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
-    <!-- ES Module Integration -->
+    <!-- ES Module Engine Integration -->
     <script type="module">
         import {
             searchYouTubeVideo,
@@ -415,13 +415,13 @@
 
     <header>
         <div class="brand" onclick="switchView('discover')">
-            <span class="brand-badge">TUNEWISE 3.0</span>
+            <span class="brand-badge">TUNEWISE 3.1</span>
         </div>
 
         <div class="search-container">
-            <span>🔍</span>
+            <button class="search-btn" onclick="triggerSearchFromInput()" title="Search">🔍</button>
             <input type="text" id="searchInput" class="search-input" placeholder="Search song, artist or say 'Hey ALL, find Believer'..." onkeypress="handleSearchKey(event)">
-            <button class="mic-btn" onclick="startVoiceAssistant()" title="Voice Search">🎙️</button>
+            <button class="mic-btn" onclick="startVoiceAssistant()" title="Voice Search (Hey ALL)">🎙️</button>
         </div>
     </header>
 
@@ -442,7 +442,7 @@
 
         <!-- Main Workspace -->
         <main class="main-content">
-            <!-- Shazam Audio Identification Banner -->
+            <!-- Shazam Audio Identification Card -->
             <div class="shazam-card" id="shazamSection">
                 <div>
                     <h2 style="margin-bottom: 6px; font-size: 20px;">🎵 TuneWise Shazam Mode</h2>
@@ -459,7 +459,7 @@
                     <div>#</div>
                     <div>Title</div>
                     <div>Duration</div>
-                    <div style="text-align: right;">Action</div>
+                    <div style="text-align: right;">Actions</div>
                 </div>
 
                 <div id="songContainer">
@@ -497,13 +497,13 @@
             <div id="playerStatus" style="font-size: 12px; color: var(--accent-cyan);">Ready</div>
         </div>
 
-        <!-- Hidden YT Frame -->
+        <!-- Hidden YT Iframe Element -->
         <div class="hidden-yt-frame">
             <div id="ytIframeContainer"></div>
         </div>
     </div>
 
-    <!-- Modal for Playlist Picker -->
+    <!-- Playlist Selector Modal -->
     <div class="modal-overlay" id="playlistModal">
         <div class="modal-box">
             <h4 style="font-size: 16px;">Add to Playlist</h4>
@@ -520,11 +520,11 @@
         let currentView = 'discover';
         let songToAddToPlaylist = null;
 
-        // Auto-Recovery State Trackers
+        // Auto-Recovery Tracking
         let currentQuery = '';
         let failedVideoIds = [];
 
-        // Inicijalizacija YouTube IFrame API
+        // YouTube IFrame API Handler
         function onYouTubeIframeAPIReady() {
             ytPlayer = new YT.Player('ytIframeContainer', {
                 height: '100',
@@ -558,17 +558,16 @@
             }
         }
 
-        // Auto-Recovery on restricted or unembeddable YouTube videos
+        // Auto-Recovery for Restricted / Unembeddable YouTube Videos
         async function onPlayerError(event) {
-            console.warn("[TuneWise Auto-Recovery Triggered] YT Error Code:", event.data);
+            console.warn("[TuneWise Auto-Recovery] YouTube Error Code:", event.data);
             
             if (currentSong && currentSong.videoId) {
                 failedVideoIds.push(currentSong.videoId);
             }
 
-            showToast("Video restricted. Finding alternative source...");
-
             if (currentQuery) {
+                document.getElementById('playerStatus').innerText = "Trying alternative source...";
                 const fallback = await window.TuneWiseEngine.searchYouTubeVideo(`${currentQuery} music video`, failedVideoIds);
                 if (fallback.success) {
                     playSong(fallback.song, false);
@@ -578,9 +577,10 @@
 
             showToast("Song not found");
             document.getElementById('playerStatus').innerText = "Song not found";
-            speakText("Sorry, this song is restricted or unavailable.");
+            speakText("Sorry, song could not be played.");
         }
 
+        // Web Speech Synthesis Engine
         function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -598,23 +598,39 @@
             setTimeout(() => { toast.style.display = 'none'; }, 3500);
         }
 
+        // Unified Search Execution Point
         async function performSearch(query) {
-            if (!query) return;
-            currentQuery = query;
-            failedVideoIds = []; // Reset failed exclusions for fresh query
+            if (!query || !query.trim()) return;
+            const cleaned = window.TuneWiseEngine.cleanSearchQuery(query);
+            if (!cleaned) return;
 
-            document.getElementById('playerStatus').innerText = `Searching: "${query}"...`;
+            currentQuery = cleaned;
+            failedVideoIds = []; // Reset exclusions for fresh search
+
+            document.getElementById('playerStatus').innerText = `Searching: "${cleaned}"...`;
             
-            const result = await window.TuneWiseEngine.searchYouTubeVideo(query, failedVideoIds);
+            const result = await window.TuneWiseEngine.searchYouTubeVideo(cleaned, failedVideoIds);
 
             if (result.success) {
                 playSong(result.song);
                 renderSearchResults([result.song]);
-                speakText(`Playing ${result.song.title}`);
+                // Mandatory Speech Voice Confirmation
+                speakText(`Playing ${result.song.title} by ${result.song.artist}`);
             } else {
                 showToast("Song not found");
                 document.getElementById('playerStatus').innerText = "Song not found";
                 speakText("Song not found");
+            }
+        }
+
+        function triggerSearchFromInput() {
+            const val = document.getElementById('searchInput').value;
+            performSearch(val);
+        }
+
+        function handleSearchKey(e) {
+            if (e.key === 'Enter') {
+                triggerSearchFromInput();
             }
         }
 
@@ -661,15 +677,9 @@
             }
         }
 
-        function handleSearchKey(e) {
-            if (e.key === 'Enter') {
-                performSearch(e.target.value);
-            }
-        }
-
         function startVoiceAssistant() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Voice search is not supported on this browser.");
+                alert("Voice recognition is not supported on this browser.");
                 return;
             }
 
@@ -684,7 +694,6 @@
                 const transcript = event.results[0][0].transcript;
                 document.getElementById('searchInput').value = transcript;
                 
-                // Voice Command Logic
                 const lower = transcript.toLowerCase();
                 if (lower.includes("add to favorites") || lower.includes("favorite this")) {
                     toggleCurrentFavorite();
@@ -712,7 +721,7 @@
                 mediaRecorder.onstop = async () => {
                     stream.getTracks().forEach(t => t.stop());
                     btn.classList.remove('listening');
-                    document.getElementById('playerStatus').innerText = "Analyzing audio sample...";
+                    document.getElementById('playerStatus').innerText = "Analyzing sample...";
 
                     const blob = new Blob(chunks, { type: 'audio/webm' });
                     const res = await window.TuneWiseEngine.recognizeAudioWithAudD(blob);
@@ -720,11 +729,11 @@
                     if (res.success && res.song) {
                         playSong(res.song);
                         renderSearchResults([res.song]);
-                        speakText(`Recognized ${res.song.title}`);
+                        speakText(`Playing ${res.song.title} by ${res.song.artist}`);
                     } else {
                         showToast("Song not found");
                         document.getElementById('playerStatus').innerText = "Song not found";
-                        speakText("Song not found in sample.");
+                        speakText("Song not found");
                     }
                 };
 
@@ -733,7 +742,7 @@
 
             } catch (err) {
                 btn.classList.remove('listening');
-                alert("Microphone access is required for Shazam mode.");
+                alert("Microphone access is required for Shazam audio identification.");
             }
         }
 
