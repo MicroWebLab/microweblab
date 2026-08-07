@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="hr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TuneWise ALL 3.0 | Dynamic Player Engine</title>
-    
-    <!-- PWA & Mobile Settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TuneWise 3.0 | Music Discovery & Player Engine</title>
+
+    <!-- PWA & Mobile Viewport Options -->
     <meta name="theme-color" content="#070a12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,21 +15,23 @@
             --bg: #070a12;
             --surface: #0f172a;
             --surface-card: #1e293b;
+            --surface-hover: #334155;
             --primary: #8b5cf6;
             --accent-pink: #ec4899;
             --accent-cyan: #06b6d4;
             --accent-green: #10b981;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border: #334155;
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         body {
@@ -41,11 +43,13 @@
             overflow-x: hidden;
         }
 
+        /* Top Header */
         header {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
-            padding: 12px 24px;
+            padding: 12px 20px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -58,35 +62,37 @@
         .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            cursor: pointer;
         }
 
         .brand-badge {
             background: linear-gradient(135deg, var(--accent-pink), var(--primary));
             color: white;
-            font-weight: 900;
+            font-weight: 800;
             padding: 6px 14px;
             border-radius: 8px;
-            font-size: 16px;
-            letter-spacing: 1px;
+            font-size: 15px;
+            letter-spacing: 0.5px;
         }
 
-        .ai-search-bar {
+        .search-container {
             flex: 1;
-            max-width: 600px;
+            max-width: 550px;
             display: flex;
             align-items: center;
-            background: var(--surface);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             border-radius: 25px;
             padding: 4px 16px;
             gap: 10px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .ai-search-bar:focus-within {
+        .search-container:focus-within {
             border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .search-input {
@@ -97,146 +103,217 @@
             font-size: 14px;
             outline: none;
             padding: 8px 0;
+            user-select: text;
         }
 
-        .mic-trigger-btn {
+        .mic-btn {
             background: transparent;
             border: none;
             cursor: pointer;
             font-size: 18px;
             opacity: 0.8;
-            transition: transform 0.2s;
+            transition: transform 0.2s, opacity 0.2s;
         }
 
-        .mic-trigger-btn:hover { transform: scale(1.1); opacity: 1; }
+        .mic-btn:hover { transform: scale(1.1); opacity: 1; }
 
+        /* Main App Grid Layout */
         .app-layout {
             display: grid;
-            grid-template-columns: 260px 1fr 320px;
-            height: calc(100vh - 65px - 90px);
+            grid-template-columns: 240px 1fr 300px;
+            height: calc(100vh - 61px - 90px);
             overflow: hidden;
         }
 
         @media (max-width: 1024px) {
-            .app-layout { grid-template-columns: 220px 1fr; }
-            .ai-sidebar-right { display: none; }
+            .app-layout { grid-template-columns: 200px 1fr; }
+            .right-sidebar { display: none; }
         }
 
         @media (max-width: 768px) {
-            .app-layout { grid-template-columns: 1fr; height: auto; margin-bottom: 140px; }
+            .app-layout { grid-template-columns: 1fr; height: auto; padding-bottom: 110px; }
             .left-sidebar { display: none; }
         }
 
+        /* Left Sidebar Nav */
         .left-sidebar {
             background: var(--surface);
             border-right: 1px solid var(--border);
-            padding: 20px;
+            padding: 20px 12px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
+            overflow-y: auto;
         }
 
-        .playlist-menu-item {
+        .nav-header {
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 8px 12px;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 12px;
-            border-radius: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
             cursor: pointer;
             color: var(--text-muted);
             font-weight: 600;
             font-size: 14px;
+            transition: all 0.2s ease;
         }
 
-        .playlist-menu-item:hover, .playlist-menu-item.active {
+        .nav-item:hover, .nav-item.active {
             background: var(--surface-card);
             color: var(--text-main);
         }
 
+        .nav-item.active { border-left: 3px solid var(--primary); }
+
+        /* Main Content View */
         .main-content {
             padding: 24px;
             overflow-y: auto;
         }
 
-        .tunewise-hero {
-            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+        /* Shazam Hero Card */
+        .shazam-card {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 24px;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .tunewise-btn {
-            width: 70px;
-            height: 70px;
+        .shazam-btn {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-cyan), var(--primary));
             border: none;
             color: white;
-            font-size: 28px;
+            font-size: 30px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.2s;
         }
 
-        .tunewise-btn:hover { transform: scale(1.05); }
+        .shazam-btn:hover { transform: scale(1.06); }
 
-        .tunewise-btn.listening {
-            animation: pulse 1.5s infinite;
+        .shazam-btn.listening {
+            animation: pulse-ring 1.5s infinite;
             background: linear-gradient(135deg, var(--accent-pink), var(--primary));
         }
 
-        @keyframes pulse {
+        @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); }
-            70% { box-shadow: 0 0 0 18px rgba(236, 72, 153, 0); }
+            70% { box-shadow: 0 0 0 20px rgba(236, 72, 153, 0); }
             100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
         }
 
-        .song-table-container {
+        /* Song List / Spotify Table */
+        .song-table {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 20px;
+            padding: 16px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 40px 1fr 120px 100px;
+            padding: 8px 12px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
         }
 
         .song-row {
             display: grid;
-            grid-template-columns: 40px 1fr 140px 60px;
+            grid-template-columns: 40px 1fr 120px 100px;
             align-items: center;
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 10px 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
+            transition: background 0.2s;
+            margin-bottom: 4px;
         }
 
         .song-row:hover { background: var(--surface-card); }
 
-        .song-title-cell { display: flex; align-items: center; gap: 12px; }
-        .song-cover-mini { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; }
+        .song-info { display: flex; align-items: center; gap: 12px; overflow: hidden; }
+        .song-cover-mini { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+        .song-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .song-artist { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .ai-sidebar-right {
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 6px;
+            border-radius: 50%;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover { color: var(--text-main); }
+
+        /* Right Queue & Playlist Sidebar */
+        .right-sidebar {
             background: var(--surface);
             border-left: 1px solid var(--border);
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
+            overflow-y: auto;
         }
 
-        .player-bar-bottom {
+        /* Toast Banner */
+        .toast-banner {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Fixed Bottom Player Bar */
+        .player-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             height: 90px;
-            background: rgba(15, 23, 42, 0.98);
-            backdrop-filter: blur(16px);
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -245,266 +322,576 @@
             z-index: 200;
         }
 
-        .player-left { display: flex; align-items: center; gap: 15px; width: 280px; }
-        .player-cover { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); }
+        .player-track { display: flex; align-items: center; gap: 14px; width: 28%; min-width: 180px; }
+        .player-cover { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); }
 
-        .player-center { flex: 1; max-width: 600px; }
-        .iframe-container { width: 100%; height: 60px; border-radius: 8px; overflow: hidden; background: #000; }
-        .iframe-container iframe { width: 100%; height: 100%; border: none; }
+        .player-controls { flex: 1; max-width: 500px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 
-        .error-toast {
+        .player-buttons { display: flex; align-items: center; gap: 20px; }
+        .control-btn { background: transparent; border: none; color: white; cursor: pointer; font-size: 20px; opacity: 0.85; }
+        .control-btn:hover { opacity: 1; transform: scale(1.08); }
+        .control-btn.play-main {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: white;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .hidden-yt-frame {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0.01;
+            pointer-events: none;
+            bottom: 0;
+            right: 0;
+        }
+
+        /* Modal styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
             display: none;
-            background: #ef4444;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+        }
+
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 16px;
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
     </style>
 
-    <!-- Učitavanje YouTube IFrame Player API-ja -->
+    <!-- YouTube IFrame API -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
+    <!-- ES Module Integration -->
     <script type="module">
-        import { startTuneWiseRecognition, searchYouTubeVideo } from "./modules/tunewise/index.js";
-        window.startTuneWiseRecognition = startTuneWiseRecognition;
-        window.searchYouTubeVideo = searchYouTubeVideo;
+        import {
+            searchYouTubeVideo,
+            recognizeAudioWithAudD,
+            getFavorites,
+            toggleFavoriteSong,
+            getRecentlyPlayed,
+            addRecentlyPlayed,
+            getQueue,
+            saveQueue,
+            getPlaylists,
+            createPlaylist,
+            addSongToPlaylist,
+            cleanSearchQuery
+        } from "./modules/tunewise/index.js";
+
+        window.TuneWiseEngine = {
+            searchYouTubeVideo,
+            recognizeAudioWithAudD,
+            getFavorites,
+            toggleFavoriteSong,
+            getRecentlyPlayed,
+            addRecentlyPlayed,
+            getQueue,
+            saveQueue,
+            getPlaylists,
+            createPlaylist,
+            addSongToPlaylist,
+            cleanSearchQuery
+        };
     </script>
 </head>
 <body>
 
     <header>
-        <div class="brand">
+        <div class="brand" onclick="switchView('discover')">
             <span class="brand-badge">TUNEWISE 3.0</span>
         </div>
 
-        <div class="ai-search-bar">
+        <div class="search-container">
             <span>🔍</span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Upisi npr. Severina Italiana ili pitaj ALL..." onkeypress="handleSearch(event)">
-            <button class="mic-trigger-btn" onclick="startVoiceAssistant()" title="Glasovne komande za ALL">🎙️</button>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search song, artist or say 'Hey ALL, find Believer'..." onkeypress="handleSearchKey(event)">
+            <button class="mic-btn" onclick="startVoiceAssistant()" title="Voice Search">🎙️</button>
         </div>
     </header>
 
+    <div id="toast" class="toast-banner">Message</div>
+
     <div class="app-layout">
+        <!-- Left Sidebar Navigation -->
         <aside class="left-sidebar">
-            <div style="color: var(--text-muted); font-size: 12px; font-weight: bold;">IZI BAZA</div>
-            <div class="playlist-menu-item active">❤️ Omiljene pjesme</div>
-            <div class="playlist-menu-item">🕒 Nedavno slušano</div>
+            <div class="nav-header">Library</div>
+            <div class="nav-item active" id="nav-discover" onclick="switchView('discover')">🔍 Discover</div>
+            <div class="nav-item" id="nav-favorites" onclick="switchView('favorites')">❤️ Favorites</div>
+            <div class="nav-item" id="nav-recent" onclick="switchView('recent')">🕒 Recently Played</div>
+            
+            <div class="nav-header" style="margin-top: 15px;">Playlists</div>
+            <div id="playlistNavList"></div>
+            <div class="nav-item" style="color: var(--accent-cyan);" onclick="promptCreatePlaylist()">➕ Create Playlist</div>
         </aside>
 
+        <!-- Main Workspace -->
         <main class="main-content">
-            <div id="errorToast" class="error-toast">Song not found</div>
-
-            <div class="tunewise-hero">
+            <!-- Shazam Audio Identification Banner -->
+            <div class="shazam-card" id="shazamSection">
                 <div>
-                    <h2 style="margin-bottom: 6px;">🎵 TuneWise Audio Engine</h2>
-                    <p style="color: var(--text-muted); font-size: 13px;">Prepoznaj pjesmu u okolini ili zatraži od ALL asistenta</p>
+                    <h2 style="margin-bottom: 6px; font-size: 20px;">🎵 TuneWise Shazam Mode</h2>
+                    <p style="color: var(--text-muted); font-size: 13px;">Tap microphone to identify music playing around you (5s sample)</p>
                 </div>
-                <button class="tunewise-btn" id="shazamBtn" onclick="runTuneWise()">🎧</button>
+                <button class="shazam-btn" id="shazamBtn" onclick="triggerAudioRecognition()">🎧</button>
             </div>
 
-            <div class="song-table-container">
-                <h3 style="margin-bottom: 15px;">Trenutna Reprodukcija</h3>
-                <div id="songList">
-                    <p style="color: var(--text-muted); font-size: 14px;">Potražite pjesmu ili pokrenite prepoznavanje.</p>
+            <!-- Song List Table -->
+            <div class="song-table">
+                <h3 id="viewTitle" style="margin-bottom: 16px; font-size: 18px;">Discover Tracks</h3>
+                
+                <div class="table-header">
+                    <div>#</div>
+                    <div>Title</div>
+                    <div>Duration</div>
+                    <div style="text-align: right;">Action</div>
+                </div>
+
+                <div id="songContainer">
+                    <p style="color: var(--text-muted); font-size: 14px; padding: 12px;">Search for a song or tap Shazam to begin.</p>
                 </div>
             </div>
         </main>
 
-        <aside class="ai-sidebar-right">
-            <div style="background: var(--surface-card); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
-                <div style="font-weight: bold; margin-bottom: 8px;">🤖 ALL AI Asistent</div>
-                <div id="aiStatus" style="font-size: 13px; color: var(--text-muted);">Spreman za pretragu i reprodukciju.</div>
+        <!-- Right Queue Sidebar -->
+        <aside class="right-sidebar">
+            <h3 style="font-size: 16px;">Up Next (Queue)</h3>
+            <div id="queueContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                <p style="color: var(--text-muted); font-size: 13px;">Queue is empty.</p>
             </div>
         </aside>
     </div>
 
-    <!-- Bottom Audio Player Bar -->
-    <div class="player-bar-bottom">
-        <div class="player-left">
-            <img id="playerCover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&h=100&fit=crop" class="player-cover">
-            <div>
-                <div id="playerTitle" style="font-weight: bold; font-size: 14px;">Nema pjesme</div>
-                <div id="playerArtist" style="font-size: 12px; color: var(--accent-cyan);">TuneWise Player</div>
+    <!-- Bottom Audio Player -->
+    <div class="player-bar">
+        <div class="player-track">
+            <img id="playerCover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=120&h=120&fit=crop" class="player-cover">
+            <div style="overflow: hidden;">
+                <div id="playerTitle" class="song-title">No Track Selected</div>
+                <div id="playerArtist" class="song-artist">TuneWise Player</div>
             </div>
+            <button class="action-btn" id="favPlayerBtn" onclick="toggleCurrentFavorite()">❤️</button>
         </div>
 
-        <div class="player-center">
-            <div class="iframe-container">
-                <div id="ytPlayerContainer"></div>
+        <div class="player-controls">
+            <div class="player-buttons">
+                <button class="control-btn" onclick="playPrevious()">⏮</button>
+                <button class="control-btn play-main" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+                <button class="control-btn" onclick="playNext()">⏭</button>
             </div>
+            <div id="playerStatus" style="font-size: 12px; color: var(--accent-cyan);">Ready</div>
+        </div>
+
+        <!-- Hidden YT Frame -->
+        <div class="hidden-yt-frame">
+            <div id="ytIframeContainer"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Playlist Picker -->
+    <div class="modal-overlay" id="playlistModal">
+        <div class="modal-box">
+            <h4 style="font-size: 16px;">Add to Playlist</h4>
+            <div id="modalPlaylistOptions" style="display:flex; flex-direction:column; gap:8px;"></div>
+            <button onclick="closePlaylistModal()" style="background:var(--surface-hover); color:white; border:none; padding:8px; border-radius:8px; cursor:pointer; margin-top:8px;">Cancel</button>
         </div>
     </div>
 
     <script>
         let ytPlayer = null;
         let isPlayerReady = false;
+        let isPlaying = false;
+        let currentSong = null;
+        let currentView = 'discover';
+        let songToAddToPlaylist = null;
 
-        // Inicijalizacija službenog YouTube JS API Player-a
+        // Auto-Recovery State Trackers
+        let currentQuery = '';
+        let failedVideoIds = [];
+
+        // Inicijalizacija YouTube IFrame API
         function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('ytPlayerContainer', {
-                height: '60',
-                width: '100%',
+            ytPlayer = new YT.Player('ytIframeContainer', {
+                height: '100',
+                width: '100',
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 1,
+                    'controls': 0,
                     'playsinline': 1,
                     'rel': 0,
-                    'origin': window.location.origin || 'http://localhost'
+                    'origin': window.location.origin
                 },
                 events: {
                     'onReady': () => { isPlayerReady = true; },
+                    'onStateChange': onPlayerStateChange,
                     'onError': onPlayerError
                 }
             });
         }
 
-        // Rukovanje greškama (npr. ako je video zabranjen za ugrađivanje ili nedostupan)
-        function onPlayerError(event) {
-            console.warn("YouTube Player Error:", event.data);
-            showError("Song not found / Video restricted");
-            document.getElementById('aiStatus').innerText = "Song not found or restricted.";
-            speak("Žao mi je, taj videozapis nije dostupan za ugrađivanje.");
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                document.getElementById('playPauseBtn').innerText = '⏸';
+                document.getElementById('playerStatus').innerText = 'Playing';
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                isPlaying = false;
+                document.getElementById('playPauseBtn').innerText = '▶';
+                document.getElementById('playerStatus').innerText = 'Paused';
+            } else if (event.data === YT.PlayerState.ENDED) {
+                playNext();
+            }
         }
 
-        function speak(text) {
+        // Auto-Recovery on restricted or unembeddable YouTube videos
+        async function onPlayerError(event) {
+            console.warn("[TuneWise Auto-Recovery Triggered] YT Error Code:", event.data);
+            
+            if (currentSong && currentSong.videoId) {
+                failedVideoIds.push(currentSong.videoId);
+            }
+
+            showToast("Video restricted. Finding alternative source...");
+
+            if (currentQuery) {
+                const fallback = await window.TuneWiseEngine.searchYouTubeVideo(`${currentQuery} music video`, failedVideoIds);
+                if (fallback.success) {
+                    playSong(fallback.song, false);
+                    return;
+                }
+            }
+
+            showToast("Song not found");
+            document.getElementById('playerStatus').innerText = "Song not found";
+            speakText("Sorry, this song is restricted or unavailable.");
+        }
+
+        function speakText(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(text);
-                u.lang = 'hr-HR';
-                window.speechSynthesis.speak(u);
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
             }
         }
 
-        function showError(msg) {
-            const toast = document.getElementById('errorToast');
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
             toast.innerText = msg;
             toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 4000);
+            setTimeout(() => { toast.style.display = 'none'; }, 3500);
         }
 
-        async function executeSearch(query) {
-            document.getElementById('aiStatus').innerText = `Pretražujem: "${query}"...`;
+        async function performSearch(query) {
+            if (!query) return;
+            currentQuery = query;
+            failedVideoIds = []; // Reset failed exclusions for fresh query
+
+            document.getElementById('playerStatus').innerText = `Searching: "${query}"...`;
             
-            // Čišćenje glasovnih fraza
-            let cleanQuery = query.toLowerCase()
-                .replace("hey all", "")
-                .replace("hej all", "")
-                .replace("nađi", "")
-                .replace("pusti", "")
-                .replace("pronađi", "")
-                .replace("od", "")
-                .trim();
+            const result = await window.TuneWiseEngine.searchYouTubeVideo(query, failedVideoIds);
 
-            if (!cleanQuery) return;
-
-            try {
-                const result = await window.searchYouTubeVideo(cleanQuery);
-
-                if (result.success && result.videoId) {
-                    playSongInPlayer(result);
-                } else {
-                    showError("Song not found");
-                    speak("Pjesma nije pronađena.");
-                    document.getElementById('aiStatus').innerText = "Song not found.";
-                }
-            } catch (e) {
-                console.error(e);
-                showError("Song not found");
+            if (result.success) {
+                playSong(result.song);
+                renderSearchResults([result.song]);
+                speakText(`Playing ${result.song.title}`);
+            } else {
+                showToast("Song not found");
+                document.getElementById('playerStatus').innerText = "Song not found";
+                speakText("Song not found");
             }
         }
 
-        function playSongInPlayer(song) {
+        function playSong(song, addToRecent = true) {
+            currentSong = song;
             document.getElementById('playerTitle').innerText = song.title;
             document.getElementById('playerArtist').innerText = song.artist;
             if (song.cover) document.getElementById('playerCover').src = song.cover;
 
-            // Reprodukcija preko YouTube API-ja
-            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                ytPlayer.loadVideoById(song.videoId);
-            } else {
-                // Fallback na izravni iframe ako se JS API još nije učitao
-                const container = document.getElementById('ytPlayerContainer');
-                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${song.videoId}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin || '*')}" allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>`;
+            if (addToRecent) {
+                window.TuneWiseEngine.addRecentlyPlayed(song);
             }
 
-            document.getElementById('aiStatus').innerText = `Reproduciram: ${song.title}`;
-            speak(`Reproduciram ${song.title}`);
+            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+                ytPlayer.loadVideoById(song.videoId);
+            }
 
-            const list = document.getElementById('songList');
-            list.innerHTML = `
-                <div class="song-row">
-                    <div style="color: var(--accent-green);">▶</div>
-                    <div class="song-title-cell">
-                        <img src="${song.cover}" class="song-cover-mini">
-                        <div>
-                            <div style="font-weight:bold;">${song.title}</div>
-                            <div style="color:var(--accent-cyan); font-size:12px;">${song.artist}</div>
-                        </div>
-                    </div>
-                    <div>YouTube Live</div>
-                    <div>3:40</div>
-                </div>
-            `;
+            updateFavButtonState();
         }
 
-        function handleSearch(e) {
+        function togglePlayPause() {
+            if (!ytPlayer || !isPlayerReady) return;
+            if (isPlaying) {
+                ytPlayer.pauseVideo();
+            } else {
+                ytPlayer.playVideo();
+            }
+        }
+
+        function playNext() {
+            let queue = window.TuneWiseEngine.getQueue();
+            if (queue.length > 0) {
+                const nextSong = queue.shift();
+                window.TuneWiseEngine.saveQueue(queue);
+                renderQueue();
+                playSong(nextSong);
+            }
+        }
+
+        function playPrevious() {
+            let recent = window.TuneWiseEngine.getRecentlyPlayed();
+            if (recent.length > 1) {
+                playSong(recent[1]);
+            }
+        }
+
+        function handleSearchKey(e) {
             if (e.key === 'Enter') {
-                executeSearch(e.target.value);
+                performSearch(e.target.value);
             }
         }
 
         function startVoiceAssistant() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Glasovno prepoznavanje nije podržano u ovom pregledniku.");
+                alert("Voice search is not supported on this browser.");
                 return;
             }
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            recognition.lang = 'hr-HR';
+            recognition.lang = 'en-US';
 
-            document.getElementById('aiStatus').innerText = "ALL sluša glasovnu naredbu...";
+            document.getElementById('playerStatus').innerText = "ALL Listening...";
             recognition.start();
 
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 document.getElementById('searchInput').value = transcript;
-                executeSearch(transcript);
+                
+                // Voice Command Logic
+                const lower = transcript.toLowerCase();
+                if (lower.includes("add to favorites") || lower.includes("favorite this")) {
+                    toggleCurrentFavorite();
+                } else {
+                    performSearch(transcript);
+                }
             };
 
             recognition.onerror = () => {
-                document.getElementById('aiStatus').innerText = "Greška s mikrofonom ili prepoznavanjem.";
+                document.getElementById('playerStatus').innerText = "Voice input error";
             };
         }
 
-        async function runTuneWise() {
+        async function triggerAudioRecognition() {
             const btn = document.getElementById('shazamBtn');
             btn.classList.add('listening');
-            document.getElementById('aiStatus').innerText = "TuneWise snima zvučni uzorak...";
+            document.getElementById('playerStatus').innerText = "Recording sample (5s)...";
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                setTimeout(async () => {
+                const mediaRecorder = new MediaRecorder(stream);
+                const chunks = [];
+
+                mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                mediaRecorder.onstop = async () => {
                     stream.getTracks().forEach(t => t.stop());
                     btn.classList.remove('listening');
+                    document.getElementById('playerStatus').innerText = "Analyzing audio sample...";
 
-                    const res = await window.startTuneWiseRecognition(null);
+                    const blob = new Blob(chunks, { type: 'audio/webm' });
+                    const res = await window.TuneWiseEngine.recognizeAudioWithAudD(blob);
+
                     if (res.success && res.song) {
-                        playSongInPlayer(res.song);
+                        playSong(res.song);
+                        renderSearchResults([res.song]);
+                        speakText(`Recognized ${res.song.title}`);
                     } else {
-                        showError("Song not found");
-                        speak("Pjesma nije pronađena.");
+                        showToast("Song not found");
+                        document.getElementById('playerStatus').innerText = "Song not found";
+                        speakText("Song not found in sample.");
                     }
-                }, 3000);
+                };
+
+                mediaRecorder.start();
+                setTimeout(() => mediaRecorder.stop(), 5000);
+
             } catch (err) {
                 btn.classList.remove('listening');
-                alert("Potrebno je odobriti pristup mikrofonu.");
+                alert("Microphone access is required for Shazam mode.");
             }
         }
+
+        function toggleCurrentFavorite() {
+            if (!currentSong) return;
+            const isFav = window.TuneWiseEngine.toggleFavoriteSong(currentSong);
+            showToast(isFav ? "Added to Favorites" : "Removed from Favorites");
+            speakText(isFav ? "Added to Favorites" : "Removed from Favorites");
+            updateFavButtonState();
+            if (currentView === 'favorites') switchView('favorites');
+        }
+
+        function updateFavButtonState() {
+            if (!currentSong) return;
+            const favs = window.TuneWiseEngine.getFavorites();
+            const exists = favs.some(f => f.videoId === currentSong.videoId);
+            document.getElementById('favPlayerBtn').style.color = exists ? 'var(--accent-pink)' : 'var(--text-muted)';
+        }
+
+        function addToQueue(song, e) {
+            if (e) e.stopPropagation();
+            let queue = window.TuneWiseEngine.getQueue();
+            queue.push(song);
+            window.TuneWiseEngine.saveQueue(queue);
+            renderQueue();
+            showToast("Added to Queue");
+        }
+
+        function openPlaylistModal(song, e) {
+            if (e) e.stopPropagation();
+            songToAddToPlaylist = song;
+            const playlists = window.TuneWiseEngine.getPlaylists();
+            const keys = Object.keys(playlists);
+            const container = document.getElementById('modalPlaylistOptions');
+
+            if (keys.length === 0) {
+                container.innerHTML = `<p style="font-size:13px; color:var(--text-muted);">No playlists created yet.</p>`;
+            } else {
+                container.innerHTML = keys.map(k => `
+                    <button onclick="saveToPlaylist('${k}')" style="background:var(--surface-card); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; text-align:left;">🎵 ${k}</button>
+                `).join('');
+            }
+
+            document.getElementById('playlistModal').style.display = 'flex';
+        }
+
+        function closePlaylistModal() {
+            document.getElementById('playlistModal').style.display = 'none';
+        }
+
+        function saveToPlaylist(name) {
+            if (songToAddToPlaylist) {
+                window.TuneWiseEngine.addSongToPlaylist(name, songToAddToPlaylist);
+                showToast(`Added to playlist "${name}"`);
+                closePlaylistModal();
+            }
+        }
+
+        function promptCreatePlaylist() {
+            const name = prompt("Enter Playlist Name:");
+            if (name) {
+                const ok = window.TuneWiseEngine.createPlaylist(name);
+                if (ok) {
+                    renderPlaylistNav();
+                    showToast(`Playlist "${name}" created`);
+                } else {
+                    alert("Playlist already exists.");
+                }
+            }
+        }
+
+        function renderPlaylistNav() {
+            const playlists = window.TuneWiseEngine.getPlaylists();
+            const container = document.getElementById('playlistNavList');
+            container.innerHTML = Object.keys(playlists).map(k => `
+                <div class="nav-item" id="nav-pl-${k}" onclick="switchView('playlist-${k}')">🎵 ${k}</div>
+            `).join('');
+        }
+
+        function renderSearchResults(songs) {
+            const container = document.getElementById('songContainer');
+            if (!songs || songs.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px; padding: 12px;">No tracks found.</p>`;
+                return;
+            }
+            container.innerHTML = songs.map((s, index) => `
+                <div class="song-row" onclick='playSong(${JSON.stringify(s)})'>
+                    <div>${index + 1}</div>
+                    <div class="song-info">
+                        <img src="${s.cover}" class="song-cover-mini">
+                        <div>
+                            <div class="song-title">${s.title}</div>
+                            <div class="song-artist">${s.artist}</div>
+                        </div>
+                    </div>
+                    <div>${s.duration || '3:30'}</div>
+                    <div style="text-align: right; display:flex; gap:6px; justify-content:flex-end;">
+                        <button class="action-btn" onclick='addToQueue(${JSON.stringify(s)}, event)' title="Add to Queue">➕</button>
+                        <button class="action-btn" onclick='openPlaylistModal(${JSON.stringify(s)}, event)' title="Add to Playlist">📂</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderQueue() {
+            const queue = window.TuneWiseEngine.getQueue();
+            const container = document.getElementById('queueContainer');
+            if (queue.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">Queue is empty.</p>`;
+                return;
+            }
+            container.innerHTML = queue.map((s) => `
+                <div style="display:flex; align-items:center; gap:10px; background:var(--surface-card); padding:8px; border-radius:8px;">
+                    <img src="${s.cover}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
+                    <div style="flex:1; overflow:hidden;">
+                        <div class="song-title" style="font-size:13px;">${s.title}</div>
+                        <div class="song-artist">${s.artist}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            const title = document.getElementById('viewTitle');
+            const shazamSection = document.getElementById('shazamSection');
+
+            if (view === 'discover') {
+                document.getElementById('nav-discover')?.classList.add('active');
+                title.innerText = "Discover Tracks";
+                shazamSection.style.display = 'flex';
+            } else if (view === 'favorites') {
+                document.getElementById('nav-favorites')?.classList.add('active');
+                title.innerText = "Favorites";
+                shazamSection.style.display = 'none';
+                renderSearchResults(window.TuneWiseEngine.getFavorites());
+            } else if (view === 'recent') {
+                document.getElementById('nav-recent')?.classList.add('active');
+                title.innerText = "Recently Played";
+                shazamSection.style.display = 'none';
+                renderSearchResults(window.TuneWiseEngine.getRecentlyPlayed());
+            } else if (view.startsWith('playlist-')) {
+                const plName = view.replace('playlist-', '');
+                document.getElementById(`nav-pl-${plName}`)?.classList.add('active');
+                title.innerText = `Playlist: ${plName}`;
+                shazamSection.style.display = 'none';
+                const playlists = window.TuneWiseEngine.getPlaylists();
+                renderSearchResults(playlists[plName] || []);
+            }
+        }
+
+        // Global Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            renderQueue();
+            renderPlaylistNav();
+        });
     </script>
 </body>
 </html>
