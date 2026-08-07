@@ -249,7 +249,7 @@
         .player-cover { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); }
 
         .player-center { flex: 1; max-width: 600px; }
-        .iframe-container { width: 100%; height: 50px; border-radius: 8px; overflow: hidden; background: #000; }
+        .iframe-container { width: 100%; height: 60px; border-radius: 8px; overflow: hidden; background: #000; }
         .iframe-container iframe { width: 100%; height: 100%; border: none; }
 
         .error-toast {
@@ -264,6 +264,9 @@
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
     </style>
+
+    <!-- Učitavanje YouTube IFrame Player API-ja -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <script type="module">
         import { startTuneWiseRecognition, searchYouTubeVideo } from "./modules/tunewise/index.js";
@@ -331,12 +334,42 @@
 
         <div class="player-center">
             <div class="iframe-container">
-                <iframe id="youtubePlayer" src="" allow="autoplay"></iframe>
+                <div id="ytPlayerContainer"></div>
             </div>
         </div>
     </div>
 
     <script>
+        let ytPlayer = null;
+        let isPlayerReady = false;
+
+        // Inicijalizacija službenog YouTube JS API Player-a
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('ytPlayerContainer', {
+                height: '60',
+                width: '100%',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 1,
+                    'playsinline': 1,
+                    'rel': 0,
+                    'origin': window.location.origin || 'http://localhost'
+                },
+                events: {
+                    'onReady': () => { isPlayerReady = true; },
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        // Rukovanje greškama (npr. ako je video zabranjen za ugrađivanje ili nedostupan)
+        function onPlayerError(event) {
+            console.warn("YouTube Player Error:", event.data);
+            showError("Song not found / Video restricted");
+            document.getElementById('aiStatus').innerText = "Song not found or restricted.";
+            speak("Žao mi je, taj videozapis nije dostupan za ugrađivanje.");
+        }
+
         function speak(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -356,7 +389,7 @@
         async function executeSearch(query) {
             document.getElementById('aiStatus').innerText = `Pretražujem: "${query}"...`;
             
-            // Očišćenje upita od fraza glasovnog asistenta
+            // Čišćenje glasovnih fraza
             let cleanQuery = query.toLowerCase()
                 .replace("hey all", "")
                 .replace("hej all", "")
@@ -369,7 +402,6 @@
             if (!cleanQuery) return;
 
             try {
-                // Pozivamo dinamičku pretragu za dohvatanje točnog YouTube Video ID-a
                 const result = await window.searchYouTubeVideo(cleanQuery);
 
                 if (result.success && result.videoId) {
@@ -378,12 +410,10 @@
                     showError("Song not found");
                     speak("Pjesma nije pronađena.");
                     document.getElementById('aiStatus').innerText = "Song not found.";
-                    document.getElementById('youtubePlayer').src = "";
                 }
             } catch (e) {
                 console.error(e);
                 showError("Song not found");
-                document.getElementById('youtubePlayer').src = "";
             }
         }
 
@@ -392,9 +422,14 @@
             document.getElementById('playerArtist').innerText = song.artist;
             if (song.cover) document.getElementById('playerCover').src = song.cover;
 
-            // Korištenjem izravnog 11-znakovnog Video ID-a uklanja se poruka "Taj videozapis nije dostupan"
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${song.videoId}?autoplay=1&enablejsapi=1`;
-            document.getElementById('youtubePlayer').src = embedUrl;
+            // Reprodukcija preko YouTube API-ja
+            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+                ytPlayer.loadVideoById(song.videoId);
+            } else {
+                // Fallback na izravni iframe ako se JS API još nije učitao
+                const container = document.getElementById('ytPlayerContainer');
+                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${song.videoId}?autoplay=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin || '*')}" allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>`;
+            }
 
             document.getElementById('aiStatus').innerText = `Reproduciram: ${song.title}`;
             speak(`Reproduciram ${song.title}`);
