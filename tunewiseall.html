@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TuneWiseAll v2.0 | Next-Gen AI Music Platform</title>
+    <title>TuneWise ALL 3.0 | Dynamic Player Engine</title>
+    
+    <!-- PWA & Mobile Settings -->
+    <meta name="theme-color" content="#070a12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <style>
         :root {
             --bg: #070a12;
@@ -23,26 +29,30 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
             min-height: 100vh;
-            padding-bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
         }
 
         header {
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
-            padding: 15px 5%;
+            padding: 12px 24px;
             position: sticky;
             top: 0;
             z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 15px;
         }
 
         .brand {
@@ -57,557 +67,409 @@
             font-weight: 900;
             padding: 6px 14px;
             border-radius: 8px;
-            font-size: 18px;
+            font-size: 16px;
             letter-spacing: 1px;
         }
 
-        .brand-title {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .user-profile-badge {
+        .ai-search-bar {
+            flex: 1;
+            max-width: 600px;
             display: flex;
             align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 4px 16px;
             gap: 10px;
-            background: var(--surface-card);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
+            transition: all 0.3s;
         }
 
-        .avatar {
-            width: 24px;
-            height: 24px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+        .ai-search-bar:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 25px auto;
-            padding: 0 20px;
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            padding: 8px 0;
         }
 
-        .shazam-banner {
-            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .mic-trigger-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            opacity: 0.8;
+            transition: transform 0.2s;
+        }
+
+        .mic-trigger-btn:hover { transform: scale(1.1); opacity: 1; }
+
+        .app-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr 320px;
+            height: calc(100vh - 65px - 90px);
+            overflow: hidden;
+        }
+
+        @media (max-width: 1024px) {
+            .app-layout { grid-template-columns: 220px 1fr; }
+            .ai-sidebar-right { display: none; }
         }
 
         @media (max-width: 768px) {
-            .shazam-banner { flex-direction: column; text-align: center; gap: 20px; }
+            .app-layout { grid-template-columns: 1fr; height: auto; margin-bottom: 140px; }
+            .left-sidebar { display: none; }
         }
 
-        .shazam-btn {
-            width: 90px;
-            height: 90px;
+        .left-sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .playlist-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .playlist-menu-item:hover, .playlist-menu-item.active {
+            background: var(--surface-card);
+            color: var(--text-main);
+        }
+
+        .main-content {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .tunewise-hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tunewise-btn {
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-cyan), var(--primary));
             border: none;
             color: white;
-            font-size: 36px;
+            font-size: 28px;
             cursor: pointer;
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
-            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            transition: transform 0.2s;
         }
 
-        .shazam-btn.listening {
-            animation: pulse-ring 1.5s infinite;
+        .tunewise-btn:hover { transform: scale(1.05); }
+
+        .tunewise-btn.listening {
+            animation: pulse 1.5s infinite;
             background: linear-gradient(135deg, var(--accent-pink), var(--primary));
         }
 
-        @keyframes pulse-ring {
+        @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); }
-            70% { box-shadow: 0 0 0 25px rgba(236, 72, 153, 0); }
+            70% { box-shadow: 0 0 0 18px rgba(236, 72, 153, 0); }
             100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
         }
 
-        .voice-control-box {
+        .song-table-container {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
         }
 
-        .voice-status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent-green);
-        }
-
-        .voice-status-indicator.active {
-            background: var(--accent-pink);
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink { 50% { opacity: 0.3; } }
-
-        .search-input {
-            flex: 1;
-            background: #070a12;
-            border: 1px solid var(--border);
-            padding: 14px 20px;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .player-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
+        .song-row {
             display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        @media (max-width: 768px) { .player-card { grid-template-columns: 1fr; } }
-
-        .album-cover {
-            width: 100%;
-            height: 300px;
-            border-radius: 16px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-        }
-
-        .player-controls {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .song-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-
-        .song-artist {
-            font-size: 20px;
-            color: var(--accent-cyan);
-            margin-bottom: 15px;
-        }
-
-        .embedded-player-container {
-            width: 100%;
-            height: 180px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-            border: 1px solid var(--border);
-            margin-bottom: 15px;
-        }
-
-        .embedded-player-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn-act {
-            padding: 10px 18px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--surface-card);
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-act:hover {
-            border-color: var(--accent-pink);
-            color: var(--accent-pink);
-        }
-
-        .tabs-container {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 25px;
-        }
-
-        .tab-headers {
-            display: flex;
-            gap: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            padding-bottom: 5px;
-        }
-
-        .tab-btn.active {
-            color: var(--accent-pink);
-            border-bottom: 2px solid var(--accent-pink);
-        }
-
-        .playlist-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .playlist-item {
-            display: flex;
-            justify-content: space-between;
+            grid-template-columns: 40px 1fr 140px 60px;
             align-items: center;
-            background: var(--surface-card);
-            padding: 12px 20px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .song-row:hover { background: var(--surface-card); }
+
+        .song-title-cell { display: flex; align-items: center; gap: 12px; }
+        .song-cover-mini { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; }
+
+        .ai-sidebar-right {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .player-bar-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 200;
+        }
+
+        .player-left { display: flex; align-items: center; gap: 15px; width: 280px; }
+        .player-cover { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); }
+
+        .player-center { flex: 1; max-width: 600px; }
+        .iframe-container { width: 100%; height: 50px; border-radius: 8px; overflow: hidden; background: #000; }
+        .iframe-container iframe { width: 100%; height: 100%; border: none; }
+
+        .error-toast {
+            display: none;
+            background: #ef4444;
+            color: white;
+            padding: 12px 18px;
             border-radius: 10px;
-            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
     </style>
 
-    <!-- Učitavanje TuneWise modula kao ES modula -->
     <script type="module">
-        import { startTuneWiseRecognition } from "./modules/tunewise/index.js";
+        import { startTuneWiseRecognition, searchYouTubeVideo } from "./modules/tunewise/index.js";
         window.startTuneWiseRecognition = startTuneWiseRecognition;
+        window.searchYouTubeVideo = searchYouTubeVideo;
     </script>
 </head>
 <body>
 
     <header>
         <div class="brand">
-            <span class="brand-badge">TUNEWISE 2.0</span>
-            <div class="brand-title">Smart Platform</div>
+            <span class="brand-badge">TUNEWISE 3.0</span>
         </div>
-        <div class="user-profile-badge">
-            <div class="avatar">K</div>
-            <span id="userName">Korisnik (Cloud Sync Ready)</span>
+
+        <div class="ai-search-bar">
+            <span>🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Upisi npr. Severina Italiana ili pitaj ALL..." onkeypress="handleSearch(event)">
+            <button class="mic-trigger-btn" onclick="startVoiceAssistant()" title="Glasovne komande za ALL">🎙️</button>
         </div>
     </header>
 
-    <div class="container">
-        <div class="shazam-banner">
+    <div class="app-layout">
+        <aside class="left-sidebar">
+            <div style="color: var(--text-muted); font-size: 12px; font-weight: bold;">IZI BAZA</div>
+            <div class="playlist-menu-item active">❤️ Omiljene pjesme</div>
+            <div class="playlist-menu-item">🕒 Nedavno slušano</div>
+        </aside>
+
+        <main class="main-content">
+            <div id="errorToast" class="error-toast">Song not found</div>
+
+            <div class="tunewise-hero">
+                <div>
+                    <h2 style="margin-bottom: 6px;">🎵 TuneWise Audio Engine</h2>
+                    <p style="color: var(--text-muted); font-size: 13px;">Prepoznaj pjesmu u okolini ili zatraži od ALL asistenta</p>
+                </div>
+                <button class="tunewise-btn" id="shazamBtn" onclick="runTuneWise()">🎧</button>
+            </div>
+
+            <div class="song-table-container">
+                <h3 style="margin-bottom: 15px;">Trenutna Reprodukcija</h3>
+                <div id="songList">
+                    <p style="color: var(--text-muted); font-size: 14px;">Potražite pjesmu ili pokrenite prepoznavanje.</p>
+                </div>
+            </div>
+        </main>
+
+        <aside class="ai-sidebar-right">
+            <div style="background: var(--surface-card); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                <div style="font-weight: bold; margin-bottom: 8px;">🤖 ALL AI Asistent</div>
+                <div id="aiStatus" style="font-size: 13px; color: var(--text-muted);">Spreman za pretragu i reprodukciju.</div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Bottom Audio Player Bar -->
+    <div class="player-bar-bottom">
+        <div class="player-left">
+            <img id="playerCover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&h=100&fit=crop" class="player-cover">
             <div>
-                <h2 style="font-size: 24px; margin-bottom: 8px;">🎵 Prepoznavanje Glazbe (TuneWise Engine)</h2>
-                <p style="color: var(--text-muted); font-size: 14px;">Pritisnite mikrofon i snimite 5s zvuka ili recite: <b>"Hej ALL, pronađi ovu pjesmu"</b></p>
+                <div id="playerTitle" style="font-weight: bold; font-size: 14px;">Nema pjesme</div>
+                <div id="playerArtist" style="font-size: 12px; color: var(--accent-cyan);">TuneWise Player</div>
             </div>
-            <button class="shazam-btn" id="shazamBtn" onclick="startAudioRecognition()" title="Prepoznaj pjesmu u okolini">🎧</button>
         </div>
 
-        <div class="voice-control-box">
-            <div class="voice-status-indicator" id="voiceIndicator"></div>
-            <span style="font-size: 14px; color: var(--text-muted);" id="voiceStateText">ALL Asistent: Spreman za naredbe...</span>
-            <input type="text" id="manualInput" class="search-input" placeholder="Upiši pjesmu ili daj naredbu..." onkeypress="handleEnter(event)">
-            <button class="btn-act" onclick="processCommand(document.getElementById('manualInput').value)">Izvrši</button>
-        </div>
-
-        <div class="player-card" id="playerArea"></div>
-
-        <div class="tabs-container">
-            <div class="tab-headers">
-                <button class="tab-btn active" id="btnTabLyrics" onclick="switchTab('lyrics')">📜 Tekst & AI Značenje</button>
-                <button class="tab-btn" id="btnTabFavs" onclick="switchTab('favorites')">❤️ Omiljene Pjesme (<span id="favCount">0</span>)</button>
+        <div class="player-center">
+            <div class="iframe-container">
+                <iframe id="youtubePlayer" src="" allow="autoplay"></iframe>
             </div>
-
-            <div id="tabContent"></div>
         </div>
     </div>
 
     <script>
-        const musicDatabase = {
-            "believer": {
-                title: "Believer",
-                artist: "Imagine Dragons",
-                album: "Evolve (2017)",
-                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-                embedUrl: "https://www.youtube.com/embed/7wtfhZwyrCA?autoplay=1",
-                lyrics: "First things first\nI'm siga say all the words inside my head\nI'm fired up and tired of the way that things have been...",
-                meaning: "Pjesma slavi prenošenje osobne boli i prepreka u unutarnju snagu."
-            },
-            "blinding lights": {
-                title: "Blinding Lights",
-                artist: "The Weeknd",
-                album: "After Hours (2020)",
-                cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80",
-                embedUrl: "https://www.youtube.com/embed/4NRXx6U8ABQ?autoplay=1",
-                lyrics: "I've been on my own for long enough\nMaybe you can show me how to love, maybe...",
-                meaning: "Synth-pop nostalgija s tematikom traženja prisutnosti voljene osobe u noćnom gradu."
-            }
-        };
-
-        let favorites = JSON.parse(localStorage.getItem('tunewise_favs')) || [];
-        let currentSong = null;
-
-        function saveFavorites() {
-            localStorage.setItem('tunewise_favs', JSON.stringify(favorites));
-            document.getElementById('favCount').innerText = favorites.length;
-        }
-
-        function speak(text, callback) {
+        function speak(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const u = new SpeechSynthesisUtterance(text);
                 u.lang = 'hr-HR';
-                u.rate = 1.0;
-                if(callback) u.onend = callback;
                 window.speechSynthesis.speak(u);
-            } else if(callback) callback();
+            }
         }
 
-        function updateVoiceUI(statusText, isActive = false) {
-            document.getElementById('voiceStateText').innerText = `ALL Asistent: ${statusText}`;
-            const ind = document.getElementById('voiceIndicator');
-            if(isActive) ind.classList.add('active');
-            else ind.classList.remove('active');
+        function showError(msg) {
+            const toast = document.getElementById('errorToast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 4000);
         }
 
-        async function startAudioRecognition() {
+        async function executeSearch(query) {
+            document.getElementById('aiStatus').innerText = `Pretražujem: "${query}"...`;
+            
+            // Očišćenje upita od fraza glasovnog asistenta
+            let cleanQuery = query.toLowerCase()
+                .replace("hey all", "")
+                .replace("hej all", "")
+                .replace("nađi", "")
+                .replace("pusti", "")
+                .replace("pronađi", "")
+                .replace("od", "")
+                .trim();
+
+            if (!cleanQuery) return;
+
+            try {
+                // Pozivamo dinamičku pretragu za dohvatanje točnog YouTube Video ID-a
+                const result = await window.searchYouTubeVideo(cleanQuery);
+
+                if (result.success && result.videoId) {
+                    playSongInPlayer(result);
+                } else {
+                    showError("Song not found");
+                    speak("Pjesma nije pronađena.");
+                    document.getElementById('aiStatus').innerText = "Song not found.";
+                    document.getElementById('youtubePlayer').src = "";
+                }
+            } catch (e) {
+                console.error(e);
+                showError("Song not found");
+                document.getElementById('youtubePlayer').src = "";
+            }
+        }
+
+        function playSongInPlayer(song) {
+            document.getElementById('playerTitle').innerText = song.title;
+            document.getElementById('playerArtist').innerText = song.artist;
+            if (song.cover) document.getElementById('playerCover').src = song.cover;
+
+            // Korištenjem izravnog 11-znakovnog Video ID-a uklanja se poruka "Taj videozapis nije dostupan"
+            const embedUrl = `https://www.youtube-nocookie.com/embed/${song.videoId}?autoplay=1&enablejsapi=1`;
+            document.getElementById('youtubePlayer').src = embedUrl;
+
+            document.getElementById('aiStatus').innerText = `Reproduciram: ${song.title}`;
+            speak(`Reproduciram ${song.title}`);
+
+            const list = document.getElementById('songList');
+            list.innerHTML = `
+                <div class="song-row">
+                    <div style="color: var(--accent-green);">▶</div>
+                    <div class="song-title-cell">
+                        <img src="${song.cover}" class="song-cover-mini">
+                        <div>
+                            <div style="font-weight:bold;">${song.title}</div>
+                            <div style="color:var(--accent-cyan); font-size:12px;">${song.artist}</div>
+                        </div>
+                    </div>
+                    <div>YouTube Live</div>
+                    <div>3:40</div>
+                </div>
+            `;
+        }
+
+        function handleSearch(e) {
+            if (e.key === 'Enter') {
+                executeSearch(e.target.value);
+            }
+        }
+
+        function startVoiceAssistant() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Glasovno prepoznavanje nije podržano u ovom pregledniku.");
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'hr-HR';
+
+            document.getElementById('aiStatus').innerText = "ALL sluša glasovnu naredbu...";
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('searchInput').value = transcript;
+                executeSearch(transcript);
+            };
+
+            recognition.onerror = () => {
+                document.getElementById('aiStatus').innerText = "Greška s mikrofonom ili prepoznavanjem.";
+            };
+        }
+
+        async function runTuneWise() {
             const btn = document.getElementById('shazamBtn');
             btn.classList.add('listening');
-            updateVoiceUI("Snimam audio uzorak iz okoline...", true);
-            speak("Slušam glazbu u tvojoj okolini...");
+            document.getElementById('aiStatus').innerText = "TuneWise snima zvučni uzorak...";
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const mediaRecorder = new MediaRecorder(stream);
-                const audioChunks = [];
-
-                mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
-                mediaRecorder.start();
-
-                setTimeout(() => { mediaRecorder.stop(); }, 5000);
-
-                mediaRecorder.onstop = async () => {
-                    stream.getTracks().forEach(track => track.stop());
+                setTimeout(async () => {
+                    stream.getTracks().forEach(t => t.stop());
                     btn.classList.remove('listening');
-                    updateVoiceUI("Analiziram zvučni otisak preko TuneWise modula...");
 
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-
-                    try {
-                        if (typeof window.startTuneWiseRecognition !== 'function') {
-                            throw new Error("TuneWise modul nije dostupan.");
-                        }
-
-                        const response = await window.startTuneWiseRecognition(audioBlob);
-
-                        if (response && response.success && response.song) {
-                            const song = response.song;
-                            speak(`Prepoznao sam pjesmu: ${song.title} izvođača ${song.artist}`);
-                            
-                            playCustomSong({
-                                title: song.title,
-                                artist: song.artist,
-                                album: song.album || "Single",
-                                cover: song.cover || "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80",
-                                embedUrl: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(song.artist + ' ' + song.title)}&autoplay=1`,
-                                lyrics: song.lyrics || "Dohvaćanje originalnog teksta pjesme s mreže...",
-                                meaning: song.meaning || "AI generirano značenje stihova u tijeku..."
-                            });
-                        } else {
-                            throw new Error("Pjesma nije pronađena.");
-                        }
-                    } catch (err) {
-                        console.warn("TuneWise prepoznavanje nije vratilo rezultat, aktiviram fallback:", err);
-                        const keys = Object.keys(musicDatabase);
-                        const randomKey = keys[Math.floor(Math.random() * keys.length)];
-                        speak("Pjesma je prepoznata!");
-                        playSong(randomKey);
+                    const res = await window.startTuneWiseRecognition(null);
+                    if (res.success && res.song) {
+                        playSongInPlayer(res.song);
+                    } else {
+                        showError("Song not found");
+                        speak("Pjesma nije pronađena.");
                     }
-                };
-
+                }, 3000);
             } catch (err) {
-                console.error("Greška s mikrofon snimanjem:", err);
                 btn.classList.remove('listening');
-                speak("Nisam mogao pristupiti mikrofonu.");
-                updateVoiceUI("Pristup mikrofonu je odbijen.");
+                alert("Potrebno je odobriti pristup mikrofonu.");
             }
         }
-
-        function processCommand(rawCmd) {
-            const cmd = rawCmd.toLowerCase().trim();
-            if(!cmd) return;
-
-            if (cmd.includes('pronađi ovu') || cmd.includes('koja je ovo') || cmd.includes('shazam')) {
-                startAudioRecognition();
-                return;
-            }
-
-            if (cmd.includes('favorit') || cmd.includes('omiljen')) {
-                addCurrentToFavorites();
-                return;
-            }
-
-            if (cmd.startsWith('pusti') || cmd.startsWith('pronađi')) {
-                let songQuery = cmd.replace(/^(pusti|pronađi)\s*/i, '').trim();
-                playSong(songQuery);
-                return;
-            }
-
-            playSong(cmd);
-        }
-
-        function playSong(query) {
-            const key = query.toLowerCase();
-            let song = musicDatabase[key];
-
-            if (!song) {
-                song = {
-                    title: query.toUpperCase(),
-                    artist: "Global Audio Stream",
-                    album: "Single",
-                    cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=600&q=80",
-                    embedUrl: `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query)}&autoplay=1`,
-                    lyrics: "Tekst pjesme se dohvaća iz baze...",
-                    meaning: "ALL AI vrši analizu značenja..."
-                };
-            }
-
-            playCustomSong(song);
-        }
-
-        function playCustomSong(song) {
-            currentSong = song;
-            const aiMsg = `Puštam pjesmu ${song.title} od ${song.artist}.`;
-            updateVoiceUI(aiMsg);
-            speak(aiMsg);
-
-            document.getElementById('playerArea').innerHTML = `
-                <img src="${song.cover}" class="album-cover" alt="Cover">
-                <div class="player-controls">
-                    <div>
-                        <div class="song-title">${song.title}</div>
-                        <div class="song-artist">${song.artist}</div>
-                    </div>
-
-                    <div class="embedded-player-container">
-                        <iframe src="${song.embedUrl}" allow="autoplay"></iframe>
-                    </div>
-
-                    <div class="action-btns">
-                        <button class="btn-act" onclick="addCurrentToFavorites()">❤️ Dodaj u favorite</button>
-                        <button class="btn-act" onclick="addToPlaylist()">📃 Dodaj u playlistu</button>
-                    </div>
-                </div>
-            `;
-
-            switchTab('lyrics');
-        }
-
-        function addCurrentToFavorites() {
-            if(!currentSong) return;
-            if(!favorites.some(s => s.title === currentSong.title)) {
-                favorites.push(currentSong);
-                saveFavorites();
-                speak(`Dodao sam ${currentSong.title} u tvoje favorite.`);
-                alert(`Pjesma ${currentSong.title} dodana u favorite!`);
-            } else {
-                speak(`Pjesma ${currentSong.title} je već u favoritima.`);
-            }
-        }
-
-        function addToPlaylist() {
-            if(!currentSong) return;
-            speak(`Dodano na tvoju playlistu.`);
-            alert(`Pjesma ${currentSong.title} dodana na playlistu!`);
-        }
-
-        function switchTab(tabName) {
-            const content = document.getElementById('tabContent');
-            const btnLyrics = document.getElementById('btnTabLyrics');
-            const btnFavs = document.getElementById('btnTabFavs');
-            
-            if (tabName === 'lyrics') {
-                btnLyrics.classList.add('active');
-                btnFavs.classList.remove('active');
-
-                if(!currentSong) {
-                    content.innerHTML = `<p style="color:var(--text-muted);">Trenutno nema odabrane pjesme.</p>`;
-                    return;
-                }
-                content.innerHTML = `
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <h4 style="color:var(--accent-cyan); margin-bottom:10px;">Tekst pjesme</h4>
-                            <div style="white-space: pre-line; color: var(--text-muted); font-size: 14px;">${currentSong.lyrics}</div>
-                        </div>
-                        <div>
-                            <h4 style="color:var(--accent-pink); margin-bottom:10px;">ALL AI Značenje</h4>
-                            <p style="color: var(--text-muted); font-size: 14px;">${currentSong.meaning}</p>
-                        </div>
-                    </div>
-                `;
-            } else if (tabName === 'favorites') {
-                btnFavs.classList.add('active');
-                btnLyrics.classList.remove('active');
-
-                if(favorites.length === 0) {
-                    content.innerHTML = `<p style="color:var(--text-muted);">Nemate spremljenih favorita.</p>`;
-                    return;
-                }
-                let html = `<div class="playlist-list">`;
-                favorites.forEach((f, idx) => {
-                    html += `
-                        <div class="playlist-item">
-                            <div>
-                                <b>${f.title}</b> - <span style="color:var(--accent-cyan);">${f.artist}</span>
-                            </div>
-                            <button class="btn-act" onclick="playFavoriteIndex(${idx})">▶ Pusti</button>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-                content.innerHTML = html;
-            }
-        }
-
-        function playFavoriteIndex(idx) {
-            if (favorites[idx]) {
-                playCustomSong(favorites[idx]);
-            }
-        }
-
-        function handleEnter(e) {
-            if(e.key === 'Enter') processCommand(document.getElementById('manualInput').value);
-        }
-
-        window.onload = () => {
-            saveFavorites();
-            playSong("believer");
-        };
     </script>
 </body>
 </html>
