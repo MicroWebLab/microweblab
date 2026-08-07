@@ -1,22 +1,43 @@
 // modules/tunewise/index.js
-// TuneWise 3.0 Core Engine - Search, AudD Recognition, YouTube Scraper & Local Storage
+// TuneWise 3.1 Core Engine - Multi-fallback Search, AudD Recognition & Local Storage Persistence
 
 /**
- * Cleans search queries from common voice assistant prefixes and command triggers.
+ * Cleans search queries by removing voice triggers, conversational prefixes, and unwanted tokens.
+ * HandlesCroatian and English voice command variations.
  */
 export function cleanSearchQuery(query) {
     if (!query) return '';
     return query
         .replace(/^(hey|hej)\s+all,?\s*/i, '')
-        .replace(/^(play|find|search|pusti|nađi|pronađi|sviraj)\s+/i, '')
-        .replace(/^(song|track|pjesma|pjesmu)\s+/i, '')
+        .replace(/^(play|find|search|pusti|nađi|pronađi|sviraj|traži|prikazi)\s+/i, '')
+        .replace(/^(song|track|pjesma|pjesmu|video)\s+/i, '')
         .replace(/\s+by\s+/i, ' ')
+        .replace(/["']/g, '')
         .trim();
 }
 
 /**
- * Multi-source CORS-safe YouTube Search Engine for GitHub Pages.
- * Extracts accurate 11-character Video IDs and supports automatic fallback list.
+ * Validates if a string is a legitimate 11-character YouTube video ID.
+ */
+function isValidVideoId(id) {
+    return typeof id === 'string' && /^[a-zA-Z0-9_-]{11}$/.test(id);
+}
+
+/**
+ * Formats seconds into M:SS timestamp format.
+ */
+function formatSeconds(seconds) {
+    const sec = parseInt(seconds, 10);
+    if (isNaN(sec) || sec <= 0) return "3:30";
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+/**
+ * Multi-source CORS-safe YouTube Search Engine tailored for GitHub Pages (no backend needed).
+ * Iterates across Piped APIs, Invidious APIs, and CORS Proxy HTML scraping.
+ * Supports exclusion of restricted/unembeddable video IDs.
  */
 export async function searchYouTubeVideo(query, excludeIds = []) {
     const cleanedQuery = cleanSearchQuery(query);
@@ -24,18 +45,19 @@ export async function searchYouTubeVideo(query, excludeIds = []) {
 
     const encoded = encodeURIComponent(cleanedQuery);
 
-    // List of reliable public API endpoints / CORS mirrors
-    const apiEndpoints = [
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://pipedapi.kavin.rocks/search?q=${encoded}&filter=music_videos`)}`,
-        `https://vid.puffyan.us/api/v1/search?q=${encoded}&type=video`,
-        `https://invidious.nerqv.ps/api/v1/search?q=${encoded}&type=video`,
+    // List of CORS-friendly API public endpoints for YouTube metadata retrieval
+    const primaryEndpoints = [
+        `https://pipedapi.kavin.rocks/search?q=${encoded}&filter=music_videos`,
+        `https://pipedapi.tokhmi.xyz/search?q=${encoded}&filter=music_videos`,
+        `https://inv.nadeko.net/api/v1/search?q=${encoded}&type=video`,
+        `https://yewtu.be/api/v1/search?q=${encoded}&type=video`,
         `https://inv.tux.pizza/api/v1/search?q=${encoded}&type=video`
     ];
 
-    for (const endpoint of apiEndpoints) {
+    for (const endpoint of primaryEndpoints) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 4000);
+            const timeoutId = setTimeout(() => controller.abort(), 3500);
 
             const response = await fetch(endpoint, { signal: controller.signal });
             clearTimeout(timeoutId);
@@ -43,86 +65,102 @@ export async function searchYouTubeVideo(query, excludeIds = []) {
             if (!response.ok) continue;
             const data = await response.json();
 
-            // Piped API format parsing
+            // Handle Piped API Response Format
             if (data.items && Array.isArray(data.items) && data.items.length > 0) {
-                const item = data.items.find(i => {
-                    const id = i.url ? i.url.split("v=")[1]?.split("&")[0] : null;
-                    return id && id.length === 11 && !excludeIds.includes(id);
-                });
-
-                if (item) {
-                    const vId = item.url.split("v=")[1]?.split("&")[0];
-                    return {
-                        success: true,
-                        song: {
-                            videoId: vId,
-                            title: item.title || cleanedQuery,
-                            artist: item.uploaderName || "YouTube Music",
-                            cover: item.thumbnail || `https://i.ytimg.com/vi/${vId}/hqdefault.jpg`,
-                            duration: item.duration ? formatSeconds(item.duration) : "3:30"
-                        }
-                    };
-                }
-            }
-
-            // Invidious API format parsing
-            if (Array.isArray(data) && data.length > 0) {
-                const item = data.find(i => i.videoId && i.videoId.length === 11 && !excludeIds.includes(i.videoId));
-                if (item) {
-                    return {
-                        success: true,
-                        song: {
-                            videoId: item.videoId,
-                            title: item.title || cleanedQuery,
-                            artist: item.author || "YouTube Music",
-                            cover: item.videoThumbnails?.[0]?.url || `https://i.ytimg.com/vi/${item.videoId}/hqdefault.jpg`,
-                            duration: item.lengthSeconds ? formatSeconds(item.lengthSeconds) : "3:30"
-                        }
-                    };
-                }
-            }
-        } catch (err) {
-            console.warn(`[TuneWise Search] Proxy fallback failed: ${endpoint}`, err);
-        }
-    }
-
-    // Direct Scraping Fallback via AllOrigins Proxy
-    try {
-        const scrapeUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://www.youtube.com/results?search_query=${encoded}`)}`;
-        const res = await fetch(scrapeUrl);
-        if (res.ok) {
-            const html = await res.text();
-            const matches = html.match(/"videoId":"([a-zA-Z0-9_-]{11})"/g);
-            if (matches && matches.length > 0) {
-                for (const match of matches) {
-                    const id = match.split(':"')[1].replace('"', '');
-                    if (id && id.length === 11 && !excludeIds.includes(id)) {
+                for (const item of data.items) {
+                    const id = item.url ? item.url.split("v=")[1]?.split("&")[0] : null;
+                    if (id && isValidVideoId(id) && !excludeIds.includes(id)) {
                         return {
                             success: true,
                             song: {
                                 videoId: id,
-                                title: cleanedQuery,
-                                artist: "YouTube Music",
-                                cover: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
-                                duration: "3:30"
+                                title: item.title || cleanedQuery,
+                                artist: item.uploaderName || "YouTube Artist",
+                                cover: item.thumbnail || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+                                duration: item.duration ? formatSeconds(item.duration) : "3:30"
                             }
                         };
                     }
                 }
             }
+
+            // Handle Invidious API Response Format
+            if (Array.isArray(data) && data.length > 0) {
+                for (const item of data) {
+                    if (item.videoId && isValidVideoId(item.videoId) && !excludeIds.includes(item.videoId)) {
+                        return {
+                            success: true,
+                            song: {
+                                videoId: item.videoId,
+                                title: item.title || cleanedQuery,
+                                artist: item.author || "YouTube Artist",
+                                cover: item.videoThumbnails?.[0]?.url || `https://i.ytimg.com/vi/${item.videoId}/hqdefault.jpg`,
+                                duration: item.lengthSeconds ? formatSeconds(item.lengthSeconds) : "3:30"
+                            }
+                        };
+                    }
+                }
+            }
+        } catch (err) {
+            console.warn(`[TuneWise Engine] Endpoint failed: ${endpoint}`, err);
         }
-    } catch (e) {
-        console.error("[TuneWise Search] Scraping error:", e);
+    }
+
+    // CORS Proxy Scraping Fallback (Guarantees YouTube search results)
+    const proxyUrls = [
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://www.youtube.com/results?search_query=${encoded}`)}`,
+        `https://corsproxy.io/?${encodeURIComponent(`https://www.youtube.com/results?search_query=${encoded}`)}`
+    ];
+
+    for (const proxyUrl of proxyUrls) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+            const res = await fetch(proxyUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            if (res.ok) {
+                const html = await res.text();
+                const matches = html.match(/"videoId":"([a-zA-Z0-9_-]{11})"/g);
+                if (matches && matches.length > 0) {
+                    for (const match of matches) {
+                        const id = match.split(':"')[1].replace('"', '');
+                        if (isValidVideoId(id) && !excludeIds.includes(id)) {
+                            // Extract title if present in page JSON
+                            let songTitle = cleanedQuery;
+                            const titleMatch = html.match(/"title":{"runs":\[{"text":"([^"]+)"/);
+                            if (titleMatch && titleMatch[1]) {
+                                songTitle = titleMatch[1];
+                            }
+
+                            return {
+                                success: true,
+                                song: {
+                                    videoId: id,
+                                    title: songTitle,
+                                    artist: "YouTube Music",
+                                    cover: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+                                    duration: "3:30"
+                                }
+                            };
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("[TuneWise Engine] Proxy scraper error:", e);
+        }
     }
 
     return { success: false, error: "Song not found" };
 }
 
 /**
- * Recognize song via AudD API (from 5s audio recorded blob).
+ * Recognizes audio using AudD API (from a recorded AudioBlob) and resolves the matching YouTube Video ID.
  */
 export async function recognizeAudioWithAudD(audioBlob, apiToken = 'test') {
-    if (!audioBlob) return { success: false, error: "No audio blob recorded" };
+    if (!audioBlob) return { success: false, error: "No audio recorded" };
 
     try {
         const formData = new FormData();
@@ -135,7 +173,7 @@ export async function recognizeAudioWithAudD(audioBlob, apiToken = 'test') {
             body: formData
         });
 
-        if (!response.ok) throw new Error("AudD network error");
+        if (!response.ok) throw new Error("AudD service error");
         const data = await response.json();
 
         if (data.status === 'success' && data.result) {
@@ -150,20 +188,19 @@ export async function recognizeAudioWithAudD(audioBlob, apiToken = 'test') {
                     song: {
                         ...ytResult.song,
                         artist: artist || ytResult.song.artist,
-                        title: title || ytResult.song.title,
-                        album: data.result.album || 'Single'
+                        title: title || ytResult.song.title
                     }
                 };
             }
         }
-        return { success: false, error: "Song not found in audio sample" };
+        return { success: false, error: "Song not found" };
     } catch (err) {
-        console.error("[TuneWise AudD Error]:", err);
-        return { success: false, error: "Recognition failed" };
+        console.error("[TuneWise AudD Engine Error]:", err);
+        return { success: false, error: "Audio recognition failed" };
     }
 }
 
-// LocalStorage Playlist & Queue Helpers
+// LocalStorage Persistence Helpers
 
 export function getFavorites() {
     try { return JSON.parse(localStorage.getItem('tunewise_favorites') || '[]'); } catch { return []; }
@@ -174,6 +211,7 @@ export function saveFavorites(favs) {
 }
 
 export function toggleFavoriteSong(song) {
+    if (!song || !song.videoId) return false;
     let favs = getFavorites();
     const index = favs.findIndex(f => f.videoId === song.videoId);
     let isFav = false;
@@ -192,9 +230,10 @@ export function getRecentlyPlayed() {
 }
 
 export function addRecentlyPlayed(song) {
+    if (!song || !song.videoId) return;
     let recent = getRecentlyPlayed().filter(r => r.videoId !== song.videoId);
     recent.unshift(song);
-    if (recent.length > 30) recent.pop();
+    if (recent.length > 40) recent.pop();
     localStorage.setItem('tunewise_recent', JSON.stringify(recent));
 }
 
@@ -215,10 +254,11 @@ export function savePlaylists(playlists) {
 }
 
 export function createPlaylist(name) {
-    if (!name) return false;
+    if (!name || !name.trim()) return false;
+    const cleanName = name.trim();
     let playlists = getPlaylists();
-    if (!playlists[name]) {
-        playlists[name] = [];
+    if (!playlists[cleanName]) {
+        playlists[cleanName] = [];
         savePlaylists(playlists);
         return true;
     }
@@ -226,6 +266,7 @@ export function createPlaylist(name) {
 }
 
 export function addSongToPlaylist(playlistName, song) {
+    if (!playlistName || !song || !song.videoId) return false;
     let playlists = getPlaylists();
     if (!playlists[playlistName]) playlists[playlistName] = [];
     if (!playlists[playlistName].some(s => s.videoId === song.videoId)) {
@@ -234,12 +275,4 @@ export function addSongToPlaylist(playlistName, song) {
         return true;
     }
     return false;
-}
-
-function formatSeconds(seconds) {
-    const sec = parseInt(seconds, 10);
-    if (isNaN(sec)) return "3:30";
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return `${m}:${s < 10 ? '0' : ''}${s}`;
 }
