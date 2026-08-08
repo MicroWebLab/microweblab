@@ -1,905 +1,1104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TuneWise 3.1 | Production Music Discovery & Player Engine</title>
-
-    <!-- Mobile Viewport & Theme Specs -->
-    <meta name="theme-color" content="#070a12">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuneWise 4.0 - Standalone Music Engine</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --bg: #070a12;
-            --surface: #0f172a;
-            --surface-card: #1e293b;
-            --surface-hover: #334155;
-            --primary: #8b5cf6;
-            --accent-pink: #ec4899;
-            --accent-cyan: #06b6d4;
-            --accent-green: #10b981;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg-primary: #0a0c10;
+            --bg-secondary: #121620;
+            --bg-card: rgba(22, 28, 42, 0.7);
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --youtube-red: #ff0000;
+            --spotify-green: #1db954;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
         }
 
-        /* Top Header Navigation */
-        header {
-            background: rgba(15, 23, 42, 0.94);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .brand-badge {
-            background: linear-gradient(135deg, var(--accent-pink), var(--primary));
-            color: white;
-            font-weight: 800;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 15px;
-            letter-spacing: 0.5px;
-        }
-
-        .search-container {
-            flex: 1;
-            max-width: 580px;
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 25px;
-            padding: 4px 16px;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .search-container:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.25);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .search-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 14px;
-            outline: none;
-            padding: 8px 0;
-            user-select: text;
-        }
-
-        .search-btn, .mic-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            opacity: 0.85;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        .search-btn:hover, .mic-btn:hover { transform: scale(1.1); opacity: 1; }
-
-        /* App Grid Layout */
-        .app-layout {
-            display: grid;
-            grid-template-columns: 240px 1fr 300px;
-            height: calc(100vh - 61px - 90px);
-            overflow: hidden;
-        }
-
-        @media (max-width: 1024px) {
-            .app-layout { grid-template-columns: 200px 1fr; }
-            .right-sidebar { display: none; }
-        }
-
-        @media (max-width: 768px) {
-            .app-layout { grid-template-columns: 1fr; height: auto; padding-bottom: 110px; }
-            .left-sidebar { display: none; }
-        }
-
-        /* Left Sidebar Nav */
-        .left-sidebar {
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            padding: 20px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow-y: auto;
-        }
-
-        .nav-header {
-            color: var(--text-muted);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 8px 12px;
-            text-transform: uppercase;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: var(--surface-card);
-            color: var(--text-main);
-        }
-
-        .nav-item.active { border-left: 3px solid var(--primary); }
-
-        /* Main View Container */
-        .main-content {
-            padding: 24px;
-            overflow-y: auto;
-        }
-
-        /* Shazam Hero Card */
-        .shazam-card {
-            background: linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .shazam-btn {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--primary));
-            border: none;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-
-        .shazam-btn:hover { transform: scale(1.06); }
-
-        .shazam-btn.listening {
-            animation: pulse-ring 1.5s infinite;
-            background: linear-gradient(135deg, var(--accent-pink), var(--primary));
-        }
-
-        @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(236, 72, 153, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
-        }
-
-        /* Song Table View */
-        .song-table {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px;
-        }
-
-        .table-header {
-            display: grid;
-            grid-template-columns: 40px 1fr 100px 100px;
-            padding: 8px 12px;
-            color: var(--text-muted);
-            font-size: 12px;
-            font-weight: 700;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 8px;
-        }
-
-        .song-row {
-            display: grid;
-            grid-template-columns: 40px 1fr 100px 100px;
-            align-items: center;
-            padding: 10px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.2s;
-            margin-bottom: 4px;
-        }
-
-        .song-row:hover { background: var(--surface-card); }
-
-        .song-info { display: flex; align-items: center; gap: 12px; overflow: hidden; }
-        .song-cover-mini { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
-        .song-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .song-artist { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .action-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 16px;
-            padding: 6px;
-            border-radius: 50%;
-            transition: color 0.2s;
-        }
-
-        .action-btn:hover { color: var(--text-main); }
-
-        /* Right Queue Sidebar */
-        .right-sidebar {
-            background: var(--surface);
-            border-left: 1px solid var(--border);
+        .app-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
             padding: 20px;
             display: flex;
             flex-direction: column;
+            gap: 24px;
+            flex: 1;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo i {
+            color: var(--accent-color);
+            font-size: 1.6rem;
+        }
+
+        .version-tag {
+            font-size: 0.75rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--accent-color);
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+        }
+
+        .config-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .config-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Search / Tune ALL Area */
+        .tune-all-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .tune-all-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tune-all-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        .search-box-wrapper {
+            display: flex;
+            gap: 12px;
+            max-width: 750px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input-container {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-input-container i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .btn-action {
+            padding: 0 24px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-voice, .btn-audio-id {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 52px;
+            height: 52px;
+            padding: 0;
+            border-radius: var(--radius-md);
+        }
+
+        .btn-voice:hover, .btn-audio-id:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-voice.listening {
+            background: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        .btn-audio-id.recording {
+            background: #f59e0b;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Pipeline Visualizer */
+        .pipeline-status {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .step-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .step-pill.active {
+            border-color: var(--accent-color);
+            color: #fff;
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .step-pill.completed {
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        /* Main Workspace */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        /* Metadata Card */
+        .track-metadata {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .album-cover-wrapper {
+            width: 200px;
+            height: 200px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .album-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .track-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+
+        .track-artist {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            word-break: break-word;
+        }
+
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .source-badge i.fa-spotify {
+            color: var(--spotify-green);
+        }
+
+        /* Player Area */
+        .player-container {
+            display: flex;
+            flex-direction: column;
             gap: 16px;
+        }
+
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .iframe-wrapper iframe, .iframe-wrapper #yt-player-target {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .player-controls-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .fallback-indicator {
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Logs */
+        .system-logs {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #a5b4fc;
+            max-height: 120px;
             overflow-y: auto;
         }
 
-        /* Toast Popup */
-        .toast-banner {
+        .log-entry { margin-bottom: 4px; }
+        .log-entry.error { color: #f87171; }
+        .log-entry.success { color: #34d399; }
+
+        /* Modal Settings */
+        .modal-backdrop {
             position: fixed;
-            top: 75px;
-            right: 20px;
-            background: var(--primary);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 1000;
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Fixed Bottom Player */
-        .player-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 90px;
-            background: rgba(15, 23, 42, 0.96);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            z-index: 200;
-        }
-
-        .player-track { display: flex; align-items: center; gap: 14px; width: 30%; min-width: 180px; }
-        .player-cover { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); }
-
-        .player-controls { flex: 1; max-width: 500px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-
-        .player-buttons { display: flex; align-items: center; gap: 20px; }
-        .control-btn { background: transparent; border: none; color: white; cursor: pointer; font-size: 20px; opacity: 0.85; }
-        .control-btn:hover { opacity: 1; transform: scale(1.08); }
-        .control-btn.play-main {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: white;
-            color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .hidden-yt-frame {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            opacity: 0.01;
+            opacity: 0;
             pointer-events: none;
-            bottom: 0;
-            right: 0;
+            transition: opacity 0.3s;
         }
 
-        /* Modal styling */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .modal-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 520px;
             padding: 24px;
-            border-radius: 16px;
-            width: 320px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: #fff;
+            outline: none;
+        }
+
+        .form-control:focus { border-color: var(--accent-color); }
+        
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
         }
     </style>
-
-    <!-- YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
-
-    <!-- ES Module Engine Integration -->
-    <script type="module">
-        import {
-            searchYouTubeVideo,
-            recognizeAudioWithAudD,
-            getFavorites,
-            toggleFavoriteSong,
-            getRecentlyPlayed,
-            addRecentlyPlayed,
-            getQueue,
-            saveQueue,
-            getPlaylists,
-            createPlaylist,
-            addSongToPlaylist,
-            cleanSearchQuery
-        } from "./modules/tunewise/index.js";
-
-        window.TuneWiseEngine = {
-            searchYouTubeVideo,
-            recognizeAudioWithAudD,
-            getFavorites,
-            toggleFavoriteSong,
-            getRecentlyPlayed,
-            addRecentlyPlayed,
-            getQueue,
-            saveQueue,
-            getPlaylists,
-            createPlaylist,
-            addSongToPlaylist,
-            cleanSearchQuery
-        };
-    </script>
 </head>
 <body>
 
-    <header>
-        <div class="brand" onclick="switchView('discover')">
-            <span class="brand-badge">TUNEWISE 3.1</span>
-        </div>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-compact-disc"></i>
+                TuneWise
+                <span class="version-tag">4.0 Production + AI Fuzzy</span>
+            </div>
+            <button class="config-btn" id="open-settings">
+                <i class="fa-solid fa-sliders"></i> API Postavke
+            </button>
+        </header>
 
-        <div class="search-container">
-            <button class="search-btn" onclick="triggerSearchFromInput()" title="Search">🔍</button>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search song, artist or say 'Hey ALL, find Believer'..." onkeypress="handleSearchKey(event)">
-            <button class="mic-btn" onclick="startVoiceAssistant()" title="Voice Search (Hey ALL)">🎙️</button>
-        </div>
-    </header>
-
-    <div id="toast" class="toast-banner">Message</div>
-
-    <div class="app-layout">
-        <!-- Left Sidebar Navigation -->
-        <aside class="left-sidebar">
-            <div class="nav-header">Library</div>
-            <div class="nav-item active" id="nav-discover" onclick="switchView('discover')">🔍 Discover</div>
-            <div class="nav-item" id="nav-favorites" onclick="switchView('favorites')">❤️ Favorites</div>
-            <div class="nav-item" id="nav-recent" onclick="switchView('recent')">🕒 Recently Played</div>
+        <!-- Search / Tune ALL Area -->
+        <section class="tune-all-section">
+            <h1 class="tune-all-title">Tune ALL Pretraživanje</h1>
+            <p class="tune-all-subtitle">Inteligentna pretraga uz AI Fuzzy & Phonetic Matching za najtočnije rezultate</p>
             
-            <div class="nav-header" style="margin-top: 15px;">Playlists</div>
-            <div id="playlistNavList"></div>
-            <div class="nav-item" style="color: var(--accent-cyan);" onclick="promptCreatePlaylist()">➕ Create Playlist</div>
-        </aside>
-
-        <!-- Main Workspace -->
-        <main class="main-content">
-            <!-- Shazam Audio Identification Card -->
-            <div class="shazam-card" id="shazamSection">
-                <div>
-                    <h2 style="margin-bottom: 6px; font-size: 20px;">🎵 TuneWise Shazam Mode</h2>
-                    <p style="color: var(--text-muted); font-size: 13px;">Tap microphone to identify music playing around you (5s sample)</p>
+            <div class="search-box-wrapper">
+                <div class="search-input-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-input" class="search-input" placeholder="Unesite naziv pjesme, izvođača..." autocomplete="off">
                 </div>
-                <button class="shazam-btn" id="shazamBtn" onclick="triggerAudioRecognition()">🎧</button>
+                <button class="btn-action btn-voice" id="btn-voice" title="Glasovno pretraživanje (Mikrofon)">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+                <button class="btn-action btn-audio-id" id="btn-audio-id" title="AudD Prepoznavanje zvuka zraka">
+                    <i class="fa-solid fa-wave-square"></i>
+                </button>
+                <button class="btn-action btn-primary" id="btn-search">
+                    <i class="fa-solid fa-play"></i> Pokreni
+                </button>
             </div>
 
-            <!-- Song List Table -->
-            <div class="song-table">
-                <h3 id="viewTitle" style="margin-bottom: 16px; font-size: 18px;">Discover Tracks</h3>
+            <!-- Pipeline Visualizer -->
+            <div class="pipeline-status">
+                <div class="step-pill" id="step-input"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Fuzzy Matching</div>
+                <i class="fa-solid fa-chevron-right"></i>
+                <div class="step-pill" id="step-spotify"><i class="fa-brands fa-spotify"></i> Headless Identifikacija</div>
+                <i class="fa-solid fa-chevron-right"></i>
+                <div class="step-pill" id="step-youtube"><i class="fa-brands fa-youtube"></i> YouTube Pretraga</div>
+                <i class="fa-solid fa-chevron-right"></i>
+                <div class="step-pill" id="step-playback"><i class="fa-solid fa-circle-play"></i> TuneWise Player</div>
+            </div>
+        </section>
+
+        <!-- Workspace Grid -->
+        <div class="workspace-grid">
+            <!-- Left: Metadata -->
+            <div class="card track-metadata">
+                <div class="album-cover-wrapper">
+                    <img id="album-cover" class="album-cover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='100%' height='100%' fill='%23121620'/><text x='50%' y='50%' font-family='sans-serif' font-size='13' fill='%2394a3b8' text-anchor='middle'>Spreman za pretragu</text></svg>" alt="Album Cover">
+                </div>
+                <div id="track-title" class="track-title">Nema Pjesme</div>
+                <div id="track-artist" class="track-artist">Pretražite za početak</div>
                 
-                <div class="table-header">
-                    <div>#</div>
-                    <div>Title</div>
-                    <div>Duration</div>
-                    <div style="text-align: right;">Actions</div>
-                </div>
-
-                <div id="songContainer">
-                    <p style="color: var(--text-muted); font-size: 14px; padding: 12px;">Search for a song or tap Shazam to begin.</p>
+                <div class="source-badge" id="source-badge">
+                    <i class="fa-brands fa-spotify"></i> Headless Metadata Engine
                 </div>
             </div>
-        </main>
 
-        <!-- Right Queue Sidebar -->
-        <aside class="right-sidebar">
-            <h3 style="font-size: 16px;">Up Next (Queue)</h3>
-            <div id="queueContainer" style="display: flex; flex-direction: column; gap: 10px;">
-                <p style="color: var(--text-muted); font-size: 13px;">Queue is empty.</p>
-            </div>
-        </aside>
-    </div>
+            <!-- Right: YouTube Embed Player -->
+            <div class="card player-container">
+                <div class="iframe-wrapper">
+                    <div id="yt-player-target"></div>
+                </div>
 
-    <!-- Bottom Audio Player -->
-    <div class="player-bar">
-        <div class="player-track">
-            <img id="playerCover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=120&h=120&fit=crop" class="player-cover">
-            <div style="overflow: hidden;">
-                <div id="playerTitle" class="song-title">No Track Selected</div>
-                <div id="playerArtist" class="song-artist">TuneWise Player</div>
+                <div class="player-controls-info">
+                    <span><i class="fa-brands fa-youtube" style="color: var(--youtube-red);"></i> Reprodukcija: TuneWise Native Player</span>
+                    <span id="fallback-status" class="fallback-indicator" style="display: none;">
+                        <i class="fa-solid fa-arrow-rotate-right"></i> Automatsko prebacivanje na zamjenski video (<span id="fallback-count">1</span>/10)...
+                    </span>
+                </div>
             </div>
-            <button class="action-btn" id="favPlayerBtn" onclick="toggleCurrentFavorite()">❤️</button>
         </div>
 
-        <div class="player-controls">
-            <div class="player-buttons">
-                <button class="control-btn" onclick="playPrevious()">⏮</button>
-                <button class="control-btn play-main" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
-                <button class="control-btn" onclick="playNext()">⏭</button>
-            </div>
-            <div id="playerStatus" style="font-size: 12px; color: var(--accent-cyan);">Ready</div>
-        </div>
-
-        <!-- Hidden YT Iframe Element -->
-        <div class="hidden-yt-frame">
-            <div id="ytIframeContainer"></div>
+        <!-- Terminal Logs -->
+        <div class="system-logs" id="logs-container">
+            <div class="log-entry">[Sustav] TuneWise 4.0 spreman. AI Fuzzy & Phonetic Matching Engine aktivan.</div>
         </div>
     </div>
 
-    <!-- Playlist Selector Modal -->
-    <div class="modal-overlay" id="playlistModal">
-        <div class="modal-box">
-            <h4 style="font-size: 16px;">Add to Playlist</h4>
-            <div id="modalPlaylistOptions" style="display:flex; flex-direction:column; gap:8px;"></div>
-            <button onclick="closePlaylistModal()" style="background:var(--surface-hover); color:white; border:none; padding:8px; border-radius:8px; cursor:pointer; margin-top:8px;">Cancel</button>
+    <!-- API Settings Modal -->
+    <div class="modal-backdrop" id="modal-backdrop">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>API & Backend Konfiguracija</h3>
+                <button id="close-settings" style="background:none; border:none; color:#fff; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="form-group">
+                <label>Spotify Token Proxy URL (Preporučeno za produkciju)</label>
+                <input type="text" id="spotify-proxy-url" class="form-control" placeholder="https://moj-backend.com/api/spotify-token">
+                <div class="form-hint">Siguran način: Backend vraća Spotify token bez izlaganja client_secreta.</div>
+            </div>
+
+            <hr style="border-color: var(--border-color); margin: 16px 0;">
+
+            <div class="form-group">
+                <label>Spotify Client ID (Izravan lokalni pristup)</label>
+                <input type="text" id="spotify-client-id" class="form-control" placeholder="Unesite Spotify Client ID">
+            </div>
+            <div class="form-group">
+                <label>Spotify Client Secret</label>
+                <input type="password" id="spotify-client-secret" class="form-control" placeholder="Unesite Spotify Client Secret">
+            </div>
+            <div class="form-group">
+                <label>YouTube Data API Key (Pretraga videa)</label>
+                <input type="password" id="youtube-api-key" class="form-control" placeholder="Unesite YouTube API Key">
+            </div>
+            <div class="form-group">
+                <label>AudD API Key (Prepoznavanje zvuka)</label>
+                <input type="password" id="audd-api-key" class="form-control" placeholder="api_token ili 'test'">
+            </div>
+            <button class="btn-action btn-primary" id="save-settings" style="width: 100%; margin-top: 10px;">Spremi Postavke</button>
         </div>
     </div>
+
+    <!-- YouTube Iframe API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
+        /**
+         * TuneWise 4.0 Core Engine + Fuzzy & Phonetic Matching
+         */
+
+        // Global State
         let ytPlayer = null;
-        let isPlayerReady = false;
-        let isPlaying = false;
-        let currentSong = null;
-        let currentView = 'discover';
-        let songToAddToPlaylist = null;
+        let isYtApiReady = false;
+        let youtubeCandidateIDs = [];
+        let currentCandidateIndex = 0;
+        let spotifyToken = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
 
-        // Auto-Recovery Tracking
-        let currentQuery = '';
-        let failedVideoIds = [];
+        // Known Global Music Knowledge Base for High-Confidence Phonetic Correction
+        const MUSIC_DICTIONARY = [
+            { artist: "Metallica", title: "Nothing Else Matters", tags: ["nathing", "od", "metter", "metalar", "nothing", "else"] },
+            { artist: "Queen", title: "Bohemian Rhapsody", tags: ["kvin", "bohemijan", "rapsodi", "bohemian", "rhapsody"] },
+            { artist: "Depeche Mode", title: "Enjoy The Silence", tags: ["depes", "mod", "enjoj", "silence", "enjoy"] },
+            { artist: "Michael Jackson", title: "Billie Jean", tags: ["majkl", "dzekson", "bili", "dzin", "billie", "jean"] },
+            { artist: "AC/DC", title: "Highway to Hell", tags: ["acdc", "hajvej", "tu", "hel", "highway", "hell"] },
+            { artist: "Guns N' Roses", title: "Sweet Child O' Mine", tags: ["gans", "rozes", "svit", "cajld", "sweet", "child"] },
+            { artist: "Eminem", title: "Lose Yourself", tags: ["eminem", "luz", "jurself", "lose", "yourself"] },
+            { artist: "Nirvana", title: "Smells Like Teen Spirit", tags: ["nirvana", "smels", "lajk", "tin", "spirit"] },
+            { artist: "Coldplay", title: "Viva La Vida", tags: ["koldplej", "viva", "la", "vida"] },
+            { artist: "Dua Lipa", title: "Levitating", tags: ["dua", "lipa", "levitejtin", "levitating"] }
+        ];
 
-        // YouTube IFrame API Handler
-        function onYouTubeIframeAPIReady() {
-            ytPlayer = new YT.Player('ytIframeContainer', {
-                height: '100',
-                width: '100',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'playsinline': 1,
-                    'rel': 0,
-                    'origin': window.location.origin
-                },
-                events: {
-                    'onReady': () => { isPlayerReady = true; },
-                    'onStateChange': onPlayerStateChange,
-                    'onError': onPlayerError
+        // DOM Handles
+        const searchInput = document.getElementById('search-input');
+        const btnSearch = document.getElementById('btn-search');
+        const btnVoice = document.getElementById('btn-voice');
+        const btnAudioId = document.getElementById('btn-audio-id');
+        const albumCover = document.getElementById('album-cover');
+        const trackTitle = document.getElementById('track-title');
+        const trackArtist = document.getElementById('track-artist');
+        const logsContainer = document.getElementById('logs-container');
+        const fallbackStatus = document.getElementById('fallback-status');
+        const fallbackCount = document.getElementById('fallback-count');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const openSettingsBtn = document.getElementById('open-settings');
+        const closeSettingsBtn = document.getElementById('close-settings');
+        const saveSettingsBtn = document.getElementById('save-settings');
+
+        function log(msg, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            entry.textContent = `[${time}] ${msg}`;
+            logsContainer.appendChild(entry);
+            logsContainer.scrollTop = logsContainer.scrollHeight;
+        }
+
+        function setStep(stepName) {
+            const steps = ['input', 'spotify', 'youtube', 'playback'];
+            let matched = false;
+            steps.forEach(s => {
+                const el = document.getElementById(`step-${s}`);
+                if (!matched) {
+                    el.classList.add('completed');
+                    el.classList.remove('active');
+                } else {
+                    el.classList.remove('completed', 'active');
+                }
+                if (s === stepName) {
+                    el.classList.add('active');
+                    el.classList.remove('completed');
+                    matched = true;
                 }
             });
         }
 
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.PLAYING) {
-                isPlaying = true;
-                document.getElementById('playPauseBtn').innerText = '⏸';
-                document.getElementById('playerStatus').innerText = 'Playing';
-            } else if (event.data === YT.PlayerState.PAUSED) {
-                isPlaying = false;
-                document.getElementById('playPauseBtn').innerText = '▶';
-                document.getElementById('playerStatus').innerText = 'Paused';
-            } else if (event.data === YT.PlayerState.ENDED) {
-                playNext();
+        // --- AI FUZZY & PHONETIC ENGINE (Levenshtein + Simplified Double Metaphone) ---
+        
+        // 1. Levenshtein Distance Calculation
+        function computeLevenshteinDistance(a, b) {
+            const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+            for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+            for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+            for (let i = 1; i <= a.length; i++) {
+                for (let j = 1; j <= b.length; j++) {
+                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,      // Deletion
+                        matrix[i][j - 1] + 1,      // Insertion
+                        matrix[i - 1][j - 1] + cost // Substitution
+                    );
+                }
             }
+            return matrix[a.length][b.length];
         }
 
-        // Auto-Recovery for Restricted / Unembeddable YouTube Videos
-        async function onPlayerError(event) {
-            console.warn("[TuneWise Auto-Recovery] YouTube Error Code:", event.data);
-            
-            if (currentSong && currentSong.videoId) {
-                failedVideoIds.push(currentSong.videoId);
+        // Calculate Similarity Score (0.0 to 1.0)
+        function getSimilarityScore(str1, str2) {
+            const s1 = str1.toLowerCase().trim();
+            const s2 = str2.toLowerCase().trim();
+            const maxLen = Math.max(s1.length, s2.length);
+            if (maxLen === 0) return 1.0;
+            const dist = computeLevenshteinDistance(s1, s2);
+            return (maxLen - dist) / maxLen;
+        }
+
+        // 2. Simplified Phonetic Encoder Engine (Double Metaphone approach)
+        function getPhoneticKey(str) {
+            let s = str.toLowerCase().trim();
+            s = s.replace(/ph/g, 'f')
+                 .replace(/ck/g, 'k')
+                 .replace(/c([eiy])/g, 's')
+                 .replace(/c/g, 'k')
+                 .replace(/qu/g, 'k')
+                 .replace(/x/g, 'ks')
+                 .replace(/th/g, 't')
+                 .replace(/dz/g, 'z')
+                 .replace(/dž/g, 'z')
+                 .replace(/đ/g, 'dj')
+                 .replace(/š/g, 's')
+                 .replace(/č/g, 'c')
+                 .replace(/ć/g, 'c')
+                 .replace(/ž/g, 'z')
+                 .replace(/([a-z])\1+/g, '$1'); // Uklanja duplirana slova
+
+            return s;
+        }
+
+        // 3. Main Fuzzy Matching & Correction Pipeline
+        function applyAIFuzzyMatching(rawInput) {
+            const cleanedInput = rawInput.toLowerCase().trim();
+            log(`[AI Fuzzy Engine] Analiza fraze: "${rawInput}"`);
+
+            let bestMatch = null;
+            let highestScore = 0;
+
+            // Step A: Search against Music Dictionary using Levenshtein & Phonetics
+            const inputPhonetic = getPhoneticKey(cleanedInput);
+
+            MUSIC_DICTIONARY.forEach(item => {
+                const fullSongTitle = `${item.artist} - ${item.title}`.toLowerCase();
+                
+                // Text similarity score
+                const textScore = getSimilarityScore(cleanedInput, fullSongTitle);
+                
+                // Phonetic similarity score
+                const itemPhonetic = getPhoneticKey(fullSongTitle);
+                const phoneticScore = getSimilarityScore(inputPhonetic, itemPhonetic);
+                
+                // Tag match bonus
+                let tagBonus = 0;
+                item.tags.forEach(tag => {
+                    if (cleanedInput.includes(tag)) tagBonus += 0.15;
+                });
+
+                const totalScore = Math.max(textScore, phoneticScore) + tagBonus;
+
+                if (totalScore > highestScore) {
+                    highestScore = totalScore;
+                    bestMatch = `${item.artist} - ${item.title}`;
+                }
+            });
+
+            // Threshold threshold (ako je samopouzdanje > 55%, koristi se AI korekcija)
+            if (highestScore >= 0.55 && bestMatch) {
+                log(`[AI Fuzzy Match Success] Prepoznat fonetski uzorak! Korekcija: "${rawInput}" -> "${bestMatch}" (Pouzdanost: ${Math.round(highestScore * 100)}%)`, 'success');
+                return bestMatch;
             }
 
-            if (currentQuery) {
-                document.getElementById('playerStatus').innerText = "Trying alternative source...";
-                const fallback = await window.TuneWiseEngine.searchYouTubeVideo(`${currentQuery} music video`, failedVideoIds);
-                if (fallback.success) {
-                    playSong(fallback.song, false);
-                    return;
+            // Step B: Ako nije u rječniku, očisti nepoželjne glasovne znakove
+            let sanitized = cleanedInput
+                .replace(/\b(pjesma|pusti|sviraj|play|song|by)\b/gi, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            if (sanitized !== cleanedInput) {
+                log(`[AI Normalizacija] Očišćene suvišne riječi: "${sanitized}"`, 'info');
+            }
+
+            return sanitized || rawInput;
+        }
+
+        // --- Settings Management ---
+        function loadSettings() {
+            document.getElementById('spotify-proxy-url').value = localStorage.getItem('tw_sp_proxy') || '';
+            document.getElementById('spotify-client-id').value = localStorage.getItem('tw_sp_id') || '';
+            document.getElementById('spotify-client-secret').value = localStorage.getItem('tw_sp_secret') || '';
+            document.getElementById('youtube-api-key').value = localStorage.getItem('tw_yt_key') || '';
+            document.getElementById('audd-api-key').value = localStorage.getItem('tw_audd_key') || 'test';
+        }
+
+        saveSettingsBtn.addEventListener('click', () => {
+            localStorage.setItem('tw_sp_proxy', document.getElementById('spotify-proxy-url').value.trim());
+            localStorage.setItem('tw_sp_id', document.getElementById('spotify-client-id').value.trim());
+            localStorage.setItem('tw_sp_secret', document.getElementById('spotify-client-secret').value.trim());
+            localStorage.setItem('tw_yt_key', document.getElementById('youtube-api-key').value.trim());
+            localStorage.setItem('tw_audd_key', document.getElementById('audd-api-key').value.trim());
+            modalBackdrop.classList.remove('active');
+            log('Postavke spremljene.', 'success');
+            getSpotifyToken();
+        });
+
+        openSettingsBtn.addEventListener('click', () => modalBackdrop.classList.add('active'));
+        closeSettingsBtn.addEventListener('click', () => modalBackdrop.classList.remove('active'));
+
+        // Headless Spotify Token Fetcher
+        async function getSpotifyToken() {
+            const proxyUrl = localStorage.getItem('tw_sp_proxy');
+            const clientId = localStorage.getItem('tw_sp_id');
+            const clientSecret = localStorage.getItem('tw_sp_secret');
+
+            if (proxyUrl) {
+                try {
+                    log('[Backend Auth] Dohvaćanje Spotify tokena s poslužitelja...');
+                    const res = await fetch(proxyUrl);
+                    if (res.ok) {
+                        const data = await res.json();
+                        spotifyToken = data.access_token || data.token;
+                        log('Spotify Headless Token dohvaćen preko Backend Proxyja.', 'success');
+                        return spotifyToken;
+                    }
+                } catch (err) {
+                    log(`Backend Proxy nedostupan: ${err.message}`, 'error');
                 }
             }
 
-            showToast("Song not found");
-            document.getElementById('playerStatus').innerText = "Song not found";
-            speakText("Sorry, song could not be played.");
-        }
+            if (clientId && clientSecret) {
+                try {
+                    const res = await fetch('https://accounts.spotify.com/api/token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret)
+                        },
+                        body: 'grant_type=client_credentials'
+                    });
 
-        // Web Speech Synthesis Engine
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.rate = 1.0;
-                window.speechSynthesis.speak(utterance);
+                    if (!res.ok) throw new Error('Neispravni Spotify klijentski ključevi.');
+                    const data = await res.json();
+                    spotifyToken = data.access_token;
+                    log('Spotify Headless Token aktiviran.', 'success');
+                    return spotifyToken;
+                } catch (err) {
+                    log(`Spotify autorizacija: ${err.message}`, 'error');
+                }
             }
+
+            log('Spotify NIJE konfiguriran. Koristit će se automatski iTunes Metadata fallback.', 'info');
+            return null;
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3500);
-        }
-
-        // Unified Search Execution Point
-        async function performSearch(query) {
-            if (!query || !query.trim()) return;
-            const cleaned = window.TuneWiseEngine.cleanSearchQuery(query);
-            if (!cleaned) return;
-
-            currentQuery = cleaned;
-            failedVideoIds = []; // Reset exclusions for fresh search
-
-            document.getElementById('playerStatus').innerText = `Searching: "${cleaned}"...`;
+        // --- Headless Metadata Identification ---
+        async function identifyTrack(rawQuery) {
+            setStep('spotify');
             
-            const result = await window.TuneWiseEngine.searchYouTubeVideo(cleaned, failedVideoIds);
+            // Prolazak kroz AI Fuzzy Engine
+            const correctedQuery = applyAIFuzzyMatching(rawQuery);
 
-            if (result.success) {
-                playSong(result.song);
-                renderSearchResults([result.song]);
-                // Mandatory Speech Voice Confirmation
-                speakText(`Playing ${result.song.title} by ${result.song.artist}`);
+            if (!spotifyToken) await getSpotifyToken();
+
+            // 1. Try Headless Spotify Search
+            if (spotifyToken) {
+                log(`[Spotify Headless API] Pretraga: "${correctedQuery}"`);
+                try {
+                    const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(correctedQuery)}&type=track&limit=1`, {
+                        headers: { 'Authorization': `Bearer ${spotifyToken}` }
+                    });
+                    const data = await res.json();
+                    if (data.tracks && data.tracks.items.length > 0) {
+                        const track = data.tracks.items[0];
+                        const meta = {
+                            title: track.name,
+                            artist: track.artists.map(a => a.name).join(', '),
+                            coverUrl: track.album.images[0]?.url || '',
+                            fullSearchString: `${track.artists[0].name} - ${track.name}`
+                        };
+                        updateMetadataUI(meta);
+                        log(`Spotify potvrda: ${meta.fullSearchString}`, 'success');
+                        return meta;
+                    }
+                } catch (e) {
+                    log(`Spotify neuspješan. Prelazim na iTunes fallback...`, 'error');
+                }
+            }
+
+            // 2. iTunes API Fallback
+            log(`[iTunes Metadata Fallback] Pretraga: "${correctedQuery}"`);
+            try {
+                const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(correctedQuery)}&entity=song&limit=1`);
+                const data = await res.json();
+                if (data.results && data.results.length > 0) {
+                    const item = data.results[0];
+                    const meta = {
+                        title: item.trackName,
+                        artist: item.artistName,
+                        coverUrl: item.artworkUrl100.replace('100x100bb', '400x400bb'),
+                        fullSearchString: `${item.artistName} - ${item.trackName}`
+                    };
+                    updateMetadataUI(meta);
+                    log(`Metadata potvrda (iTunes): ${meta.fullSearchString}`, 'success');
+                    return meta;
+                }
+            } catch (e) {
+                log(`iTunes Metadata neuspješan.`, 'error');
+            }
+
+            // 3. Fallback ako nitko ne vrati rezultat
+            const fallbackMeta = { title: correctedQuery, artist: 'Izravna pretraga', coverUrl: '', fullSearchString: correctedQuery };
+            updateMetadataUI(fallbackMeta);
+            return fallbackMeta;
+        }
+
+        function updateMetadataUI(meta) {
+            trackTitle.textContent = meta.title;
+            trackArtist.textContent = meta.artist;
+            if (meta.coverUrl) albumCover.src = meta.coverUrl;
+        }
+
+        // --- YouTube Candidate Extraction (10 Candidates) ---
+        async function fetchYouTubeCandidates(searchQuery) {
+            setStep('youtube');
+            const ytKey = localStorage.getItem('tw_yt_key');
+
+            if (!ytKey) {
+                log('YouTube API ključ nedostaje. Unesite ga u postavkama.', 'error');
+                return [];
+            }
+
+            log(`[YouTube API] Pretraga 10 kandidata za: "${searchQuery}"`);
+            try {
+                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&maxResults=10&key=${ytKey}`;
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (data.items && data.items.length > 0) {
+                    youtubeCandidateIDs = data.items.map(item => item.id.videoId);
+                    currentCandidateIndex = 0;
+                    log(`Pronađeno ${youtubeCandidateIDs.length} kandidata za reprodukciju.`, 'success');
+                    return youtubeCandidateIDs;
+                } else {
+                    log('Nije pronađen niti jedan YouTube videozapis.', 'error');
+                    return [];
+                }
+            } catch (err) {
+                log(`YouTube API pogreška: ${err.message}`, 'error');
+                return [];
+            }
+        }
+
+        // --- YouTube Embedded Player Engine ---
+        function onYouTubeIframeAPIReady() {
+            isYtApiReady = true;
+            ytPlayer = new YT.Player('yt-player-target', {
+                height: '100%',
+                width: '100%',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 1,
+                    'rel': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': () => log('TuneWise Player spreman za reprodukciju.'),
+                    'onError': handlePlayerError,
+                    'onStateChange': (evt) => {
+                        if (evt.data === YT.PlayerState.PLAYING) {
+                            setStep('playback');
+                            fallbackStatus.style.display = 'none';
+                        }
+                    }
+                }
+            });
+        }
+
+        function handlePlayerError(evt) {
+            log(`Video ID ${youtubeCandidateIDs[currentCandidateIndex]} je blokiran/nedostupan (Kod: ${evt.data}).`, 'error');
+            
+            currentCandidateIndex++;
+            if (currentCandidateIndex < youtubeCandidateIDs.length) {
+                fallbackStatus.style.display = 'inline-flex';
+                fallbackCount.textContent = currentCandidateIndex + 1;
+                log(`Automatski prelazak na zamjenski video kandidat #${currentCandidateIndex + 1}...`, 'info');
+                ytPlayer.loadVideoById(youtubeCandidateIDs[currentCandidateIndex]);
             } else {
-                showToast("Song not found");
-                document.getElementById('playerStatus').innerText = "Song not found";
-                speakText("Song not found");
+                log('Svi dohvaćeni video kandidate nije moguće reproducirati.', 'error');
+                fallbackStatus.style.display = 'none';
             }
         }
 
-        function triggerSearchFromInput() {
-            const val = document.getElementById('searchInput').value;
-            performSearch(val);
-        }
-
-        function handleSearchKey(e) {
-            if (e.key === 'Enter') {
-                triggerSearchFromInput();
-            }
-        }
-
-        function playSong(song, addToRecent = true) {
-            currentSong = song;
-            document.getElementById('playerTitle').innerText = song.title;
-            document.getElementById('playerArtist').innerText = song.artist;
-            if (song.cover) document.getElementById('playerCover').src = song.cover;
-
-            if (addToRecent) {
-                window.TuneWiseEngine.addRecentlyPlayed(song);
-            }
-
-            if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-                ytPlayer.loadVideoById(song.videoId);
-            }
-
-            updateFavButtonState();
-        }
-
-        function togglePlayPause() {
-            if (!ytPlayer || !isPlayerReady) return;
-            if (isPlaying) {
-                ytPlayer.pauseVideo();
-            } else {
-                ytPlayer.playVideo();
-            }
-        }
-
-        function playNext() {
-            let queue = window.TuneWiseEngine.getQueue();
-            if (queue.length > 0) {
-                const nextSong = queue.shift();
-                window.TuneWiseEngine.saveQueue(queue);
-                renderQueue();
-                playSong(nextSong);
-            }
-        }
-
-        function playPrevious() {
-            let recent = window.TuneWiseEngine.getRecentlyPlayed();
-            if (recent.length > 1) {
-                playSong(recent[1]);
-            }
-        }
-
-        function startVoiceAssistant() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Voice recognition is not supported on this browser.");
+        function playCandidateVideo() {
+            if (!isYtApiReady || !ytPlayer) {
+                log('Player se još učitava, pričekajte trenutak...', 'error');
                 return;
             }
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-
-            document.getElementById('playerStatus').innerText = "ALL Listening...";
-            recognition.start();
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById('searchInput').value = transcript;
-                
-                const lower = transcript.toLowerCase();
-                if (lower.includes("add to favorites") || lower.includes("favorite this")) {
-                    toggleCurrentFavorite();
-                } else {
-                    performSearch(transcript);
-                }
-            };
-
-            recognition.onerror = () => {
-                document.getElementById('playerStatus').innerText = "Voice input error";
-            };
+            if (youtubeCandidateIDs.length > 0) {
+                const vid = youtubeCandidateIDs[currentCandidateIndex];
+                log(`Pokretanje video zapisa ID: ${vid}`);
+                ytPlayer.loadVideoById(vid);
+            }
         }
 
-        async function triggerAudioRecognition() {
-            const btn = document.getElementById('shazamBtn');
-            btn.classList.add('listening');
-            document.getElementById('playerStatus').innerText = "Recording sample (5s)...";
+        // --- Tune ALL Automated Execution Pipeline ---
+        async function runTuneWise(rawQuery) {
+            if (!rawQuery || !rawQuery.trim()) return;
+
+            setStep('input');
+            log(`Zaprimljen upit: "${rawQuery}"`);
+
+            // Korak 1: Fuzzy Matching & Metadata Identification
+            const meta = await identifyTrack(rawQuery);
+
+            // Korak 2: YouTube Pretraga (Dohvat 10 kandidata)
+            const candidates = await fetchYouTubeCandidates(meta.fullSearchString);
+
+            // Korak 3: Pokretanje reprodukcije
+            if (candidates.length > 0) {
+                playCandidateVideo();
+            }
+        }
+
+        // --- Event Handlers & AudD Flow ---
+        btnSearch.addEventListener('click', () => runTuneWise(searchInput.value));
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') runTuneWise(searchInput.value);
+        });
+
+        // Web Speech API
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'hr-HR';
+
+            btnVoice.addEventListener('click', () => {
+                btnVoice.classList.add('listening');
+                log('Slušam glasovni unos...');
+                recognition.start();
+            });
+
+            recognition.onresult = (evt) => {
+                btnVoice.classList.remove('listening');
+                const voiceResult = evt.results[0][0].transcript;
+                searchInput.value = voiceResult;
+                log(`Glas prepoznat: "${voiceResult}"`, 'success');
+                runTuneWise(voiceResult);
+            };
+
+            recognition.onerror = (err) => {
+                btnVoice.classList.remove('listening');
+                log(`Glasovna pogreška: ${err.error}`, 'error');
+            };
+
+            recognition.onend = () => btnVoice.classList.remove('listening');
+        } else {
+            btnVoice.style.display = 'none';
+        }
+
+        // AudD Audio Recognition
+        btnAudioId.addEventListener('click', async () => {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                return;
+            }
 
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const mediaRecorder = new MediaRecorder(stream);
-                const chunks = [];
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
 
-                mediaRecorder.ondataavailable = e => chunks.push(e.data);
+                mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+                
+                mediaRecorder.onstart = () => {
+                    btnAudioId.classList.add('recording');
+                    log('Snimam zvuk iz okoline (5s)...');
+                    setTimeout(() => {
+                        if (mediaRecorder.state === "recording") mediaRecorder.stop();
+                    }, 5000);
+                };
+
                 mediaRecorder.onstop = async () => {
-                    stream.getTracks().forEach(t => t.stop());
-                    btn.classList.remove('listening');
-                    document.getElementById('playerStatus').innerText = "Analyzing sample...";
-
-                    const blob = new Blob(chunks, { type: 'audio/webm' });
-                    const res = await window.TuneWiseEngine.recognizeAudioWithAudD(blob);
-
-                    if (res.success && res.song) {
-                        playSong(res.song);
-                        renderSearchResults([res.song]);
-                        speakText(`Playing ${res.song.title} by ${res.song.artist}`);
-                    } else {
-                        showToast("Song not found");
-                        document.getElementById('playerStatus').innerText = "Song not found";
-                        speakText("Song not found");
-                    }
+                    btnAudioId.classList.remove('recording');
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    log('Snimanje završeno. Slanje na AudD API...');
+                    await sendAudioToAudD(audioBlob);
+                    stream.getTracks().forEach(track => track.stop());
                 };
 
                 mediaRecorder.start();
-                setTimeout(() => mediaRecorder.stop(), 5000);
-
             } catch (err) {
-                btn.classList.remove('listening');
-                alert("Microphone access is required for Shazam audio identification.");
+                log(`Pristup mikrofonu onemogućen: ${err.message}`, 'error');
             }
-        }
+        });
 
-        function toggleCurrentFavorite() {
-            if (!currentSong) return;
-            const isFav = window.TuneWiseEngine.toggleFavoriteSong(currentSong);
-            showToast(isFav ? "Added to Favorites" : "Removed from Favorites");
-            speakText(isFav ? "Added to Favorites" : "Removed from Favorites");
-            updateFavButtonState();
-            if (currentView === 'favorites') switchView('favorites');
-        }
+        async function sendAudioToAudD(blob) {
+            const auddKey = localStorage.getItem('tw_audd_key') || 'test';
+            const formData = new FormData();
+            formData.append('file', blob);
+            formData.append('api_token', auddKey);
 
-        function updateFavButtonState() {
-            if (!currentSong) return;
-            const favs = window.TuneWiseEngine.getFavorites();
-            const exists = favs.some(f => f.videoId === currentSong.videoId);
-            document.getElementById('favPlayerBtn').style.color = exists ? 'var(--accent-pink)' : 'var(--text-muted)';
-        }
+            try {
+                const res = await fetch('https://api.audd.io/', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
 
-        function addToQueue(song, e) {
-            if (e) e.stopPropagation();
-            let queue = window.TuneWiseEngine.getQueue();
-            queue.push(song);
-            window.TuneWiseEngine.saveQueue(queue);
-            renderQueue();
-            showToast("Added to Queue");
-        }
-
-        function openPlaylistModal(song, e) {
-            if (e) e.stopPropagation();
-            songToAddToPlaylist = song;
-            const playlists = window.TuneWiseEngine.getPlaylists();
-            const keys = Object.keys(playlists);
-            const container = document.getElementById('modalPlaylistOptions');
-
-            if (keys.length === 0) {
-                container.innerHTML = `<p style="font-size:13px; color:var(--text-muted);">No playlists created yet.</p>`;
-            } else {
-                container.innerHTML = keys.map(k => `
-                    <button onclick="saveToPlaylist('${k}')" style="background:var(--surface-card); color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; text-align:left;">🎵 ${k}</button>
-                `).join('');
-            }
-
-            document.getElementById('playlistModal').style.display = 'flex';
-        }
-
-        function closePlaylistModal() {
-            document.getElementById('playlistModal').style.display = 'none';
-        }
-
-        function saveToPlaylist(name) {
-            if (songToAddToPlaylist) {
-                window.TuneWiseEngine.addSongToPlaylist(name, songToAddToPlaylist);
-                showToast(`Added to playlist "${name}"`);
-                closePlaylistModal();
-            }
-        }
-
-        function promptCreatePlaylist() {
-            const name = prompt("Enter Playlist Name:");
-            if (name) {
-                const ok = window.TuneWiseEngine.createPlaylist(name);
-                if (ok) {
-                    renderPlaylistNav();
-                    showToast(`Playlist "${name}" created`);
+                if (data.status === 'success' && data.result) {
+                    const trackMatch = `${data.result.artist} - ${data.result.title}`;
+                    log(`AudD prepoznavanje uspješno: "${trackMatch}"`, 'success');
+                    searchInput.value = trackMatch;
+                    runTuneWise(trackMatch);
                 } else {
-                    alert("Playlist already exists.");
+                    log('AudD nije uspio prepoznati pjesmu iz zvuka.', 'error');
                 }
+            } catch (err) {
+                log(`AudD API pogreška: ${err.message}`, 'error');
             }
         }
 
-        function renderPlaylistNav() {
-            const playlists = window.TuneWiseEngine.getPlaylists();
-            const container = document.getElementById('playlistNavList');
-            container.innerHTML = Object.keys(playlists).map(k => `
-                <div class="nav-item" id="nav-pl-${k}" onclick="switchView('playlist-${k}')">🎵 ${k}</div>
-            `).join('');
-        }
-
-        function renderSearchResults(songs) {
-            const container = document.getElementById('songContainer');
-            if (!songs || songs.length === 0) {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 14px; padding: 12px;">No tracks found.</p>`;
-                return;
-            }
-            container.innerHTML = songs.map((s, index) => `
-                <div class="song-row" onclick='playSong(${JSON.stringify(s)})'>
-                    <div>${index + 1}</div>
-                    <div class="song-info">
-                        <img src="${s.cover}" class="song-cover-mini">
-                        <div>
-                            <div class="song-title">${s.title}</div>
-                            <div class="song-artist">${s.artist}</div>
-                        </div>
-                    </div>
-                    <div>${s.duration || '3:30'}</div>
-                    <div style="text-align: right; display:flex; gap:6px; justify-content:flex-end;">
-                        <button class="action-btn" onclick='addToQueue(${JSON.stringify(s)}, event)' title="Add to Queue">➕</button>
-                        <button class="action-btn" onclick='openPlaylistModal(${JSON.stringify(s)}, event)' title="Add to Playlist">📂</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderQueue() {
-            const queue = window.TuneWiseEngine.getQueue();
-            const container = document.getElementById('queueContainer');
-            if (queue.length === 0) {
-                container.innerHTML = `<p style="color: var(--text-muted); font-size: 13px;">Queue is empty.</p>`;
-                return;
-            }
-            container.innerHTML = queue.map((s) => `
-                <div style="display:flex; align-items:center; gap:10px; background:var(--surface-card); padding:8px; border-radius:8px;">
-                    <img src="${s.cover}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
-                    <div style="flex:1; overflow:hidden;">
-                        <div class="song-title" style="font-size:13px;">${s.title}</div>
-                        <div class="song-artist">${s.artist}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function switchView(view) {
-            currentView = view;
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            const title = document.getElementById('viewTitle');
-            const shazamSection = document.getElementById('shazamSection');
-
-            if (view === 'discover') {
-                document.getElementById('nav-discover')?.classList.add('active');
-                title.innerText = "Discover Tracks";
-                shazamSection.style.display = 'flex';
-            } else if (view === 'favorites') {
-                document.getElementById('nav-favorites')?.classList.add('active');
-                title.innerText = "Favorites";
-                shazamSection.style.display = 'none';
-                renderSearchResults(window.TuneWiseEngine.getFavorites());
-            } else if (view === 'recent') {
-                document.getElementById('nav-recent')?.classList.add('active');
-                title.innerText = "Recently Played";
-                shazamSection.style.display = 'none';
-                renderSearchResults(window.TuneWiseEngine.getRecentlyPlayed());
-            } else if (view.startsWith('playlist-')) {
-                const plName = view.replace('playlist-', '');
-                document.getElementById(`nav-pl-${plName}`)?.classList.add('active');
-                title.innerText = `Playlist: ${plName}`;
-                shazamSection.style.display = 'none';
-                const playlists = window.TuneWiseEngine.getPlaylists();
-                renderSearchResults(playlists[plName] || []);
-            }
-        }
-
-        // Global Initialization
+        // Init Engine
         window.addEventListener('DOMContentLoaded', () => {
-            renderQueue();
-            renderPlaylistNav();
+            loadSettings();
+            getSpotifyToken();
         });
     </script>
 </body>
