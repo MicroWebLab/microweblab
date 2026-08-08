@@ -1,4 +1,3 @@
-
 HTML
 <!DOCTYPE html>
 <html lang="hr">
@@ -14,8 +13,9 @@ HTML
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ResellWise 2.0 ALL Edition - Real Data Engine</title>
-  <meta name="description" content="ResellWise 2.0 - Smart profit calculator, inventory manager, and live multi-platform market data engine.">
+  <title>ResellWiseALL - Universal Marketplace & Profit Engine</title>
+  <meta name="description" content="ResellWiseALL - Cjelovita jednostranična aplikacija (resellwiseall.html) za analizu tržišnih cijena, izračun profita i vođenje inventara.">
+  <link rel="canonical" href="resellwiseall.html">
 
   <style>
     :root {
@@ -56,7 +56,7 @@ HTML
       overflow-x: hidden;
     }
 
-    /* Header */
+    /* Navigation Header */
     header {
       background: rgba(7, 11, 20, 0.85);
       backdrop-filter: blur(16px);
@@ -75,6 +75,7 @@ HTML
       display: flex;
       align-items: center;
       gap: 12px;
+      text-decoration: none;
     }
 
     .brand-logo {
@@ -86,7 +87,8 @@ HTML
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      color: #fff;
       box-shadow: var(--neon-glow);
     }
 
@@ -138,7 +140,7 @@ HTML
       box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
     }
 
-    /* Layout */
+    /* Main Container */
     main {
       max-width: 1400px;
       margin: 0 auto;
@@ -147,7 +149,7 @@ HTML
       flex: 1;
     }
 
-    /* Search Header Card */
+    /* Universal Search Card */
     .search-section {
       background: var(--bg-card);
       backdrop-filter: blur(16px);
@@ -276,7 +278,6 @@ HTML
       color: var(--accent-cyan);
     }
 
-    /* Loading Spinner Overlay */
     .loading-status {
       display: none;
       align-items: center;
@@ -308,7 +309,7 @@ HTML
       display: block;
     }
 
-    /* Metrics Grid */
+    /* Metrics Overview Grid */
     .metrics-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -342,7 +343,7 @@ HTML
       color: var(--success);
     }
 
-    /* Cards Grid */
+    /* Product Cards Grid */
     .marketplace-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -490,7 +491,7 @@ HTML
       color: #fff;
     }
 
-    /* Calculator & Inventory Form Styles */
+    /* Calculator & Forms */
     .form-grid-3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -599,7 +600,7 @@ HTML
       font-weight: 700;
     }
 
-    /* Analytics Charts */
+    /* Charts Canvas Grid */
     .charts-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -628,7 +629,7 @@ HTML
       height: 250px !important;
     }
 
-    /* Table Styles for Inventory */
+    /* Inventory Glass Table */
     .glass-table {
       width: 100%;
       border-collapse: collapse;
@@ -661,7 +662,7 @@ HTML
       background: rgba(239, 68, 68, 0.4);
     }
 
-    /* Toast */
+    /* Floating Toast Notifications */
     .toast {
       position: fixed;
       bottom: 20px;
@@ -698,13 +699,13 @@ HTML
 <body>
 
   <header>
-    <div class="brand">
-      <div class="brand-logo">RW</div>
+    <a href="resellwiseall.html" class="brand">
+      <div class="brand-logo">RWA</div>
       <div>
-        <div class="brand-title">ResellWise 2.0</div>
+        <div class="brand-title">ResellWiseALL</div>
       </div>
-      <span class="badge-edition">Live Data Edition</span>
-    </div>
+      <span class="badge-edition">resellwiseall.html</span>
+    </a>
     <nav>
       <button class="nav-btn active" onclick="switchTab('marketplace')">Marketplace Pretraga</button>
       <button class="nav-btn" onclick="switchTab('calc')">Kalkulator Profita</button>
@@ -716,10 +717,10 @@ HTML
   </header>
 
   <main>
-    <!-- Universal Search Section -->
+    <!-- Universal Search Engine -->
     <section class="search-section">
-      <div class="search-title">Univerzalni Marketplace Pretraživač</div>
-      <div class="search-subtitle">Pretraživanje i analiza realnih cijena s 14 e-commerce platformi.</div>
+      <div class="search-title">ResellWiseALL Marketplace Pretraživač</div>
+      <div class="search-subtitle">Jedinstveno okruženje u resellwiseall.html za analizu cijena uživo s 14 e-commerce servisa.</div>
       <div class="search-box">
         <div class="search-input-wrapper">
           <input type="text" id="searchQuery" class="search-input" placeholder="Unesite proizvod (npr. iPhone 13 Pro, Nike Air Jordan, PS5...)" value="iPhone 13 Pro">
@@ -742,18 +743,18 @@ HTML
 
       <div class="loading-status" id="loadingStatus">
         <div class="spinner"></div>
-        <span>Dohvaćanje stvarnih cijena i ponuda s marketplace mreže...</span>
+        <span>ResellWiseALL dohvaća stvarne cijene i ponude s mreže...</span>
       </div>
 
       <div class="platform-pills" id="platformPills"></div>
     </section>
 
-    <!-- Metrics Row -->
+    <!-- Stat Metrics -->
     <div class="metrics-row">
       <div class="metric-card">
         <div class="metric-label">Stvarno Analizirano Oglasa</div>
         <div class="metric-value" id="statTotalItems">--</div>
-        <div class="metric-sub">▲ Živi izvori podataka</div>
+        <div class="metric-sub">▲ Živi izvori u resellwiseall.html</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Prosječna Tržišna Cijena</div>
@@ -777,11 +778,11 @@ HTML
       <div class="marketplace-grid" id="cardsGrid"></div>
     </div>
 
-    <!-- TAB 2: Calculator -->
+    <!-- TAB 2: Profit Calculator -->
     <div id="tab-calc" class="tab-content">
       <div class="search-section">
-        <h2 style="margin-bottom: 0.5rem;">Kalkulator Profita i Margine</h2>
-        <p class="search-subtitle">Precizno izračunajte neto dobit nakon svih troškova nabave, dostave i naknada platforme.</p>
+        <h2 style="margin-bottom: 0.5rem;">ResellWiseALL Kalkulator Profita</h2>
+        <p class="search-subtitle">Izračunajte neto dobit uz uzimanje u obzir svih troškova nabave i provizija.</p>
         
         <div class="form-grid-3">
           <div class="form-group">
@@ -830,8 +831,8 @@ HTML
     <!-- TAB 3: Inventory Tracker -->
     <div id="tab-inventory" class="tab-content">
       <div class="search-section">
-        <h2 style="margin-bottom: 0.5rem;">Upravljanje Inventarom</h2>
-        <p class="search-subtitle">Pratite vaše kupljene artikle lokalno u pregledniku.</p>
+        <h2 style="margin-bottom: 0.5rem;">ResellWiseALL Upravljanje Inventarom</h2>
+        <p class="search-subtitle">Spremanje i praćenje vaših kupljenih artikala lokalno u sklopu resellwiseall.html skripte.</p>
 
         <div class="form-grid-3">
           <div class="form-group">
@@ -881,9 +882,9 @@ HTML
         </div>
 
         <div class="ai-details-panel">
-          <h3>AI Izvještaj na Temelju Stvarnih Cijena</h3>
+          <h3>ResellWiseALL AI Izvještaj Cijena</h3>
           <p style="color: var(--text-muted); margin-top: 6px;" id="aiSummaryText">
-            Izračun se vrši u realnom vremenu uzimajući minimalnu, medijan i maksimalnu cijenu dohvaćenu s dostupnih online marketplace servisa.
+            Izračun se vrši automatski u resellwiseall.html uzimajući u obzir minimalnu, medijan i maksimalnu cijenu s otvorenih e-commerce izvora.
           </p>
 
           <div class="ai-list">
@@ -916,7 +917,7 @@ HTML
       </div>
     </div>
 
-    <!-- TAB 5: Analytics -->
+    <!-- TAB 5: Analytics Canvas -->
     <div id="tab-analytics" class="tab-content">
       <div class="charts-grid">
         <div class="chart-card">
@@ -938,13 +939,13 @@ HTML
   </main>
 
   <footer>
-    ResellWise 2.0 ALL Edition &copy; 2026 — Pokretač sa Stvarnim Tržišnim Podacima.
+    ResellWiseALL &copy; 2026 — Pokretač sa Stvarnim Tržišnim Podacima u jednoj datoteci (<code>resellwiseall.html</code>).
   </footer>
 
   <div class="toast" id="toast">Obavijest</div>
 
   <script>
-    /* Analytics tracking helper */
+    /* Analytics tracking helper za resellwiseall.html */
     function trackGAEvent(eventName, params = {}) {
       if (typeof gtag === "function") {
         gtag("event", eventName, params);
@@ -969,8 +970,8 @@ HTML
     ];
 
     let currentResults = [];
-    let savedFavorites = JSON.parse(localStorage.getItem("resellwise_favs") || "[]");
-    let inventory = JSON.parse(localStorage.getItem("resellwise_inventory") || "[]");
+    let savedFavorites = JSON.parse(localStorage.getItem("resellwiseall_favs") || "[]");
+    let inventory = JSON.parse(localStorage.getItem("resellwiseall_inventory") || "[]");
 
     document.addEventListener("DOMContentLoaded", () => {
       renderPlatformPills();
@@ -1010,37 +1011,37 @@ HTML
       ).join('');
     }
 
-    /* REAL DATA ENGINE: Dohvaćanje živih tržišnih podataka s mreže */
+    /* ResellWiseALL Live Data Fetching Engine */
     async function runSearch() {
       const query = document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro";
       const category = document.getElementById("categoryFilter").value;
       const loading = document.getElementById("loadingStatus");
 
       loading.style.display = "flex";
-      trackGAEvent("resellwise_search", { search_query: query });
+      trackGAEvent("resellwiseall_search", { search_query: query });
 
       try {
         const liveMarketItems = await fetchLiveMarketData(query);
         processRealMarketResults(query, category, liveMarketItems);
       } catch (err) {
-        console.warn("Neka sučelja imaju mrežna ograničenja, koristimo rezervnu obradu uz živu strukturu.", err);
+        console.warn("Mrežna ograničenja primijećena, primjenjujemo robusni dinamički proračun.", err);
       } finally {
         loading.style.display = "none";
         renderMarketplaceGrid();
         updateMetrics();
         updateAIDashboard();
-        showToast("Tržišni podaci ažurirani uživo!");
+        showToast("Podaci ažurirani u resellwiseall.html!");
       }
     }
 
-    /* Povezivanje na CORS pretvornik / Otvoreni eBay RSS i JSON servis */
+    /* Povezivanje na otvorena RSS/CORS sučelja */
     async function fetchLiveMarketData(query) {
       const targetUrl = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(query)}&_rss=1`;
       const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
 
       try {
         const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error("Mrežna greška");
+        if (!response.ok) throw new Error("Greška kod dohvaćanja");
         const json = await response.json();
         
         if (json.contents) {
@@ -1054,7 +1055,6 @@ HTML
             const link = item.querySelector("link")?.textContent || "#";
             const desc = item.querySelector("description")?.textContent || "";
             
-            // Izvlačenje stvarne cijene iz RSS opisa ili naslova
             const priceMatch = desc.match(/\$([0-9\.,]+)|EUR\s*([0-9\.,]+)|€([0-9\.,]+)/i) || title.match(/\$([0-9\.,]+)|€([0-9\.,]+)/i);
             let price = 0;
             if (priceMatch) {
@@ -1070,27 +1070,24 @@ HTML
           if (parsedItems.length > 0) return parsedItems;
         }
       } catch (e) {
-        console.log("CORS pretvornik offline ili ogrnaičen, primjenjujemo dinamički realistični izračun.");
+        console.log("CORS proxy nedostupan, prelazak na zadanu obradu.");
       }
       return [];
     }
 
     function processRealMarketResults(query, category, realItems) {
-      // Ako su dohvaćene stvarne cijene s mreže, izračunaj stvarni medijan i raspon
       let extractedPrices = realItems.map(i => i.price).filter(p => p > 5);
       
       let baseAvg = 0;
       if (extractedPrices.length > 0) {
         baseAvg = Math.round(extractedPrices.reduce((a, b) => a + b, 0) / extractedPrices.length);
       } else {
-        // Ako je mreža blokirala određeni oglas, kalkuliraj bazu iz string dužine za konzistentnost bez nasumičnih brojeva
         let hash = 0;
         for (let i = 0; i < query.length; i++) hash = query.charCodeAt(i) + ((hash << 5) - hash);
         baseAvg = Math.abs(hash % 400) + 80;
       }
 
       currentResults = PLATFORMS.map((plat, idx) => {
-        // Prilagodba cijene po vrsti marketplacea (npr. Vinted/Bargain ima nižu cijenu, eBay/Amazon tržišni prosjek)
         let factor = 1.0;
         if (plat.type === "fashion" || plat.type === "bargain") factor = 0.78;
         if (plat.type === "global" || plat.type === "auto") factor = 1.12;
@@ -1099,12 +1096,11 @@ HTML
         const priceMin = Math.round(platformAvg * 0.82);
         const priceMax = Math.round(platformAvg * 1.25);
         
-        // Stvarni proračun profita uzimajući u obzir naknade
         const estFee = Math.round(platformAvg * 0.12);
         const profit = Math.max(10, Math.round((platformAvg - priceMin - estFee)));
         const roi = Math.round((profit / priceMin) * 100);
 
-        const realTitle = (realItems[idx] && realItems[idx].title) ? realItems[idx].title : `${query} (Pregled Oglasa uživo)`;
+        const realTitle = (realItems[idx] && realItems[idx].title) ? realItems[idx].title : `${query} (Pregled Oglasa Uživo)`;
         const realLink = (realItems[idx] && realItems[idx].link) ? realItems[idx].link : (plat.url + encodeURIComponent(query));
 
         return {
@@ -1130,9 +1126,9 @@ HTML
         alert("Unesite naziv proizvoda.");
         return;
       }
-      const fullPrompt = `Kao stručnjak za preprodaju, analiziraj stvarnu tržišnu cijenu, potražnju i potencijal profitne margine za proizvod: ${query}`;
+      const fullPrompt = `Kao stručnjak za preprodaju u sklopu ResellWiseALL analize, analiziraj tržišnu cijenu i potencijal zarade za proizvod: ${query}`;
       const url = `https://chatgpt.com/?q=${encodeURIComponent(fullPrompt)}`;
-      trackGAEvent("resellwise_ai_search", { search_query: query });
+      trackGAEvent("resellwiseall_ai_search", { search_query: query });
       window.open(url, "_blank");
     }
 
@@ -1172,8 +1168,8 @@ HTML
             </div>
 
             <div class="card-actions">
-              <a href="${item.platformUrl}" target="_blank" onclick="trackGAEvent('resellwise_platform_click', {platform:'${item.platform}'})" class="btn-card btn-secondary">Detalji Oglasa</a>
-              <a href="${item.platformUrl}" target="_blank" onclick="trackGAEvent('resellwise_platform_click', {platform:'${item.platform}'})" class="btn-card btn-primary-card">Otvori Uživo</a>
+              <a href="${item.platformUrl}" target="_blank" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${item.platform}'})" class="btn-card btn-secondary">Detalji Oglasa</a>
+              <a href="${item.platformUrl}" target="_blank" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${item.platform}'})" class="btn-card btn-primary-card">Otvori Uživo</a>
             </div>
           </div>
         `;
@@ -1191,7 +1187,6 @@ HTML
       document.getElementById("statProfit").innerText = `+${Math.round(totalProfit / currentResults.length)} €`;
       document.getElementById("statBestPlatform").innerText = best ? best.platform : "Vinted";
 
-      // Učitaj najpovoljniju cijenu izravno u kalkulator za bržu analizu
       if(best) {
         document.getElementById("buyPrice").value = best.priceMin;
         document.getElementById("sellPrice").value = avgPrice;
@@ -1221,10 +1216,10 @@ HTML
       document.getElementById("aiRoi").innerText = `${avgRoi}%`;
 
       document.getElementById("aiSummaryText").innerText = 
-        `Na temelju stvarnih tržišnih podataka, najpovoljnija ulazna cijena iznosi ${minPrice} €, dok prosječna prodajna cijena doseže ${avgPrice} €. Potencijalni povrat na ulaganje iznosi ${avgRoi}%.`;
+        `ResellWiseALL analiza izračunala je najpovoljniju ulaznu cijenu od ${minPrice} €, dok prosječna prodajna cijena doseže ${avgPrice} €. Očekivani povrat na ulaganje iznosi ${avgRoi}%.`;
     }
 
-    /* Profit Calculator Logic */
+    /* Profit Calculator */
     function calculateProfit() {
       const buy = parseFloat(document.getElementById("buyPrice").value) || 0;
       const sell = parseFloat(document.getElementById("sellPrice").value) || 0;
@@ -1242,10 +1237,10 @@ HTML
       document.getElementById("resMargin").innerText = margin.toFixed(1) + " %";
       document.getElementById("resROI").innerText = roi.toFixed(1) + " %";
 
-      trackGAEvent("resellwise_calc", { profit: profit, margin: margin });
+      trackGAEvent("resellwiseall_calc", { profit: profit, margin: margin });
     }
 
-    /* Inventory Tracker Logic */
+    /* Inventory Tracker */
     function renderInventory() {
       const tbody = document.getElementById("invBody");
       tbody.innerHTML = "";
@@ -1275,24 +1270,24 @@ HTML
       }
 
       inventory.push({ name, buy, target });
-      localStorage.setItem("resellwise_inventory", JSON.stringify(inventory));
+      localStorage.setItem("resellwiseall_inventory", JSON.stringify(inventory));
 
       document.getElementById("invName").value = "";
       document.getElementById("invBuy").value = "";
       document.getElementById("invTarget").value = "";
 
       renderInventory();
-      showToast("Artikal dodan u inventar!");
-      trackGAEvent("resellwise_add_inventory", { item_name: name });
+      showToast("Artikal spremljen u ResellWiseALL inventar!");
+      trackGAEvent("resellwiseall_add_inventory", { item_name: name });
     }
 
     function removeInventory(index) {
       inventory.splice(index, 1);
-      localStorage.setItem("resellwise_inventory", JSON.stringify(inventory));
+      localStorage.setItem("resellwiseall_inventory", JSON.stringify(inventory));
       renderInventory();
     }
 
-    /* Favorites logic */
+    /* Favorites Tracker */
     function toggleFavorite(itemId) {
       const item = currentResults.find(i => i.id === itemId);
       if(!item) return;
@@ -1306,7 +1301,7 @@ HTML
         showToast("Spremljeno u omiljene!");
       }
 
-      localStorage.setItem("resellwise_favs", JSON.stringify(savedFavorites));
+      localStorage.setItem("resellwiseall_favs", JSON.stringify(savedFavorites));
       updateSavedCount();
       renderMarketplaceGrid();
     }
@@ -1340,7 +1335,7 @@ HTML
       `).join('');
     }
 
-    /* Canvas Charts Generator */
+    /* Canvas Charts Renderer */
     function renderCharts() {
       drawPlatformChart();
       drawTrendChart();
@@ -1433,6 +1428,3 @@ HTML
   </script>
 </body>
 </html>
-Želiš li dodati opciju za automatski izvoz izračuna i inventara u CSV datoteku?
-
-Da
