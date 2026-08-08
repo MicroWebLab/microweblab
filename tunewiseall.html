@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TuneWise 4.0 - Standalone Music Engine</title>
+    <title>TuneWise 4.2 - Production Music Engine</title>
     <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-primary: #0a0c10;
-            --bg-secondary: #121620;
-            --bg-card: rgba(22, 28, 42, 0.7);
+            --bg-primary: #08090d;
+            --bg-secondary: #0f131d;
+            --bg-card: rgba(20, 26, 40, 0.75);
             --accent-color: #6366f1;
             --accent-hover: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.35);
             --youtube-red: #ff0000;
             --spotify-green: #1db954;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --border-color: rgba(255, 255, 255, 0.08);
-            --radius-lg: 16px;
-            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
             --radius-sm: 8px;
         }
 
@@ -29,7 +30,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
@@ -42,10 +43,10 @@
         }
 
         .app-container {
-            max-width: 1200px;
+            max-width: 1280px;
             width: 100%;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px 20px;
             display: flex;
             flex-direction: column;
             gap: 24px;
@@ -57,83 +58,98 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 24px;
+            padding: 18px 28px;
             background: var(--bg-card);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.4rem;
-            font-weight: 700;
+            gap: 14px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
             color: var(--text-primary);
         }
 
         .logo i {
             color: var(--accent-color);
-            font-size: 1.6rem;
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 10px var(--accent-glow));
         }
 
         .version-tag {
             font-size: 0.75rem;
-            background: rgba(99, 102, 241, 0.2);
-            color: var(--accent-color);
-            padding: 2px 8px;
+            font-weight: 600;
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            padding: 4px 10px;
             border-radius: 20px;
-            border: 1px solid rgba(99, 102, 241, 0.4);
+            border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
-        .config-btn {
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-icon-text {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 10px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
 
-        .config-btn:hover {
+        .btn-icon-text:hover {
             background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
         }
 
-        /* Search / Tune ALL Area */
+        /* Tune ALL Hero Section */
         .tune-all-section {
-            background: var(--bg-card);
+            background: linear-gradient(135deg, rgba(20, 26, 40, 0.9) 0%, rgba(15, 19, 29, 0.95) 100%);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 32px;
+            padding: 36px 28px;
             text-align: center;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
         .tune-all-title {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 800;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
 
         .tune-all-subtitle {
             color: var(--text-secondary);
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             font-size: 0.95rem;
         }
 
         .search-box-wrapper {
             display: flex;
             gap: 12px;
-            max-width: 750px;
+            max-width: 800px;
             margin: 0 auto;
             position: relative;
         }
@@ -145,26 +161,29 @@
 
         .search-input-container i {
             position: absolute;
-            left: 16px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-secondary);
+            font-size: 1.1rem;
         }
 
         .search-input {
             width: 100%;
-            padding: 16px 16px 16px 48px;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 16px 20px 16px 52px;
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             color: #fff;
-            font-size: 1rem;
+            font-size: 1.05rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.25s ease;
         }
 
         .search-input:focus {
             border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+            background: rgba(0, 0, 0, 0.6);
         }
 
         .btn-action {
@@ -172,29 +191,32 @@
             border-radius: var(--radius-md);
             border: none;
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 10px;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
             background: var(--accent-color);
             color: #fff;
+            box-shadow: 0 4px 14px var(--accent-glow);
         }
 
         .btn-primary:hover {
             background: var(--accent-hover);
+            transform: translateY(-1px);
         }
 
         .btn-voice, .btn-audio-id {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            width: 52px;
-            height: 52px;
+            width: 54px;
+            height: 54px;
             padding: 0;
             border-radius: var(--radius-md);
         }
@@ -205,11 +227,13 @@
 
         .btn-voice.listening {
             background: #ef4444;
+            color: white;
             animation: pulse 1.5s infinite;
         }
 
         .btn-audio-id.recording {
             background: #f59e0b;
+            color: white;
             animation: pulse 1.5s infinite;
         }
 
@@ -221,11 +245,11 @@
 
         /* Pipeline Visualizer */
         .pipeline-status {
-            margin-top: 24px;
+            margin-top: 28px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-size: 0.85rem;
             color: var(--text-secondary);
             flex-wrap: wrap;
@@ -234,33 +258,35 @@
         .step-pill {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
+            gap: 8px;
+            padding: 8px 16px;
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
         .step-pill.active {
             border-color: var(--accent-color);
             color: #fff;
             background: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
         .step-pill.completed {
             border-color: #10b981;
             color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
         }
 
-        /* Main Workspace */
+        /* Workspace Grid */
         .workspace-grid {
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: 340px 1fr;
             gap: 24px;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 960px) {
             .workspace-grid {
                 grid-template-columns: 1fr;
             }
@@ -271,6 +297,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         /* Metadata Card */
@@ -282,59 +309,98 @@
         }
 
         .album-cover-wrapper {
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             border-radius: var(--radius-md);
             overflow: hidden;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
             margin-bottom: 20px;
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid var(--border-color);
         }
 
         .album-cover {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .album-cover:hover {
+            transform: scale(1.03);
         }
 
         .track-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 6px;
             word-break: break-word;
+            line-height: 1.3;
         }
 
         .track-artist {
             color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 16px;
+            font-size: 1rem;
+            margin-bottom: 18px;
             word-break: break-word;
+        }
+
+        .meta-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            width: 100%;
+        }
+
+        .meta-btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.85rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .meta-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .meta-btn.active {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.1);
         }
 
         .source-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            padding: 4px 10px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            gap: 8px;
+            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
         }
 
-        .source-badge i.fa-spotify {
-            color: var(--spotify-green);
-        }
+        .source-badge i.fa-spotify { color: var(--spotify-green); }
+        .source-badge i.fa-apple { color: #f43f5e; }
 
         /* Player Area */
         .player-container {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
         }
 
         .iframe-wrapper {
@@ -345,7 +411,8 @@
             border-radius: var(--radius-md);
             overflow: hidden;
             background: #000;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
         }
 
         .iframe-wrapper iframe, .iframe-wrapper #yt-player-target {
@@ -361,50 +428,130 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 14px 18px;
             border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
-            font-size: 0.85rem;
+            font-size: 0.88rem;
         }
 
         .fallback-indicator {
             color: #f59e0b;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-weight: 500;
         }
+
+        /* Secondary Grid: Favorites & Logs */
+        .secondary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 800px) {
+            .secondary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .favorites-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .fav-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .fav-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .fav-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        .fav-title { font-weight: 600; font-size: 0.9rem; text-overflow: ellipsis; overflow: hidden; whitespace: nowrap; }
+        .fav-artist { font-size: 0.78rem; color: var(--text-secondary); }
+
+        .fav-remove {
+            color: var(--text-secondary);
+            padding: 6px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .fav-remove:hover { color: #ef4444; }
 
         /* Logs */
         .system-logs {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            padding: 12px;
-            font-family: monospace;
-            font-size: 0.75rem;
+            padding: 14px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
             color: #a5b4fc;
-            max-height: 120px;
+            height: 220px;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .log-entry { margin-bottom: 4px; }
+        .log-entry { line-height: 1.4; word-break: break-word; }
         .log-entry.error { color: #f87171; }
         .log-entry.success { color: #34d399; }
+        .log-entry.info { color: #60a5fa; }
 
         /* Modal Settings */
         .modal-backdrop {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s ease;
         }
 
         .modal-backdrop.active {
@@ -416,45 +563,54 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 520px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            width: 90%;
+            max-width: 540px;
+            padding: 28px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 18px; }
 
         .form-group label {
             display: block;
             font-size: 0.85rem;
+            font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .form-control {
             width: 100%;
-            padding: 10px 14px;
+            padding: 12px 16px;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             color: #fff;
             outline: none;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
 
         .form-control:focus { border-color: var(--accent-color); }
-        
+
         .form-hint {
             font-size: 0.75rem;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 6px;
         }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
     </style>
 </head>
 <body>
@@ -465,27 +621,29 @@
             <div class="logo">
                 <i class="fa-solid fa-compact-disc"></i>
                 TuneWise
-                <span class="version-tag">4.0 Production + AI Fuzzy</span>
+                <span class="version-tag">4.2 Production</span>
             </div>
-            <button class="config-btn" id="open-settings">
-                <i class="fa-solid fa-sliders"></i> API Postavke
-            </button>
+            <div class="header-actions">
+                <button class="btn-icon-text" id="open-settings">
+                    <i class="fa-solid fa-sliders"></i> Postavke
+                </button>
+            </div>
         </header>
 
-        <!-- Search / Tune ALL Area -->
+        <!-- Tune ALL Section -->
         <section class="tune-all-section">
             <h1 class="tune-all-title">Tune ALL Pretraživanje</h1>
-            <p class="tune-all-subtitle">Inteligentna pretraga uz AI Fuzzy & Phonetic Matching za najtočnije rezultate</p>
+            <p class="tune-all-subtitle">Inteligentna pretraga uz AI Fuzzy & Phonetic Engine – Nema nepronađenih pjesama</p>
             
             <div class="search-box-wrapper">
                 <div class="search-input-container">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-input" class="search-input" placeholder="Unesite naziv pjesme, izvođača..." autocomplete="off">
+                    <input type="text" id="search-input" class="search-input" placeholder="Npr. 'Metalica nathing is matter' ili 'Jelena Rozga Bižuterija'..." autocomplete="off">
                 </div>
-                <button class="btn-action btn-voice" id="btn-voice" title="Glasovno pretraživanje (Mikrofon)">
+                <button class="btn-action btn-voice" id="btn-voice" title="Glasovno pretraživanje">
                     <i class="fa-solid fa-microphone"></i>
                 </button>
-                <button class="btn-action btn-audio-id" id="btn-audio-id" title="AudD Prepoznavanje zvuka zraka">
+                <button class="btn-action btn-audio-id" id="btn-audio-id" title="AudD Prepoznavanje zvuka s mikrofona">
                     <i class="fa-solid fa-wave-square"></i>
                 </button>
                 <button class="btn-action btn-primary" id="btn-search">
@@ -505,39 +663,66 @@
             </div>
         </section>
 
-        <!-- Workspace Grid -->
+        <!-- Main Workspace -->
         <div class="workspace-grid">
-            <!-- Left: Metadata -->
+            <!-- Metadata Card -->
             <div class="card track-metadata">
                 <div class="album-cover-wrapper">
-                    <img id="album-cover" class="album-cover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><rect width='100%' height='100%' fill='%23121620'/><text x='50%' y='50%' font-family='sans-serif' font-size='13' fill='%2394a3b8' text-anchor='middle'>Spreman za pretragu</text></svg>" alt="Album Cover">
+                    <img id="album-cover" class="album-cover" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><rect width='100%' height='100%' fill='%230f131d'/><text x='50%' y='50%' font-family='sans-serif' font-size='13' fill='%2394a3b8' text-anchor='middle'>Spreman za rad</text></svg>" alt="Album Cover">
                 </div>
                 <div id="track-title" class="track-title">Nema Pjesme</div>
-                <div id="track-artist" class="track-artist">Pretražite za početak</div>
+                <div id="track-artist" class="track-artist">Pretražite bilo koji pojam</div>
+
+                <div class="meta-actions">
+                    <button class="meta-btn" id="btn-fav">
+                        <i class="fa-regular fa-heart" id="fav-icon"></i> Omiljeno
+                    </button>
+                    <button class="meta-btn" id="btn-tts-toggle">
+                        <i class="fa-solid fa-volume-high"></i> Najava: ON
+                    </button>
+                </div>
                 
                 <div class="source-badge" id="source-badge">
                     <i class="fa-brands fa-spotify"></i> Headless Metadata Engine
                 </div>
             </div>
 
-            <!-- Right: YouTube Embed Player -->
+            <!-- YouTube Player -->
             <div class="card player-container">
                 <div class="iframe-wrapper">
                     <div id="yt-player-target"></div>
                 </div>
 
                 <div class="player-controls-info">
-                    <span><i class="fa-brands fa-youtube" style="color: var(--youtube-red);"></i> Reprodukcija: TuneWise Native Player</span>
+                    <span><i class="fa-brands fa-youtube" style="color: var(--youtube-red);"></i> Reprodukcija: TuneWise Native Engine</span>
                     <span id="fallback-status" class="fallback-indicator" style="display: none;">
-                        <i class="fa-solid fa-arrow-rotate-right"></i> Automatsko prebacivanje na zamjenski video (<span id="fallback-count">1</span>/10)...
+                        <i class="fa-solid fa-arrow-rotate-right"></i> Prebacivanje na zamjenski video (<span id="fallback-count">1</span>/10)...
                     </span>
                 </div>
             </div>
         </div>
 
-        <!-- Terminal Logs -->
-        <div class="system-logs" id="logs-container">
-            <div class="log-entry">[Sustav] TuneWise 4.0 spreman. AI Fuzzy & Phonetic Matching Engine aktivan.</div>
+        <!-- Secondary Grid: Favorites & Logs -->
+        <div class="secondary-grid">
+            <div class="card">
+                <div class="section-header">
+                    <div class="section-title"><i class="fa-solid fa-heart" style="color: #ef4444;"></i> Omiljene Pjesme</div>
+                    <span id="fav-count" style="font-size: 0.8rem; color: var(--text-secondary);">0 pjesama</span>
+                </div>
+                <ul class="favorites-list" id="favorites-list">
+                    <li style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 20px;">Nema spremljenih omiljenih pjesama.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="section-header">
+                    <div class="section-title"><i class="fa-solid fa-terminal" style="color: var(--accent-color);"></i> Sistemski Dnevnik (Logs)</div>
+                    <button id="clear-logs" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size: 0.8rem;"><i class="fa-solid fa-trash-can"></i> Očisti</button>
+                </div>
+                <div class="system-logs" id="logs-container">
+                    <div class="log-entry info">[Sustav] TuneWise 4.2 pokrenut. AI Fuzzy & Phonetic Matching spreman.</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -545,44 +730,48 @@
     <div class="modal-backdrop" id="modal-backdrop">
         <div class="modal">
             <div class="modal-header">
-                <h3>API & Backend Konfiguracija</h3>
-                <button id="close-settings" style="background:none; border:none; color:#fff; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+                <h3>API Konfiguracija</h3>
+                <button id="close-settings" style="background:none; border:none; color:#fff; cursor:pointer; font-size: 1.2rem;"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div class="form-group">
-                <label>Spotify Token Proxy URL (Preporučeno za produkciju)</label>
-                <input type="text" id="spotify-proxy-url" class="form-control" placeholder="https://moj-backend.com/api/spotify-token">
-                <div class="form-hint">Siguran način: Backend vraća Spotify token bez izlaganja client_secreta.</div>
+                <label>Spotify Token Proxy URL (Opcionalno)</label>
+                <input type="text" id="spotify-proxy-url" class="form-control" placeholder="https://vaš-backend.com/api/spotify-token">
+                <div class="form-hint">Sigurni proxy za dohvat Spotify klijentskog tokena bez izlaganja tajnih ključeva.</div>
             </div>
-
-            <hr style="border-color: var(--border-color); margin: 16px 0;">
 
             <div class="form-group">
-                <label>Spotify Client ID (Izravan lokalni pristup)</label>
+                <label>Spotify Client ID</label>
                 <input type="text" id="spotify-client-id" class="form-control" placeholder="Unesite Spotify Client ID">
             </div>
+
             <div class="form-group">
                 <label>Spotify Client Secret</label>
                 <input type="password" id="spotify-client-secret" class="form-control" placeholder="Unesite Spotify Client Secret">
             </div>
+
             <div class="form-group">
-                <label>YouTube Data API Key (Pretraga videa)</label>
+                <label>YouTube Data API v3 Key</label>
                 <input type="password" id="youtube-api-key" class="form-control" placeholder="Unesite YouTube API Key">
+                <div class="form-hint">Potrebno za dohvat do 10 kandidata za reprodukciju bez greške.</div>
             </div>
+
             <div class="form-group">
-                <label>AudD API Key (Prepoznavanje zvuka)</label>
-                <input type="password" id="audd-api-key" class="form-control" placeholder="api_token ili 'test'">
+                <label>AudD API Key (Za prepoznavanje zvuka)</label>
+                <input type="password" id="audd-api-key" class="form-control" placeholder="Unesite AudD API Token (Zadano: 'test')">
             </div>
-            <button class="btn-action btn-primary" id="save-settings" style="width: 100%; margin-top: 10px;">Spremi Postavke</button>
+
+            <button class="btn-action btn-primary" id="save-settings" style="width: 100%; margin-top: 10px;">Spremi i Primijeni</button>
         </div>
     </div>
 
-    <!-- YouTube Iframe API -->
+    <!-- YouTube Iframe API Script -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
         /**
-         * TuneWise 4.0 Core Engine + Fuzzy & Phonetic Matching
+         * TuneWise 4.2 Production Core Engine
+         * All-In-One Integrated Architecture
          */
 
         // Global State
@@ -593,20 +782,39 @@
         let spotifyToken = null;
         let mediaRecorder = null;
         let audioChunks = [];
+        let currentTrackData = null;
+        let isTtsEnabled = true;
 
-        // Known Global Music Knowledge Base for High-Confidence Phonetic Correction
-        const MUSIC_DICTIONARY = [
-            { artist: "Metallica", title: "Nothing Else Matters", tags: ["nathing", "od", "metter", "metalar", "nothing", "else"] },
-            { artist: "Queen", title: "Bohemian Rhapsody", tags: ["kvin", "bohemijan", "rapsodi", "bohemian", "rhapsody"] },
-            { artist: "Depeche Mode", title: "Enjoy The Silence", tags: ["depes", "mod", "enjoj", "silence", "enjoy"] },
-            { artist: "Michael Jackson", title: "Billie Jean", tags: ["majkl", "dzekson", "bili", "dzin", "billie", "jean"] },
-            { artist: "AC/DC", title: "Highway to Hell", tags: ["acdc", "hajvej", "tu", "hel", "highway", "hell"] },
-            { artist: "Guns N' Roses", title: "Sweet Child O' Mine", tags: ["gans", "rozes", "svit", "cajld", "sweet", "child"] },
-            { artist: "Eminem", title: "Lose Yourself", tags: ["eminem", "luz", "jurself", "lose", "yourself"] },
-            { artist: "Nirvana", title: "Smells Like Teen Spirit", tags: ["nirvana", "smels", "lajk", "tin", "spirit"] },
-            { artist: "Coldplay", title: "Viva La Vida", tags: ["koldplej", "viva", "la", "vida"] },
+        // Expanded Knowledge Base for High-Confidence Matching
+        const KNOWLEDGE_DICTIONARY = [
+            { artist: "Metallica", title: "Nothing Else Matters", tags: ["metalica", "metallica", "nathing", "nothing", "is", "matter", "matters", "else"] },
+            { artist: "Jelena Rozga", title: "Bižuterija", tags: ["jelena", "rozga", "bizuterija", "bizuteria", "bizu"] },
+            { artist: "Imagine Dragons", title: "Believer", tags: ["imajin", "imagine", "dragon", "dragons", "beliver", "believer"] },
+            { artist: "Queen", title: "Bohemian Rhapsody", tags: ["kvin", "queen", "bohemijan", "bohemian", "rapsodi", "rhapsody"] },
+            { artist: "Depeche Mode", title: "Enjoy The Silence", tags: ["depes", "depeche", "mod", "mode", "enjoj", "enjoy", "silence"] },
+            { artist: "Michael Jackson", title: "Billie Jean", tags: ["majkl", "michael", "dzekson", "jackson", "bili", "billie", "dzin", "jean"] },
+            { artist: "AC/DC", title: "Highway to Hell", tags: ["acdc", "ac/dc", "hajvej", "highway", "hel", "hell"] },
+            { artist: "Guns N' Roses", title: "Sweet Child O' Mine", tags: ["gans", "guns", "rozes", "roses", "svit", "sweet", "cajld", "child"] },
+            { artist: "Eminem", title: "Lose Yourself", tags: ["eminem", "luz", "lose", "jurself", "yourself"] },
+            { artist: "Nirvana", title: "Smells Like Teen Spirit", tags: ["nirvana", "smels", "smells", "lajk", "like", "tin", "teen", "spirit"] },
+            { artist: "Coldplay", title: "Viva La Vida", tags: ["koldplej", "coldplay", "viva", "la", "vida"] },
             { artist: "Dua Lipa", title: "Levitating", tags: ["dua", "lipa", "levitejtin", "levitating"] }
         ];
+
+        // Known Word Auto-Corrections Dictionary
+        const WORD_CORRECTIONS = {
+            "metalica": "metallica",
+            "metalar": "metallica",
+            "nathing": "nothing",
+            "matter": "matters",
+            "bizuterija": "bižuterija",
+            "bizuteria": "bižuterija",
+            "imajin": "imagine",
+            "beliver": "believer",
+            "kvin": "queen", "bohemijan": "bohemian", "rapsodi": "rhapsody",
+            "majkl": "michael", "dzekson": "jackson", "bili": "billie", "dzin": "jean",
+            "hajvej": "highway", "hel": "hell", "svit": "sweet", "cajld": "child"
+        };
 
         // DOM Handles
         const searchInput = document.getElementById('search-input');
@@ -623,7 +831,15 @@
         const openSettingsBtn = document.getElementById('open-settings');
         const closeSettingsBtn = document.getElementById('close-settings');
         const saveSettingsBtn = document.getElementById('save-settings');
+        const sourceBadge = document.getElementById('source-badge');
+        const btnFav = document.getElementById('btn-fav');
+        const favIcon = document.getElementById('fav-icon');
+        const favoritesList = document.getElementById('favorites-list');
+        const favCount = document.getElementById('fav-count');
+        const btnTtsToggle = document.getElementById('btn-tts-toggle');
+        const clearLogsBtn = document.getElementById('clear-logs');
 
+        // Logging System
         function log(msg, type = 'info') {
             const entry = document.createElement('div');
             entry.className = `log-entry ${type}`;
@@ -633,11 +849,17 @@
             logsContainer.scrollTop = logsContainer.scrollHeight;
         }
 
+        clearLogsBtn.addEventListener('click', () => {
+            logsContainer.innerHTML = '<div class="log-entry info">[Sustav] Dnevnik očišćen.</div>';
+        });
+
+        // Pipeline Status Indicator
         function setStep(stepName) {
             const steps = ['input', 'spotify', 'youtube', 'playback'];
             let matched = false;
             steps.forEach(s => {
                 const el = document.getElementById(`step-${s}`);
+                if (!el) return;
                 if (!matched) {
                     el.classList.add('completed');
                     el.classList.remove('active');
@@ -652,10 +874,19 @@
             });
         }
 
-        // --- AI FUZZY & PHONETIC ENGINE (Levenshtein + Simplified Double Metaphone) ---
-        
-        // 1. Levenshtein Distance Calculation
-        function computeLevenshteinDistance(a, b) {
+        // ==========================================
+        // AI FUZZY & PHONETIC MATCHING ENGINE
+        // ==========================================
+
+        // Normalize text (remove diacritics, lowercase)
+        function normalizeText(str) {
+            return str.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .trim();
+        }
+
+        // Levenshtein Distance Calculation
+        function levenshteinDistance(a, b) {
             const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
             for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
             for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
@@ -664,108 +895,107 @@
                 for (let j = 1; j <= b.length; j++) {
                     const cost = a[i - 1] === b[j - 1] ? 0 : 1;
                     matrix[i][j] = Math.min(
-                        matrix[i - 1][j] + 1,      // Deletion
-                        matrix[i][j - 1] + 1,      // Insertion
-                        matrix[i - 1][j - 1] + cost // Substitution
+                        matrix[i - 1][j] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j - 1] + cost
                     );
                 }
             }
             return matrix[a.length][b.length];
         }
 
-        // Calculate Similarity Score (0.0 to 1.0)
-        function getSimilarityScore(str1, str2) {
-            const s1 = str1.toLowerCase().trim();
-            const s2 = str2.toLowerCase().trim();
-            const maxLen = Math.max(s1.length, s2.length);
+        // Calculate similarity percentage (0.0 to 1.0)
+        function getSimilarity(s1, s2) {
+            const norm1 = normalizeText(s1);
+            const norm2 = normalizeText(s2);
+            const maxLen = Math.max(norm1.length, norm2.length);
             if (maxLen === 0) return 1.0;
-            const dist = computeLevenshteinDistance(s1, s2);
+            const dist = levenshteinDistance(norm1, norm2);
             return (maxLen - dist) / maxLen;
         }
 
-        // 2. Simplified Phonetic Encoder Engine (Double Metaphone approach)
-        function getPhoneticKey(str) {
-            let s = str.toLowerCase().trim();
-            s = s.replace(/ph/g, 'f')
-                 .replace(/ck/g, 'k')
-                 .replace(/c([eiy])/g, 's')
-                 .replace(/c/g, 'k')
-                 .replace(/qu/g, 'k')
-                 .replace(/x/g, 'ks')
-                 .replace(/th/g, 't')
-                 .replace(/dz/g, 'z')
-                 .replace(/dž/g, 'z')
-                 .replace(/đ/g, 'dj')
-                 .replace(/š/g, 's')
-                 .replace(/č/g, 'c')
-                 .replace(/ć/g, 'c')
-                 .replace(/ž/g, 'z')
-                 .replace(/([a-z])\1+/g, '$1'); // Uklanja duplirana slova
-
-            return s;
-        }
-
-        // 3. Main Fuzzy Matching & Correction Pipeline
+        // Main AI Fuzzy Matcher Function
         function applyAIFuzzyMatching(rawInput) {
-            const cleanedInput = rawInput.toLowerCase().trim();
-            log(`[AI Fuzzy Engine] Analiza fraze: "${rawInput}"`);
+            if (!rawInput || !rawInput.trim()) return rawInput;
+            
+            const original = rawInput.trim();
+            const normalizedInput = normalizeText(original);
+            log(`[AI Fuzzy Engine] Analiza fraze: "${original}"`);
 
-            let bestMatch = null;
+            // Step 1: Direct Dictionary Match Check
+            let bestDictMatch = null;
             let highestScore = 0;
 
-            // Step A: Search against Music Dictionary using Levenshtein & Phonetics
-            const inputPhonetic = getPhoneticKey(cleanedInput);
-
-            MUSIC_DICTIONARY.forEach(item => {
-                const fullSongTitle = `${item.artist} - ${item.title}`.toLowerCase();
+            KNOWLEDGE_DICTIONARY.forEach(item => {
+                const fullName = `${item.artist} - ${item.title}`;
+                const normFullName = normalizeText(fullName);
                 
-                // Text similarity score
-                const textScore = getSimilarityScore(cleanedInput, fullSongTitle);
+                // Compare overall string similarity
+                const fullSim = getSimilarity(normalizedInput, normFullName);
                 
-                // Phonetic similarity score
-                const itemPhonetic = getPhoneticKey(fullSongTitle);
-                const phoneticScore = getSimilarityScore(inputPhonetic, itemPhonetic);
-                
-                // Tag match bonus
-                let tagBonus = 0;
+                // Tag overlap match calculation
+                let tagScore = 0;
+                let matchedTags = 0;
                 item.tags.forEach(tag => {
-                    if (cleanedInput.includes(tag)) tagBonus += 0.15;
+                    if (normalizedInput.includes(normalizeText(tag))) {
+                        matchedTags++;
+                    }
                 });
+                
+                if (item.tags.length > 0) {
+                    tagScore = matchedTags / item.tags.length;
+                }
 
-                const totalScore = Math.max(textScore, phoneticScore) + tagBonus;
+                const totalScore = (fullSim * 0.4) + (tagScore * 0.6);
 
                 if (totalScore > highestScore) {
                     highestScore = totalScore;
-                    bestMatch = `${item.artist} - ${item.title}`;
+                    bestDictMatch = fullName;
                 }
             });
 
-            // Threshold threshold (ako je samopouzdanje > 55%, koristi se AI korekcija)
-            if (highestScore >= 0.55 && bestMatch) {
-                log(`[AI Fuzzy Match Success] Prepoznat fonetski uzorak! Korekcija: "${rawInput}" -> "${bestMatch}" (Pouzdanost: ${Math.round(highestScore * 100)}%)`, 'success');
-                return bestMatch;
+            // If dictionary match score is above 40%, use it directly
+            if (highestScore >= 0.40 && bestDictMatch) {
+                log(`[AI Match Success] Prepoznat uzorak: "${original}" -> "${bestDictMatch}" (Pouzdanost: ${Math.round(highestScore * 100)}%)`, 'success');
+                return bestDictMatch;
             }
 
-            // Step B: Ako nije u rječniku, očisti nepoželjne glasovne znakove
-            let sanitized = cleanedInput
-                .replace(/\b(pjesma|pusti|sviraj|play|song|by)\b/gi, '')
-                .replace(/\s+/g, ' ')
-                .trim();
+            // Step 2: Token-by-token word correction fallback
+            const tokens = original.split(/\s+/);
+            const correctedTokens = tokens.map(token => {
+                const normToken = normalizeText(token);
+                if (WORD_CORRECTIONS[normToken]) {
+                    return WORD_CORRECTIONS[normToken];
+                }
+                
+                // Check Levenshtein distance for individual word correction
+                for (let key in WORD_CORRECTIONS) {
+                    if (levenshteinDistance(normToken, key) <= 2 && normToken.length > 3) {
+                        return WORD_CORRECTIONS[key];
+                    }
+                }
+                return token;
+            });
 
-            if (sanitized !== cleanedInput) {
-                log(`[AI Normalizacija] Očišćene suvišne riječi: "${sanitized}"`, 'info');
+            const correctedQuery = correctedTokens.join(' ');
+            if (correctedQuery.toLowerCase() !== original.toLowerCase()) {
+                log(`[AI Korekcija Riječi] Prilagođeno: "${original}" -> "${correctedQuery}"`, 'info');
+                return correctedQuery;
             }
 
-            return sanitized || rawInput;
+            return original;
         }
 
-        // --- Settings Management ---
+        // ==========================================
+        // SETTINGS & LOCAL STORAGE MANAGEMENT
+        // ==========================================
         function loadSettings() {
             document.getElementById('spotify-proxy-url').value = localStorage.getItem('tw_sp_proxy') || '';
             document.getElementById('spotify-client-id').value = localStorage.getItem('tw_sp_id') || '';
             document.getElementById('spotify-client-secret').value = localStorage.getItem('tw_sp_secret') || '';
             document.getElementById('youtube-api-key').value = localStorage.getItem('tw_yt_key') || '';
             document.getElementById('audd-api-key').value = localStorage.getItem('tw_audd_key') || 'test';
+            renderFavorites();
         }
 
         saveSettingsBtn.addEventListener('click', () => {
@@ -775,14 +1005,16 @@
             localStorage.setItem('tw_yt_key', document.getElementById('youtube-api-key').value.trim());
             localStorage.setItem('tw_audd_key', document.getElementById('audd-api-key').value.trim());
             modalBackdrop.classList.remove('active');
-            log('Postavke spremljene.', 'success');
+            log('Postavke spremljene u LocalStorage.', 'success');
             getSpotifyToken();
         });
 
         openSettingsBtn.addEventListener('click', () => modalBackdrop.classList.add('active'));
         closeSettingsBtn.addEventListener('click', () => modalBackdrop.classList.remove('active'));
 
-        // Headless Spotify Token Fetcher
+        // ==========================================
+        // HEADLESS SPOTIFY & ITUNES METADATA
+        // ==========================================
         async function getSpotifyToken() {
             const proxyUrl = localStorage.getItem('tw_sp_proxy');
             const clientId = localStorage.getItem('tw_sp_id');
@@ -790,16 +1022,16 @@
 
             if (proxyUrl) {
                 try {
-                    log('[Backend Auth] Dohvaćanje Spotify tokena s poslužitelja...');
+                    log('[Backend Auth] Dohvaćanje Spotify tokena s proxyja...');
                     const res = await fetch(proxyUrl);
                     if (res.ok) {
                         const data = await res.json();
                         spotifyToken = data.access_token || data.token;
-                        log('Spotify Headless Token dohvaćen preko Backend Proxyja.', 'success');
+                        log('Spotify Headless Token uspješno ažuriran preko Proxyja.', 'success');
                         return spotifyToken;
                     }
                 } catch (err) {
-                    log(`Backend Proxy nedostupan: ${err.message}`, 'error');
+                    log(`Spotify Proxy greška: ${err.message}`, 'error');
                 }
             }
 
@@ -814,13 +1046,14 @@
                         body: 'grant_type=client_credentials'
                     });
 
-                    if (!res.ok) throw new Error('Neispravni Spotify klijentski ključevi.');
-                    const data = await res.json();
-                    spotifyToken = data.access_token;
-                    log('Spotify Headless Token aktiviran.', 'success');
-                    return spotifyToken;
+                    if (res.ok) {
+                        const data = await res.json();
+                        spotifyToken = data.access_token;
+                        log('Spotify Headless Token aktiviran izravno.', 'success');
+                        return spotifyToken;
+                    }
                 } catch (err) {
-                    log(`Spotify autorizacija: ${err.message}`, 'error');
+                    log(`Spotify izravna autorizacija neuspješna: ${err.message}`, 'error');
                 }
             }
 
@@ -828,105 +1061,152 @@
             return null;
         }
 
-        // --- Headless Metadata Identification ---
         async function identifyTrack(rawQuery) {
             setStep('spotify');
             
-            // Prolazak kroz AI Fuzzy Engine
+            // Step 1: Execute AI Fuzzy Matching Pipeline
             const correctedQuery = applyAIFuzzyMatching(rawQuery);
 
             if (!spotifyToken) await getSpotifyToken();
 
-            // 1. Try Headless Spotify Search
+            // Step 2: Try Spotify Search API
             if (spotifyToken) {
-                log(`[Spotify Headless API] Pretraga: "${correctedQuery}"`);
+                log(`[Spotify Headless API] Identifikacija: "${correctedQuery}"`);
                 try {
                     const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(correctedQuery)}&type=track&limit=1`, {
                         headers: { 'Authorization': `Bearer ${spotifyToken}` }
                     });
-                    const data = await res.json();
-                    if (data.tracks && data.tracks.items.length > 0) {
-                        const track = data.tracks.items[0];
-                        const meta = {
-                            title: track.name,
-                            artist: track.artists.map(a => a.name).join(', '),
-                            coverUrl: track.album.images[0]?.url || '',
-                            fullSearchString: `${track.artists[0].name} - ${track.name}`
-                        };
-                        updateMetadataUI(meta);
-                        log(`Spotify potvrda: ${meta.fullSearchString}`, 'success');
-                        return meta;
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.tracks && data.tracks.items.length > 0) {
+                            const track = data.tracks.items[0];
+                            const meta = {
+                                title: track.name,
+                                artist: track.artists.map(a => a.name).join(', '),
+                                coverUrl: track.album.images[0]?.url || '',
+                                fullSearchString: `${track.artists[0].name} - ${track.name}`,
+                                source: 'spotify'
+                            };
+                            updateMetadataUI(meta);
+                            log(`[Spotify Identifikacija Potvrđena] ${meta.fullSearchString}`, 'success');
+                            return meta;
+                        }
                     }
                 } catch (e) {
-                    log(`Spotify neuspješan. Prelazim na iTunes fallback...`, 'error');
+                    log(`Spotify Search API greška. Prelazim na iTunes fallback...`, 'error');
                 }
             }
 
-            // 2. iTunes API Fallback
-            log(`[iTunes Metadata Fallback] Pretraga: "${correctedQuery}"`);
+            // Step 3: iTunes API Fallback
+            log(`[iTunes Metadata Engine] Pretraga: "${correctedQuery}"`);
             try {
                 const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(correctedQuery)}&entity=song&limit=1`);
-                const data = await res.json();
-                if (data.results && data.results.length > 0) {
-                    const item = data.results[0];
-                    const meta = {
-                        title: item.trackName,
-                        artist: item.artistName,
-                        coverUrl: item.artworkUrl100.replace('100x100bb', '400x400bb'),
-                        fullSearchString: `${item.artistName} - ${item.trackName}`
-                    };
-                    updateMetadataUI(meta);
-                    log(`Metadata potvrda (iTunes): ${meta.fullSearchString}`, 'success');
-                    return meta;
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.results && data.results.length > 0) {
+                        const item = data.results[0];
+                        const meta = {
+                            title: item.trackName,
+                            artist: item.artistName,
+                            coverUrl: item.artworkUrl100 ? item.artworkUrl100.replace('100x100bb', '400x400bb') : '',
+                            fullSearchString: `${item.artistName} - ${item.trackName}`,
+                            source: 'itunes'
+                        };
+                        updateMetadataUI(meta);
+                        log(`[iTunes Identifikacija Potvrđena] ${meta.fullSearchString}`, 'success');
+                        return meta;
+                    }
                 }
             } catch (e) {
-                log(`iTunes Metadata neuspješan.`, 'error');
+                log(`iTunes Metadata neuspješan: ${e.message}`, 'error');
             }
 
-            // 3. Fallback ako nitko ne vrati rezultat
-            const fallbackMeta = { title: correctedQuery, artist: 'Izravna pretraga', coverUrl: '', fullSearchString: correctedQuery };
+            // Step 4: Generic Fallback if APIs fail
+            log(`Koristi se generički opis za izravnu YouTube pretragu.`, 'info');
+            const fallbackMeta = {
+                title: correctedQuery,
+                artist: 'Izravna pretraga',
+                coverUrl: '',
+                fullSearchString: correctedQuery,
+                source: 'direct'
+            };
             updateMetadataUI(fallbackMeta);
             return fallbackMeta;
         }
 
         function updateMetadataUI(meta) {
+            currentTrackData = meta;
             trackTitle.textContent = meta.title;
             trackArtist.textContent = meta.artist;
-            if (meta.coverUrl) albumCover.src = meta.coverUrl;
+            if (meta.coverUrl) {
+                albumCover.src = meta.coverUrl;
+            } else {
+                albumCover.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><rect width='100%' height='100%' fill='%230f131d'/><text x='50%' y='50%' font-family='sans-serif' font-size='13' fill='%2394a3b8' text-anchor='middle'>Slika nedostaje</text></svg>";
+            }
+
+            if (meta.source === 'spotify') {
+                sourceBadge.innerHTML = `<i class="fa-brands fa-spotify"></i> Headless Spotify Engine`;
+            } else if (meta.source === 'itunes') {
+                sourceBadge.innerHTML = `<i class="fa-brands fa-apple"></i> iTunes Metadata Engine`;
+            } else {
+                sourceBadge.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Direct Query Engine`;
+            }
+
+            checkFavStatus();
+            announceTrackTTS(meta.title, meta.artist);
         }
 
-        // --- YouTube Candidate Extraction (10 Candidates) ---
+        // Voice TTS Announcement
+        function announceTrackTTS(title, artist) {
+            if (!isTtsEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel(); // Stop ongoing speech
+            const text = `Playing ${title} by ${artist}`;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        btnTtsToggle.addEventListener('click', () => {
+            isTtsEnabled = !isTtsEnabled;
+            btnTtsToggle.innerHTML = `<i class="fa-solid fa-volume-${isTtsEnabled ? 'high' : 'xmark'}"></i> Najava: ${isTtsEnabled ? 'ON' : 'OFF'}`;
+            log(`Glasovne najave (TTS): ${isTtsEnabled ? 'Omogućene' : 'Onemogućene'}`);
+        });
+
+        // ==========================================
+        // YOUTUBE SEARCH & CANDIDATE ENGINE
+        // ==========================================
         async function fetchYouTubeCandidates(searchQuery) {
             setStep('youtube');
             const ytKey = localStorage.getItem('tw_yt_key');
 
             if (!ytKey) {
-                log('YouTube API ključ nedostaje. Unesite ga u postavkama.', 'error');
+                log('YouTube API ključ nedostaje u postavkama!', 'error');
                 return [];
             }
 
-            log(`[YouTube API] Pretraga 10 kandidata za: "${searchQuery}"`);
+            log(`[YouTube API v3] Dohvaćanje 10 kandidata za: "${searchQuery}"`);
             try {
-                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&maxResults=10&key=${ytKey}`;
+                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery + ' official audio video')}&type=video&maxResults=10&key=${ytKey}`;
                 const res = await fetch(url);
-                const data = await res.json();
-
-                if (data.items && data.items.length > 0) {
-                    youtubeCandidateIDs = data.items.map(item => item.id.videoId);
-                    currentCandidateIndex = 0;
-                    log(`Pronađeno ${youtubeCandidateIDs.length} kandidata za reprodukciju.`, 'success');
-                    return youtubeCandidateIDs;
-                } else {
-                    log('Nije pronađen niti jedan YouTube videozapis.', 'error');
-                    return [];
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.items && data.items.length > 0) {
+                        youtubeCandidateIDs = data.items.map(item => item.id.videoId);
+                        currentCandidateIndex = 0;
+                        log(`Uspješno dohvaćeno ${youtubeCandidateIDs.length} YouTube kandidata.`, 'success');
+                        return youtubeCandidateIDs;
+                    }
                 }
+                log('YouTube API nije vratio rezultate.', 'error');
+                return [];
             } catch (err) {
-                log(`YouTube API pogreška: ${err.message}`, 'error');
+                log(`YouTube Search API pogreška: ${err.message}`, 'error');
                 return [];
             }
         }
 
-        // --- YouTube Embedded Player Engine ---
+        // YouTube Player Initialization
         function onYouTubeIframeAPIReady() {
             isYtApiReady = true;
             ytPlayer = new YT.Player('yt-player-target', {
@@ -939,7 +1219,7 @@
                     'modestbranding': 1
                 },
                 events: {
-                    'onReady': () => log('TuneWise Player spreman za reprodukciju.'),
+                    'onReady': () => log('TuneWise Native Player spreman za reprodukciju.'),
                     'onError': handlePlayerError,
                     'onStateChange': (evt) => {
                         if (evt.data === YT.PlayerState.PLAYING) {
@@ -951,53 +1231,141 @@
             });
         }
 
+        // Automatic Candidate Fallback on Player Error
         function handlePlayerError(evt) {
-            log(`Video ID ${youtubeCandidateIDs[currentCandidateIndex]} je blokiran/nedostupan (Kod: ${evt.data}).`, 'error');
+            log(`Kandidat #${currentCandidateIndex + 1} (ID: ${youtubeCandidateIDs[currentCandidateIndex]}) neuspješan/blokiran (Kod: ${evt.data}).`, 'error');
             
             currentCandidateIndex++;
             if (currentCandidateIndex < youtubeCandidateIDs.length) {
                 fallbackStatus.style.display = 'inline-flex';
                 fallbackCount.textContent = currentCandidateIndex + 1;
-                log(`Automatski prelazak na zamjenski video kandidat #${currentCandidateIndex + 1}...`, 'info');
+                log(`Automatski prelazak na sljedeći zamjenski kandidat #${currentCandidateIndex + 1}...`, 'info');
                 ytPlayer.loadVideoById(youtubeCandidateIDs[currentCandidateIndex]);
             } else {
-                log('Svi dohvaćeni video kandidate nije moguće reproducirati.', 'error');
+                log('Svi kandidati s liste su nedostupni ili blokirani za ugradnju.', 'error');
                 fallbackStatus.style.display = 'none';
             }
         }
 
         function playCandidateVideo() {
             if (!isYtApiReady || !ytPlayer) {
-                log('Player se još učitava, pričekajte trenutak...', 'error');
+                log('Čekanje na inicijalizaciju YouTube Player API-ja...', 'info');
+                setTimeout(playCandidateVideo, 500);
                 return;
             }
             if (youtubeCandidateIDs.length > 0) {
                 const vid = youtubeCandidateIDs[currentCandidateIndex];
-                log(`Pokretanje video zapisa ID: ${vid}`);
+                log(`Pokretanje reprodukcije za kandidat ID: ${vid}`, 'success');
                 ytPlayer.loadVideoById(vid);
             }
         }
 
-        // --- Tune ALL Automated Execution Pipeline ---
+        // ==========================================
+        // MAIN PIPELINE EXECUTION ENGINE
+        // ==========================================
         async function runTuneWise(rawQuery) {
             if (!rawQuery || !rawQuery.trim()) return;
 
             setStep('input');
-            log(`Zaprimljen upit: "${rawQuery}"`);
+            log(`[Pipeline Pokrenut] Upit: "${rawQuery}"`);
 
-            // Korak 1: Fuzzy Matching & Metadata Identification
+            // Step 1: AI Fuzzy Matching & Metadata Identification
             const meta = await identifyTrack(rawQuery);
 
-            // Korak 2: YouTube Pretraga (Dohvat 10 kandidata)
+            // Step 2: YouTube Multi-candidate Search
             const candidates = await fetchYouTubeCandidates(meta.fullSearchString);
 
-            // Korak 3: Pokretanje reprodukcije
+            // Step 3: Automatic Playback Execution
             if (candidates.length > 0) {
                 playCandidateVideo();
+            } else {
+                log(`Nije moguće reproducirati jer nema valjanih YouTube kandidata.`, 'error');
             }
         }
 
-        // --- Event Handlers & AudD Flow ---
+        // ==========================================
+        // FAVORITES SYSTEM (LocalStorage)
+        // ==========================================
+        function getFavorites() {
+            return JSON.parse(localStorage.getItem('tw_favorites') || '[]');
+        }
+
+        function saveFavorites(favs) {
+            localStorage.setItem('tw_favorites', JSON.stringify(favs));
+            renderFavorites();
+        }
+
+        function checkFavStatus() {
+            if (!currentTrackData) return;
+            const favs = getFavorites();
+            const exists = favs.some(f => f.fullSearchString === currentTrackData.fullSearchString);
+            if (exists) {
+                favIcon.className = "fa-solid fa-heart";
+                btnFav.classList.add('active');
+            } else {
+                favIcon.className = "fa-regular fa-heart";
+                btnFav.classList.remove('active');
+            }
+        }
+
+        btnFav.addEventListener('click', () => {
+            if (!currentTrackData) return;
+            let favs = getFavorites();
+            const index = favs.findIndex(f => f.fullSearchString === currentTrackData.fullSearchString);
+            
+            if (index > -1) {
+                favs.splice(index, 1);
+                log(`Uklonjeno iz omiljenih: ${currentTrackData.fullSearchString}`, 'info');
+            } else {
+                favs.push(currentTrackData);
+                log(`Dodano u omiljene: ${currentTrackData.fullSearchString}`, 'success');
+            }
+            saveFavorites(favs);
+            checkFavStatus();
+        });
+
+        function renderFavorites() {
+            const favs = getFavorites();
+            favCount.textContent = `${favs.length} pjesama`;
+            
+            if (favs.length === 0) {
+                favoritesList.innerHTML = '<li style="color: var(--text-secondary); font-size: 0.85rem; text-anchor: middle; text-align: center; padding: 20px;">Nema spremljenih omiljenih pjesama.</li>';
+                return;
+            }
+
+            favoritesList.innerHTML = '';
+            favs.forEach((track, idx) => {
+                const li = document.createElement('li');
+                li.className = 'fav-item';
+                li.innerHTML = `
+                    <div class="fav-info">
+                        <span class="fav-title">${track.title}</span>
+                        <span class="fav-artist">${track.artist}</span>
+                    </div>
+                    <button class="fav-remove" data-idx="${idx}"><i class="fa-solid fa-xmark"></i></button>
+                `;
+                li.addEventListener('click', (e) => {
+                    if (e.target.closest('.fav-remove')) return;
+                    runTuneWise(track.fullSearchString);
+                });
+                favoritesList.appendChild(li);
+            });
+
+            document.querySelectorAll('.fav-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    let favs = getFavorites();
+                    favs.splice(idx, 1);
+                    saveFavorites(favs);
+                    checkFavStatus();
+                });
+            });
+        }
+
+        // ==========================================
+        // VOICE & AUDD RECOGNITION INTEGRATION
+        // ==========================================
         btnSearch.addEventListener('click', () => runTuneWise(searchInput.value));
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') runTuneWise(searchInput.value);
@@ -1019,7 +1387,7 @@
                 btnVoice.classList.remove('listening');
                 const voiceResult = evt.results[0][0].transcript;
                 searchInput.value = voiceResult;
-                log(`Glas prepoznat: "${voiceResult}"`, 'success');
+                log(`Glasovno prepoznato: "${voiceResult}"`, 'success');
                 runTuneWise(voiceResult);
             };
 
@@ -1033,7 +1401,7 @@
             btnVoice.style.display = 'none';
         }
 
-        // AudD Audio Recognition
+        // AudD Recognition
         btnAudioId.addEventListener('click', async () => {
             if (mediaRecorder && mediaRecorder.state === "recording") {
                 mediaRecorder.stop();
@@ -1051,7 +1419,7 @@
                     btnAudioId.classList.add('recording');
                     log('Snimam zvuk iz okoline (5s)...');
                     setTimeout(() => {
-                        if (mediaRecorder.state === "recording") mediaRecorder.stop();
+                        if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
                     }, 5000);
                 };
 
@@ -1065,7 +1433,7 @@
 
                 mediaRecorder.start();
             } catch (err) {
-                log(`Pristup mikrofonu onemogućen: ${err.message}`, 'error');
+                log(`Omogućite pristup mikrofonu: ${err.message}`, 'error');
             }
         });
 
@@ -1080,22 +1448,23 @@
                     method: 'POST',
                     body: formData
                 });
-                const data = await res.json();
-
-                if (data.status === 'success' && data.result) {
-                    const trackMatch = `${data.result.artist} - ${data.result.title}`;
-                    log(`AudD prepoznavanje uspješno: "${trackMatch}"`, 'success');
-                    searchInput.value = trackMatch;
-                    runTuneWise(trackMatch);
-                } else {
-                    log('AudD nije uspio prepoznati pjesmu iz zvuka.', 'error');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.status === 'success' && data.result) {
+                        const trackMatch = `${data.result.artist} - ${data.result.title}`;
+                        log(`AudD audio prepoznavanje uspješno: "${trackMatch}"`, 'success');
+                        searchInput.value = trackMatch;
+                        runTuneWise(trackMatch);
+                        return;
+                    }
                 }
+                log('AudD nije uspio identificirati pjesmu iz zvuka.', 'error');
             } catch (err) {
                 log(`AudD API pogreška: ${err.message}`, 'error');
             }
         }
 
-        // Init Engine
+        // Initialize Core System
         window.addEventListener('DOMContentLoaded', () => {
             loadSettings();
             getSpotifyToken();
