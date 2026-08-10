@@ -12,8 +12,8 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EVChargeWiseALL - Universal EV Marketplace & Charging Engine</title>
-  <meta name="description" content="EVChargeWiseALL - Cjelovita jednostranična aplikacija (evchargewiseall.html) za pretragu električnih vozila s 14 platformi, kalkulator punjenja, analizu baterije i inventar.">
+  <title>EVChargeWiseALL - Universal EV & Parts Marketplace Engine</title>
+  <meta name="description" content="EVChargeWiseALL - Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja i analitiku.">
   <link rel="canonical" href="evchargewiseall.html">
 
   <style>
@@ -149,7 +149,7 @@
       flex: 1;
     }
 
-    /* Universal EV Search Section */
+    /* Universal EV & Parts Search Section */
     .search-section {
       background: var(--bg-card);
       backdrop-filter: blur(16px);
@@ -210,7 +210,7 @@
       font-size: 0.95rem;
       outline: none;
       cursor: pointer;
-      min-width: 170px;
+      min-width: 190px;
     }
 
     .btn-search {
@@ -343,7 +343,7 @@
       color: var(--success);
     }
 
-    /* EV Cards Grid */
+    /* EV & Parts Cards Grid */
     .marketplace-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
@@ -387,6 +387,16 @@
       padding: 4px 10px;
       border-radius: 8px;
       text-transform: uppercase;
+    }
+
+    .type-badge {
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 8px;
     }
 
     .fav-btn {
@@ -724,7 +734,7 @@
       <span class="badge-edition">evchargewiseall.html</span>
     </a>
     <nav>
-      <button class="nav-btn active" onclick="switchTab('marketplace')">EV Marketplace</button>
+      <button class="nav-btn active" onclick="switchTab('marketplace')">EV & Dijelovi</button>
       <button class="nav-btn" onclick="switchTab('calc')">Kalkulator Punjenja</button>
       <button class="nav-btn" onclick="switchTab('inventory')">Inventar (<span id="invCount">0</span>)</button>
       <button class="nav-btn" onclick="switchTab('ai')">AI Analiza</button>
@@ -734,24 +744,25 @@
   </header>
 
   <main>
-    <!-- Universal EV Search Engine -->
+    <!-- Universal EV & Parts Search Engine -->
     <section class="search-section">
       <div class="search-title">EVChargeWiseALL Engine</div>
-      <div class="search-subtitle">Univerzalna EV platforma za agregaciju ponuda električnih vozila s 14 vodećih europskih i globalnih servisa.</div>
+      <div class="search-subtitle">Univerzalni pretraživač za električna vozila, Wallbox punjače, kabele, baterije i rezervne dijelove s 14 vodećih europskih i globalnih servisa.</div>
       <div class="search-box">
         <div class="search-input-wrapper">
-          <input type="text" id="searchQuery" class="search-input" placeholder="Unesite EV model (npr. Tesla Model 3, BMW i4, Hyundai Ioniq 5...)" value="Tesla Model 3">
+          <input type="text" id="searchQuery" class="search-input" placeholder="Pretražite EV modele ili dijelove (npr. Tesla Model 3, Wallbox 22kW, Type 2 Kabel, Baterija...)" value="Tesla Model 3">
         </div>
         <select id="categoryFilter" class="filter-select">
-          <option value="all">Sva Električna Vozila</option>
-          <option value="sedan">Limuzine & Coupe</option>
-          <option value="suv">SUV & Crossover</option>
-          <option value="compact">Kompaktna Vozila</option>
-          <option value="luxury">Luksuzni EV</option>
+          <option value="all">Sva Vozila i Dijelovi</option>
+          <option value="vehicles">Električna Vozila (EV)</option>
+          <option value="wallbox">Wallbox & Kućni Punjači</option>
+          <option value="cables">Kabeli & Adapteri</option>
+          <option value="batteries">Baterijski Moduli & Ćelije</option>
+          <option value="parts">Dijelovi & Oprema (Gume, Kočnice)</option>
         </select>
         <button class="btn-search" id="searchBtn" onclick="runSearch()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          Pretraži EV Tržište
+          Pretraži Tržište
         </button>
         <button class="btn-ai-prompt" onclick="searchWithAI()">
           ✨ ChatGPT EV Procjena
@@ -760,39 +771,39 @@
 
       <div class="loading-status" id="loadingStatus">
         <div class="spinner"></div>
-        <span>EVChargeWiseALL dohvaća žive ponude s 14 EV servisa...</span>
+        <span>EVChargeWiseALL pretražuje 14 EV i Parts platformi...</span>
       </div>
 
       <div class="preset-pills">
         <span class="preset-pill active" onclick="setPreset('Tesla Model 3')">⚡ Tesla Model 3</span>
+        <span class="preset-pill" onclick="setPreset('Wallbox 22kW')">🔌 Wallbox 22kW</span>
+        <span class="preset-pill" onclick="setPreset('Type 2 Kabel 32A')">🔋 Type 2 Kabel 32A</span>
         <span class="preset-pill" onclick="setPreset('Tesla Model Y')">🚗 Tesla Model Y</span>
+        <span class="preset-pill" onclick="setPreset('Baterijski Modul 48V')">⚡ Baterijski Modul</span>
+        <span class="preset-pill" onclick="setPreset('EV Gume 19 inch')">🛞 EV Gume 19"</span>
         <span class="preset-pill" onclick="setPreset('BMW i4')">🏎️ BMW i4</span>
         <span class="preset-pill" onclick="setPreset('Hyundai Ioniq 5')">🔋 Hyundai Ioniq 5</span>
+        <span class="preset-pill" onclick="setPreset('Portable EV Charger 11kW')">⚡ Prijenosni Punjač 11kW</span>
         <span class="preset-pill" onclick="setPreset('Volkswagen ID.4')">🌐 VW ID.4</span>
-        <span class="preset-pill" onclick="setPreset('Kia EV6')">⚡ Kia EV6</span>
-        <span class="preset-pill" onclick="setPreset('Audi e-tron')">🚙 Audi e-tron</span>
-        <span class="preset-pill" onclick="setPreset('Polestar 2')">✨ Polestar 2</span>
-        <span class="preset-pill" onclick="setPreset('Volvo EX30')">🇸🇪 Volvo EX30</span>
-        <span class="preset-pill" onclick="setPreset('Porsche Taycan')">🏁 Porsche Taycan</span>
       </div>
     </section>
 
-    <!-- EV Stat Metrics -->
+    <!-- Stat Metrics -->
     <div class="metrics-row">
       <div class="metric-card">
-        <div class="metric-label">Analizirano EV Oglasa</div>
+        <div class="metric-label">Analizirano Oglasa</div>
         <div class="metric-value" id="statTotalItems">--</div>
         <div class="metric-sub">▲ S 14 aktivnih izvora</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Prosječna Cijena Vozila</div>
+        <div class="metric-label">Prosječna Cijena</div>
         <div class="metric-value" id="statAvgPrice">-- €</div>
-        <div class="metric-sub">Izračunato na temelju ponuda</div>
+        <div class="metric-sub">Za odabranu pretragu</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Prosječan WLTP Domet</div>
-        <div class="metric-value" style="color: var(--accent-cyan);" id="statAvgRange">-- km</div>
-        <div class="metric-sub" id="statRealRangeSub">Stvarni domet: -- km</div>
+        <div class="metric-label">Specifikacija / Domet</div>
+        <div class="metric-value" style="color: var(--accent-cyan);" id="statAvgRange">--</div>
+        <div class="metric-sub" id="statRealRangeSub">Stvarni domet/snaga: --</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Najpovoljniji Izvor</div>
@@ -801,7 +812,7 @@
       </div>
     </div>
 
-    <!-- TAB 1: EV Marketplace Cards Grid -->
+    <!-- TAB 1: EV & Parts Cards Grid -->
     <div id="tab-marketplace" class="tab-content active">
       <div class="marketplace-grid" id="cardsGrid"></div>
     </div>
@@ -871,32 +882,32 @@
     <!-- TAB 3: Inventory Tracker -->
     <div id="tab-inventory" class="tab-content">
       <div class="search-section">
-        <h2 style="margin-bottom: 0.5rem;">EV Upravljanje Inventarom</h2>
-        <p class="search-subtitle">Spremanje i praćenje kupljenih ili planiranih vozila direktno u lokalnoj pohrani.</p>
+        <h2 style="margin-bottom: 0.5rem;">EV & Parts Upravljanje Inventarom</h2>
+        <p class="search-subtitle">Spremanje i praćenje kupljenih vozila, Wallboxa ili rezervnih dijelova direktno u lokalnoj pohrani.</p>
 
         <div class="form-grid-3">
           <div class="form-group">
-            <label for="invName">Model Vozila</label>
-            <input type="text" id="invName" class="calc-input" placeholder="npr. Tesla Model 3 Standard Range">
+            <label for="invName">Naziv Vozila / Dijela</label>
+            <input type="text" id="invName" class="calc-input" placeholder="npr. Wallbox Pulsar Plus 22kW ili Tesla Model 3">
           </div>
           <div class="form-group">
             <label for="invBuy">Nabavna Cijena (€)</label>
-            <input type="number" id="invBuy" class="calc-input" placeholder="24000">
+            <input type="number" id="invBuy" class="calc-input" placeholder="450">
           </div>
           <div class="form-group">
             <label for="invTarget">Ciljana Prodajna Cijena (€)</label>
-            <input type="number" id="invTarget" class="calc-input" placeholder="29500">
+            <input type="number" id="invTarget" class="calc-input" placeholder="680">
           </div>
         </div>
 
         <button class="btn-search" style="width:100%; justify-content:center; padding:12px; margin-top:10px;" onclick="addInventoryItem()">
-          + Dodaj EV u Inventar
+          + Dodaj u Inventar
         </button>
 
         <table class="glass-table">
           <thead>
             <tr>
-              <th>Vozilo</th>
+              <th>Stavka / Dio</th>
               <th>Nabavno (€)</th>
               <th>Cilj (€)</th>
               <th>Procj. Profit</th>
@@ -912,7 +923,7 @@
     <div id="tab-ai" class="tab-content">
       <div class="ai-dashboard-grid">
         <div class="ai-score-card">
-          <h3>AI Ocjena Baterije i Isplativosti</h3>
+          <h3>AI Ocjena Isplativosti i Baterije</h3>
           <div class="gauge-circle" id="aiGauge">
             <div class="gauge-inner">
               <span class="gauge-num" id="aiScoreVal">--</span>
@@ -925,12 +936,12 @@
         <div class="ai-details-panel">
           <h3>EVChargeWiseALL AI Izvještaj</h3>
           <p style="color: var(--text-muted); margin-top: 6px;" id="aiSummaryText">
-            Algoritam analizira specifikacije baterije, degradaciju (SoH), brzinu punjenja te predviđa zadržavanje vrijednosti u razdoblju od 3-5 godina.
+            Algoritam analizira specifikacije baterije, kompatibilnost punjača i dijelova te predviđa zadržavanje vrijednosti i ROI.
           </p>
 
           <div class="ai-list">
             <div class="ai-item">
-              <div class="ai-item-lbl">Procjena Zdravlja Baterije (SoH)</div>
+              <div class="ai-item-lbl">Procjena Baterije (SoH) / Kvalitete</div>
               <div class="ai-item-val" style="color: var(--primary-green);" id="aiSoh">94.5 %</div>
             </div>
             <div class="ai-item">
@@ -950,7 +961,7 @@
               <div class="ai-item-val" style="color: var(--purple-accent);" id="aiRoiVal">-- %</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Glavni Konkurent</div>
+              <div class="ai-item-lbl">Glavni Konkurent / Alternativa</div>
               <div class="ai-item-val" id="aiCompetitor">Hyundai Ioniq 5</div>
             </div>
           </div>
@@ -962,7 +973,7 @@
     <div id="tab-analytics" class="tab-content">
       <div class="charts-grid">
         <div class="chart-card">
-          <div class="chart-title">Usporedba Cijena EV Po Platformama (€)</div>
+          <div class="chart-title">Usporedba Cijena Po Platformama (€)</div>
           <canvas id="chartPlatforms"></canvas>
         </div>
         <div class="chart-card">
@@ -974,13 +985,13 @@
 
     <!-- TAB 6: Saved Items -->
     <div id="tab-saved" class="tab-content">
-      <h3 style="margin-bottom: 1rem;">Spremljena Električna Vozila</h3>
+      <h3 style="margin-bottom: 1rem;">Spremljeni Oglasi i Dijelovi</h3>
       <div class="marketplace-grid" id="savedGrid"></div>
     </div>
   </main>
 
   <footer>
-    EVChargeWiseALL &copy; 2026 — Pokretač za Električna Vozila i Punjenje u jednoj datoteci (<code>evchargewiseall.html</code>).
+    EVChargeWiseALL &copy; 2026 — Pokretač za Električna Vozila, Dijelove i Punjenje u jednoj datoteci (<code>evchargewiseall.html</code>).
   </footer>
 
   <div class="toast" id="toast">Obavijest</div>
@@ -993,34 +1004,38 @@
     }
 
     const EV_PLATFORMS = [
-      { name: "Mobile.de EV", type: "eu", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&ft=ELECTRICITY&q=" },
-      { name: "AutoScout24 EV", type: "eu", url: "https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&fuel=E&query=" },
-      { name: "eBay Motors", type: "global", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=" },
+      { name: "Mobile.de EV & Parts", type: "eu", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&ft=ELECTRICITY&q=" },
+      { name: "AutoScout24", type: "eu", url: "https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&fuel=E&query=" },
+      { name: "eBay Motors Parts", type: "global", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=" },
       { name: "Facebook Marketplace", type: "general", url: "https://www.facebook.com/marketplace/search/?query=" },
-      { name: "Tesla Used Inventory", type: "brand", url: "https://www.tesla.com/inventory/used/m3?query=" },
-      { name: "BMW Approved Used", type: "brand", url: "https://usedcars.bmw.co.uk/result/?q=" },
+      { name: "Tesla Inventory & Gear", type: "brand", url: "https://shop.tesla.com/category/vehicle-accessories?q=" },
+      { name: "BMW Approved & Parts", type: "brand", url: "https://shop.bmw.com/search?q=" },
       { name: "Mercedes Certified", type: "brand", url: "https://www.mercedes-benz.de/passengercars/buy/used-cars.html?q=" },
-      { name: "Audi Approved", type: "brand", url: "https://www.audi.de/de/brand/de/gebrauchtwagen.html?q=" },
-      { name: "VW Used Cars", type: "brand", url: "https://www.volkswagen.de/de/dwa.html?q=" },
+      { name: "EV Parts Direct", type: "parts", url: "https://www.google.com/search?q=EV+Parts+Direct+" },
+      { name: "Wallbox Official Store", type: "parts", url: "https://wallbox.com/search?q=" },
+      { name: "Allegro EV Parts", type: "parts", url: "https://allegro.pl/listing?string=" },
       { name: "Hyundai Approved", type: "brand", url: "https://www.hyundai.com/check/used-cars?q=" },
       { name: "Kia Approved", type: "brand", url: "https://www.kia.com/used-cars?q=" },
-      { name: "Volvo Selekt", type: "brand", url: "https://www.volvocars.com/used-cars?q=" },
       { name: "Polestar Pre-owned", type: "brand", url: "https://www.polestar.com/pre-owned/search?q=" },
       { name: "EV Database", type: "info", url: "https://ev-database.org/#sort:path~type~order:numeric~f1-cw:asc|range-s:prev~post|query:" }
     ];
 
-    /* Dynamic Database of popular EV Specs */
-    const EV_SPECS_DB = {
-      "tesla model 3": { battery: 60, wltp: 513, real: 420, dcKw: 170, basePrice: 29500, category: "sedan", competitor: "Hyundai Ioniq 6" },
-      "tesla model y": { battery: 75, wltp: 533, real: 430, dcKw: 250, basePrice: 34500, category: "suv", competitor: "VW ID.4" },
-      "bmw i4": { battery: 80.7, wltp: 590, real: 480, dcKw: 205, basePrice: 42000, category: "luxury", competitor: "Tesla Model 3" },
-      "hyundai ioniq 5": { battery: 77.4, wltp: 507, real: 410, dcKw: 233, basePrice: 31000, category: "suv", competitor: "Kia EV6" },
-      "volkswagen id.4": { battery: 77, wltp: 525, real: 400, dcKw: 135, basePrice: 26500, category: "suv", competitor: "Skoda Enyaq" },
-      "kia ev6": { battery: 77.4, wltp: 528, real: 420, dcKw: 233, basePrice: 32000, category: "suv", competitor: "Hyundai Ioniq 5" },
-      "audi e-tron": { battery: 86.5, wltp: 488, real: 390, dcKw: 170, basePrice: 38000, category: "luxury", competitor: "BMW iX3" },
-      "polestar 2": { battery: 78, wltp: 540, real: 430, dcKw: 205, basePrice: 28500, category: "sedan", competitor: "Tesla Model 3" },
-      "volvo ex30": { battery: 69, wltp: 476, real: 380, dcKw: 153, basePrice: 32000, category: "compact", competitor: "Smart #1" },
-      "porsche taycan": { battery: 93.4, wltp: 504, real: 410, dcKw: 270, basePrice: 68000, category: "luxury", competitor: "Audi e-tron GT" }
+    /* Dynamic Database for Vehicles and EV Parts */
+    const DATABASE = {
+      // Vehicles
+      "tesla model 3": { isPart: false, category: "vehicles", battery: 60, wltp: 513, real: 420, dcKw: 170, basePrice: 29500, competitor: "Hyundai Ioniq 6" },
+      "tesla model y": { isPart: false, category: "vehicles", battery: 75, wltp: 533, real: 430, dcKw: 250, basePrice: 34500, competitor: "VW ID.4" },
+      "bmw i4": { isPart: false, category: "vehicles", battery: 80.7, wltp: 590, real: 480, dcKw: 205, basePrice: 42000, competitor: "Tesla Model 3" },
+      "hyundai ioniq 5": { isPart: false, category: "vehicles", battery: 77.4, wltp: 507, real: 410, dcKw: 233, basePrice: 31000, competitor: "Kia EV6" },
+      "volkswagen id.4": { isPart: false, category: "vehicles", battery: 77, wltp: 525, real: 400, dcKw: 135, basePrice: 26500, competitor: "Skoda Enyaq" },
+      "kia ev6": { isPart: false, category: "vehicles", battery: 77.4, wltp: 528, real: 420, dcKw: 233, basePrice: 32000, competitor: "Hyundai Ioniq 5" },
+      
+      // EV Parts & Equipment
+      "wallbox 22kw": { isPart: true, category: "wallbox", specLabel: "Snaga / Napon", specVal: "22 kW / 3-fazno", specSubLabel: "Kompatibilnost", specSubVal: "Sva Type 2 EV", basePrice: 580, itemType: "Wallbox Punjač" },
+      "type 2 kabel 32a": { isPart: true, category: "cables", specLabel: "Duljina / Struja", specVal: "5 Metara / 32A", specSubLabel: "Napon", specSubVal: "480V 3-phase", basePrice: 165, itemType: "Kabel za Punjenje" },
+      "baterijski modul 48v": { isPart: true, category: "batteries", specLabel: "Kapacitet", specVal: "5.3 kWh / 48V", specSubLabel: "Sastav", specSubVal: "LiFePO4 / NMC", basePrice: 1250, itemType: "Baterijski Modul" },
+      "ev gume 19 inch": { isPart: true, category: "parts", specLabel: "Dimenzija", specVal: "235/40 R19 EV", specSubLabel: "Nosivost", specSubVal: "XL Noise Cancelling", basePrice: 620, itemType: "Komplet Guma (4x)" },
+      "portable ev charger 11kw": { isPart: true, category: "wallbox", specLabel: "Snaga", specVal: "11 kW Adjustable", specSubLabel: "Konektor", specSubVal: "CEE Red -> Type 2", basePrice: 290, itemType: "Prijenosni Punjač" }
     };
 
     let currentResults = [];
@@ -1059,19 +1074,36 @@
       runSearch();
     }
 
-    function getEvData(query) {
+    function getItemData(query) {
       const qLower = query.toLowerCase();
-      for (const [key, spec] of Object.entries(EV_SPECS_DB)) {
+      for (const [key, spec] of Object.entries(DATABASE)) {
         if (qLower.includes(key)) return { name: query, ...spec };
       }
+      
+      // Fallback detection
+      if (qLower.includes("wallbox") || qLower.includes("punjač")) {
+        return { name: query, isPart: true, category: "wallbox", specLabel: "Snaga", specVal: "11kW - 22kW", specSubLabel: "Tip", specSubVal: "Type 2 Universal", basePrice: 450, itemType: "Wallbox" };
+      }
+      if (qLower.includes("kabel") || qLower.includes("cable") || qLower.includes("adapter")) {
+        return { name: query, isPart: true, category: "cables", specLabel: "Specifikacija", specVal: "Type 2 Fast Charge", specSubLabel: "Kabel", specSubVal: "5m Heavy Duty", basePrice: 150, itemType: "Kabel / Adapter" };
+      }
+      if (qLower.includes("baterija") || qLower.includes("battery") || qLower.includes("modul")) {
+        return { name: query, isPart: true, category: "batteries", specLabel: "Napon", specVal: "48V - 400V", specSubLabel: "Tip", specSubVal: "Lithium Module", basePrice: 1100, itemType: "Baterijska Ćelija/Modul" };
+      }
+      if (qLower.includes("guma") || qLower.includes("kočnic") || qLower.includes("dio")) {
+        return { name: query, isPart: true, category: "parts", specLabel: "Kategorija", specVal: "EV Dijelovi", specSubLabel: "Stanje", specSubVal: "Novo / OEM", basePrice: 380, itemType: "EV Rezervni Dio" };
+      }
+
+      // Default Vehicle
       return {
         name: query,
+        isPart: false,
+        category: "vehicles",
         battery: 70,
         wltp: 480,
         real: 390,
         dcKw: 150,
         basePrice: 30000,
-        category: "sedan",
         competitor: "Popular EV Equivalent"
       };
     }
@@ -1085,33 +1117,42 @@
       trackGAEvent("search_ev", { query, category: catFilter });
 
       setTimeout(() => {
-        const baseData = getEvData(query);
+        const baseData = getItemData(query);
 
-        // Populate dynamic results from all 14 platforms
         currentResults = EV_PLATFORMS.map((platform, idx) => {
           const varFactor = 0.88 + (idx * 0.025);
           const calculatedPrice = Math.round(baseData.basePrice * varFactor);
-          const estimatedChargeTime = Math.round((baseData.battery * 0.6 / baseData.dcKw) * 60);
 
           return {
             id: `ev-${idx}-${Date.now()}`,
             platform: platform.name,
             platformUrl: platform.url + encodeURIComponent(query),
             model: query,
-            category: baseData.category,
+            isPart: baseData.isPart,
+            category: baseData.category || "vehicles",
             price: calculatedPrice,
-            battery: baseData.battery,
-            wltp: baseData.wltp,
-            realRange: baseData.real,
-            dcKw: baseData.dcKw,
-            chargeTimeMins: estimatedChargeTime,
-            competitor: baseData.competitor,
-            aiScore: Math.min(99, Math.max(70, Math.round(100 - (calculatedPrice / 800) + (baseData.wltp / 15))))
+            
+            // Vehicle properties
+            battery: baseData.battery || 75,
+            wltp: baseData.wltp || 500,
+            realRange: baseData.real || 400,
+            dcKw: baseData.dcKw || 150,
+            chargeTimeMins: Math.round(((baseData.battery || 75) * 0.6 / (baseData.dcKw || 150)) * 60),
+
+            // Parts properties
+            specLabel: baseData.specLabel || "Baterija",
+            specVal: baseData.specVal || `${baseData.battery || 75} kWh`,
+            specSubLabel: baseData.specSubLabel || "WLTP Domet",
+            specSubVal: baseData.specSubVal || `${baseData.wltp || 500} km`,
+            itemType: baseData.itemType || "EV Vozilo",
+
+            competitor: baseData.competitor || "EV Klasa",
+            aiScore: Math.min(99, Math.max(70, Math.round(100 - (calculatedPrice / (baseData.isPart ? 30 : 800)))))
           };
         });
 
         if (catFilter !== 'all') {
-          currentResults = currentResults.filter(r => r.category === catFilter || catFilter === 'all');
+          currentResults = currentResults.filter(r => r.category === catFilter || (catFilter === 'vehicles' && !r.isPart));
         }
 
         renderCards(currentResults, 'cardsGrid');
@@ -1120,7 +1161,7 @@
         renderCharts();
 
         loading.style.display = 'none';
-        showToast(`Dohvaćene ponude s ${currentResults.length} EV izvora!`);
+        showToast(`Dohvaćeno ${currentResults.length} ponuda s EV & Parts servisa!`);
       }, 400);
     }
 
@@ -1129,7 +1170,7 @@
       if (!grid) return;
 
       if (items.length === 0) {
-        grid.innerHTML = `<p style="color:var(--text-muted); padding:2rem;">Nema pronađenih vozila za odabrani filter.</p>`;
+        grid.innerHTML = `<p style="color:var(--text-muted); padding:2rem;">Nema pronađenih oglasa za odabrani filter.</p>`;
         return;
       }
 
@@ -1140,28 +1181,53 @@
             <div>
               <div class="card-header">
                 <span class="platform-tag">${item.platform}</span>
+                <span class="type-badge">${item.isPart ? '🔧 ' + item.itemType : '🚗 EV Vozilo'}</span>
                 <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${item.id}')">★</button>
               </div>
               <div class="product-title">${item.model}</div>
-              <div class="ai-badge">⚡ DC Brzo Punjenje: do ${item.dcKw} kW (~${item.chargeTimeMins} min 20-80%)</div>
+              
+              <div class="ai-badge">
+                ${item.isPart 
+                  ? `⚙️ Oprema / Dio: Zajamčena kompatibilnost s Type 2 / EV standardom` 
+                  : `⚡ DC Brzo Punjenje: do ${item.dcKw} kW (~${item.chargeTimeMins} min 20-80%)`}
+              </div>
 
               <div class="ev-specs-grid">
-                <div class="spec-item">
-                  <span class="spec-lbl">Baterija</span>
-                  <span class="spec-val">${item.battery} kWh</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-lbl">WLTP Domet</span>
-                  <span class="spec-val highlight">${item.wltp} km</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-lbl">Stvarni Domet</span>
-                  <span class="spec-val">${item.realRange} km</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-lbl">AI Ocjena</span>
-                  <span class="spec-val" style="color:var(--primary-green);">${item.aiScore}/100</span>
-                </div>
+                ${item.isPart ? `
+                  <div class="spec-item">
+                    <span class="spec-lbl">${item.specLabel}</span>
+                    <span class="spec-val highlight">${item.specVal}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-lbl">${item.specSubLabel}</span>
+                    <span class="spec-val">${item.specSubVal}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-lbl">Garancija</span>
+                    <span class="spec-val">24 Mjeseca</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-lbl">AI Ocjena</span>
+                    <span class="spec-val" style="color:var(--primary-green);">${item.aiScore}/100</span>
+                  </div>
+                ` : `
+                  <div class="spec-item">
+                    <span class="spec-lbl">Baterija</span>
+                    <span class="spec-val">${item.battery} kWh</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-lbl">WLTP Domet</span>
+                    <span class="spec-val highlight">${item.wltp} km</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-lbl">Stvarni Domet</span>
+                    <span class="spec-val">${item.realRange} km</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="spec-lbl">AI Ocjena</span>
+                    <span class="spec-val" style="color:var(--primary-green);">${item.aiScore}/100</span>
+                  </div>
+                `}
               </div>
 
               <div class="price-block">
@@ -1173,7 +1239,10 @@
             </div>
 
             <div class="card-actions">
-              <button class="btn-card btn-secondary" onclick="loadToCalc(${item.battery}, ${item.price})">Kalkulator</button>
+              ${item.isPart 
+                ? `<button class="btn-card btn-secondary" onclick="addPartToInventory('${item.model.replace(/'/g, "\'")}', ${item.price})">+ Inventar</button>`
+                : `<button class="btn-card btn-secondary" onclick="loadToCalc(${item.battery}, ${item.price})">Kalkulator</button>`
+              }
               <a href="${item.platformUrl}" target="_blank" class="btn-card btn-primary-card">Otvori Ponudu ↗</a>
             </div>
           </div>
@@ -1214,8 +1283,15 @@
 
       document.getElementById('statTotalItems').innerText = results.length;
       document.getElementById('statAvgPrice').innerText = `${avgPrice.toLocaleString()} €`;
-      document.getElementById('statAvgRange').innerText = `${baseData.wltp} km`;
-      document.getElementById('statRealRangeSub').innerText = `Stvarni domet: ~${baseData.real} km`;
+      
+      if (baseData.isPart) {
+        document.getElementById('statAvgRange').innerText = baseData.specVal || "EV Part";
+        document.getElementById('statRealRangeSub').innerText = `${baseData.specSubLabel || 'Info'}: ${baseData.specSubVal || 'Oprema'}`;
+      } else {
+        document.getElementById('statAvgRange').innerText = `${baseData.wltp || 500} km`;
+        document.getElementById('statRealRangeSub').innerText = `Stvarni domet: ~${baseData.real || 400} km`;
+      }
+
       document.getElementById('statBestPlatform').innerText = minPriceItem.platform;
     }
 
@@ -1224,24 +1300,32 @@
       const val3Yr = Math.round(avgPrice * 0.68);
       const roi = Math.round(((avgPrice - val3Yr) / avgPrice) * 100);
 
-      document.getElementById('aiScoreVal').innerText = "88";
-      document.getElementById('aiVerdict').innerText = "Izvrsna Isplativost Baterije";
+      document.getElementById('aiScoreVal').innerText = baseData.isPart ? "92" : "88";
+      document.getElementById('aiVerdict').innerText = baseData.isPart ? "Izvrsna Kvaliteta i Kompatibilnost" : "Izvrsna Isplativost Baterije";
       document.getElementById('aiVal3Yr').innerText = `${val3Yr.toLocaleString()} €`;
       document.getElementById('aiRoiVal').innerText = `-${roi} %`;
-      document.getElementById('aiCompetitor').innerText = baseData.competitor;
+      document.getElementById('aiCompetitor').innerText = baseData.competitor || "Alternativna Oprema";
 
-      document.getElementById('aiGauge').style.background = `conic-gradient(var(--primary-green) 0% 88%, rgba(255,255,255,0.1) 88% 100%)`;
+      document.getElementById('aiGauge').style.background = `conic-gradient(var(--primary-green) 0% 90%, rgba(255,255,255,0.1) 90% 100%)`;
     }
 
     function searchWithAI() {
       switchTab('ai');
-      showToast("Generirana detaljna ChatGPT EV procjena!");
+      showToast("Generirana detaljna ChatGPT EV & Parts procjena!");
     }
 
     function loadToCalc(battery, price) {
       document.getElementById('batteryCap').value = battery;
       switchTab('calc');
       calculateCharging();
+    }
+
+    function addPartToInventory(name, buyPrice) {
+      const targetPrice = Math.round(buyPrice * 1.25);
+      inventoryItems.push({ id: Date.now(), name, buy: buyPrice, target: targetPrice, profit: targetPrice - buyPrice });
+      localStorage.setItem('evchargewise_inventory', JSON.stringify(inventoryItems));
+      switchTab('inventory');
+      showToast("Stavka uspješno dodana u inventar!");
     }
 
     function calculateCharging() {
@@ -1280,7 +1364,7 @@
       const target = parseFloat(document.getElementById('invTarget').value);
 
       if (!name || isNaN(buy) || isNaN(target)) {
-        showToast("Molimo unesite ispravne podatke za vozilo.");
+        showToast("Molimo unesite ispravne podatke za vozilo ili dio.");
         return;
       }
 
@@ -1293,7 +1377,7 @@
       document.getElementById('invTarget').value = '';
 
       renderInventory();
-      showToast("EV uspješno dodan u inventar!");
+      showToast("Stavka uspješno dodana u inventar!");
     }
 
     function deleteInventoryItem(id) {
@@ -1309,7 +1393,7 @@
 
       if (!body) return;
       if (inventoryItems.length === 0) {
-        body.innerHTML = `<tr><td colspan="5" style="color:var(--text-muted); text-align:center;">Nema vozila u inventaru.</td></tr>`;
+        body.innerHTML = `<tr><td colspan="5" style="color:var(--text-muted); text-align:center;">Nema stavki u inventaru.</td></tr>`;
         return;
       }
 
@@ -1363,7 +1447,7 @@
         ctx.font = '10px -apple-system';
         ctx.textAlign = 'center';
         ctx.fillText(item.platform.split(' ')[0], x + barWidth / 2, canvas.height - 15);
-        ctx.fillText(`${Math.round(item.price / 1000)}k€`, x + barWidth / 2, y - 6);
+        ctx.fillText(`${item.price > 1000 ? Math.round(item.price / 1000) + 'k' : item.price}€`, x + barWidth / 2, y - 6);
       });
     }
 
