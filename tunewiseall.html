@@ -297,6 +297,9 @@
   .playlist-item .pl-info div:first-child,.fav-item .fv-info div:first-child{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .playlist-item .pl-info div:last-child,.fav-item .fv-info div:last-child{font-size:12px;color:var(--text-faint);}
   .empty-mini{color:var(--text-faint);font-size:13px;text-align:center;padding:24px 10px;}
+  .legal-text{font-size:13.5px;line-height:1.6;color:var(--text-dim);}
+  .legal-text p{margin:0 0 12px;}
+  .legal-text strong{color:var(--text);}
   .new-pl-row{display:flex;gap:8px;margin-top:6px;}
   .new-pl-row input{flex:1;}
   .new-pl-row button{background:var(--accent);border:none;color:#1a0d08;border-radius:10px;padding:0 16px;font-weight:700;}
@@ -426,14 +429,6 @@
     <div class="modal-handle"></div>
     <div class="modal-head"><h3>Postavke</h3><button class="icon-btn small" id="closeSettings"></button></div>
 
-    <div class="field-label">YouTube Data API v3 ključ</div>
-    <input type="password" id="ytApiKeyInput" placeholder="AIza...">
-    <div class="field-hint">Potreban za pretragu i automatsko pronalaženje pjesama. Besplatan ključ se generira u Google Cloud Console (YouTube Data API v3).</div>
-
-    <div class="field-label">AudD API token (prepoznavanje pjesme)</div>
-    <input type="password" id="auddApiKeyInput" placeholder="npr. test (demo) ili tvoj token">
-    <div class="field-hint">Opcionalno — bez tokena funkcija „Prepoznaj pjesmu" je onemogućena, no tekstualna i glasovna pretraga rade normalno.</div>
-
     <div class="field-label">Ponašanje</div>
     <div class="toggle-row">
       <div><div class="tr-label">Always Listening</div><div class="tr-sub">Sluša riječ „TuneWise" u pozadini</div></div>
@@ -444,12 +439,61 @@
       <div class="switch" id="settingsAllSwitch"></div>
     </div>
 
-    <button class="primary-btn" id="saveSettingsBtn">Spremi postavke</button>
+    <div class="field-label">O aplikaciji</div>
+    <div class="field-hint">TuneWiseALL koristi YouTube Data API v3 i YouTube IFrame Player API za pretragu i reprodukciju javno dostupnog YouTube sadržaja. YouTube je izvor glazbenog sadržaja. TuneWiseALL ne pohranjuje niti distribuira glazbene datoteke.</div>
+    <button class="ghost-btn" id="openPrivacyBtn">Pravila privatnosti</button>
+    <button class="ghost-btn" id="openTermsBtn">Uvjeti korištenja</button>
     <button class="ghost-btn" id="clearDataBtn">Obriši sve lokalne podatke</button>
   </div>
 </div>
 
-<!-- Favorites Modal -->
+<!-- Privacy Policy Modal -->
+<div class="modal-overlay" id="privacyModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Pravila privatnosti</h3><button class="icon-btn small" id="closePrivacy"></button></div>
+    <div class="legal-text">
+      <p><strong>Zadnje ažurirano:</strong> 2026.</p>
+      <p>TuneWiseALL je aplikacija koja korisnicima omogućuje pretragu i reprodukciju javno dostupnog glazbenog sadržaja s YouTubea unutar jedinstvenog sučelja.</p>
+      <p><strong>Podaci koje obrađujemo</strong></p>
+      <p>Upiti koje utipkate ili izgovorite šalju se YouTube Data API v3 servisu (Google) isključivo radi dohvaćanja rezultata pretrage. TuneWiseALL ne vodi korisničke račune i ne prikuplja osobne podatke na vlastitim poslužiteljima.</p>
+      <p><strong>Mikrofon</strong></p>
+      <p>Mikrofon se koristi samo kada aktivno pokreneš glasovnu pretragu, uključiš Always Listening način ili pritisneš „Prepoznaj pjesmu". Zvučni isječak za prepoznavanje pjesme šalje se vanjskom servisu za prepoznavanje glazbe samo u trenutku snimanja i ne pohranjuje se unutar aplikacije.</p>
+      <p><strong>Lokalna pohrana</strong></p>
+      <p>Favoriti, playliste i postavke spremaju se isključivo lokalno u tvom pregledniku (LocalStorage) i ne šalju se na vanjske poslužitelje. Brisanjem podataka preglednika ili gumbom „Obriši sve lokalne podatke" ti podaci se trajno uklanjaju.</p>
+      <p><strong>Treće strane</strong></p>
+      <p>Pretraga i reprodukcija oslanjaju se na YouTube/Google usluge koje imaju vlastita pravila privatnosti. Korištenjem TuneWiseALL prihvaćaš i pravila privatnosti tih usluga.</p>
+      <p><strong>Kontakt</strong></p>
+      <p>Za pitanja o privatnosti obrati se administratoru aplikacije putem kontaktnih podataka navedenih na stranici s koje si pristupio/la aplikaciji.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Terms of Use Modal -->
+<div class="modal-overlay" id="termsModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Uvjeti korištenja</h3><button class="icon-btn small" id="closeTerms"></button></div>
+    <div class="legal-text">
+      <p><strong>Zadnje ažurirano:</strong> 2026.</p>
+      <p>Korištenjem TuneWiseALL prihvaćaš sljedeće uvjete.</p>
+      <p><strong>Priroda usluge</strong></p>
+      <p>TuneWiseALL koristi YouTube Data API v3 i YouTube IFrame Player API za pretragu i reprodukciju javno dostupnog YouTube sadržaja. YouTube je izvor glazbenog sadržaja. TuneWiseALL ne pohranjuje niti distribuira glazbene datoteke.</p>
+      <p><strong>Intelektualno vlasništvo</strong></p>
+      <p>Sav reproducirani sadržaj vlasništvo je odgovarajućih nositelja prava i dostupan je putem YouTubea. TuneWiseALL ne tvrdi vlasništvo nad tim sadržajem i ne omogućuje preuzimanje ili distribuciju glazbenih datoteka.</p>
+      <p><strong>Dopuštena upotreba</strong></p>
+      <p>Aplikacija je namijenjena osobnoj, nekomercijalnoj upotrebi. Korištenjem aplikacije obvezuješ se poštovati YouTube-ove Uvjete korištenja te sve primjenjive zakone.</p>
+      <p><strong>Dostupnost usluge</strong></p>
+      <p>TuneWiseALL ne jamči neprekidnu dostupnost pretrage ili reprodukcije, budući da ovisi o dostupnosti vanjskih servisa (YouTube i drugi). Sadržaj pojedinih videa može biti nedostupan za ugrađenu reprodukciju ovisno o postavkama nositelja prava.</p>
+      <p><strong>Ograničenje odgovornosti</strong></p>
+      <p>Aplikacija se pruža „takva kakva jest", bez jamstava bilo koje vrste. TuneWiseALL ne odgovara za prekide usluge, netočnost rezultata pretrage ili nedostupnost pojedinog sadržaja.</p>
+      <p><strong>Izmjene</strong></p>
+      <p>Ovi uvjeti mogu se povremeno ažurirati. Nastavak korištenja aplikacije nakon izmjena smatra se prihvaćanjem novih uvjeta.</p>
+    </div>
+  </div>
+</div>
+
+
 <div class="modal-overlay" id="favModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
@@ -522,9 +566,21 @@ function svg(name,strokeW){
 }
 function setIcon(el,name){ if(el) el.innerHTML = svg(name); }
 
+/* ============================= APP CONFIG (embedded, not user-facing) =============================
+   API ključevi su ugrađeni izravno u aplikaciju — korisnici ih nikad ne unose niti vide.
+   Zamijeni vrijednosti ispod svojim stvarnim ključevima prije objave na GitHub Pages.
+   YOUTUBE_API_KEY je obavezan za pretragu i reprodukciju.
+   AUDD_API_TOKEN je opcionalan — ako je prazan, samo je funkcija "Prepoznaj pjesmu" isključena,
+   dok tekstualna i glasovna pretraga rade normalno.
+*/
+const APP_CONFIG = {
+  YOUTUBE_API_KEY: "AIzaSyD-REPLACE-WITH-YOUR-OWN-YOUTUBE-API-KEY",
+  AUDD_API_TOKEN: ""
+};
+
 /* ============================= STATE ============================= */
 const LS = {
-  keys:'tw_apikeys_v1', fav:'tw_favorites_v1', pl:'tw_playlists_v1', settings:'tw_settings_v1', history:'tw_history_v1'
+  fav:'tw_favorites_v1', pl:'tw_playlists_v1', settings:'tw_settings_v1', history:'tw_history_v1'
 };
 function loadJSON(key, fallback){
   try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; }
@@ -532,7 +588,7 @@ function loadJSON(key, fallback){
 function saveJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
 
 const State = {
-  apiKeys: loadJSON(LS.keys, {youtube:'', audd:''}),
+  apiKeys: { youtube: APP_CONFIG.YOUTUBE_API_KEY, audd: APP_CONFIG.AUDD_API_TOKEN },
   favorites: loadJSON(LS.fav, []),
   playlists: loadJSON(LS.pl, []),
   settings: loadJSON(LS.settings, {alwaysListening:false, allMode:true, volume:80}),
@@ -580,13 +636,16 @@ async function ytSearch(query, maxResults){
   maxResults = maxResults || 12;
   const key = State.apiKeys.youtube;
   if(!key){
-    throw {code:'NO_KEY', message:'YouTube API ključ nije postavljen. Dodaj ga u Postavkama.'};
+    // App is misconfigured (developer hasn't embedded a key) — never surface this as a key prompt to end users.
+    throw {code:'UNAVAILABLE', message:'Glazbena usluga trenutno nije dostupna. Pokušaj ponovno malo kasnije.'};
   }
   const searchUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=10&maxResults='+maxResults+'&q='+encodeURIComponent(query)+'&key='+encodeURIComponent(key);
   const res = await fetch(searchUrl);
   const data = await res.json();
   if(data.error){
-    throw {code:'API_ERROR', message: (data.error.message || 'YouTube API greška.')};
+    // Log the technical Google API error for developers, but never show raw API/key error text to end users.
+    console.warn('YouTube API error:', data.error.message || data.error);
+    throw {code:'UNAVAILABLE', message:'Trenutno ne mogu dovršiti pretragu. Pokušaj ponovno za trenutak.'};
   }
   const items = (data.items||[]).filter(it=>it.id && it.id.videoId);
   if(items.length===0) return [];
@@ -1049,12 +1108,8 @@ async function playSong(query){
   }
 }
 function handleApiError(err){
-  if(err && err.code==='NO_KEY'){
-    toast('Dodaj YouTube API ključ u Postavkama kako bi ALL mogao pretraživati.', 'err');
-    openModal('settingsModal');
-  } else {
-    toast((err && err.message) || 'Došlo je do greške pri pretrazi.', 'err');
-  }
+  // Generic, non-technical messaging only — never surface raw API/key errors to end users.
+  toast((err && err.message) || 'Trenutno ne mogu dovršiti pretragu. Pokušaj ponovno za trenutak.', 'err');
 }
 
 /* ============================= VOICE COMMANDS ============================= */
@@ -1167,7 +1222,7 @@ async function recognizeSong(){
   const key = State.apiKeys.audd;
   const btn = document.getElementById('recognizeBtn');
   if(!key){
-    toast('Prepoznavanje pjesme nije postavljeno. Dodaj AudD API token u Postavkama.', 'err');
+    toast('Prepoznavanje pjesme trenutno nije dostupno u ovoj instalaciji.', 'err');
     return;
   }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
@@ -1245,6 +1300,8 @@ function initIcons(){
   setIcon(document.getElementById('closePl'),'x');
   setIcon(document.getElementById('closeQueue'),'x');
   setIcon(document.getElementById('closePlDetail'),'x');
+  setIcon(document.getElementById('closePrivacy'),'x');
+  setIcon(document.getElementById('closeTerms'),'x');
 }
 
 /* ============================= EVENT WIRING ============================= */
@@ -1344,8 +1401,6 @@ function wireEvents(){
   // settings
   const settingsBtn = document.getElementById('settingsBtn');
   settingsBtn.addEventListener('click', ()=>{
-    document.getElementById('ytApiKeyInput').value = State.apiKeys.youtube || '';
-    document.getElementById('auddApiKeyInput').value = State.apiKeys.audd || '';
     document.getElementById('settingsAlwaysSwitch').classList.toggle('on', State.settings.alwaysListening);
     document.getElementById('settingsAllSwitch').classList.toggle('on', State.settings.allMode);
     openModal('settingsModal');
@@ -1360,19 +1415,21 @@ function wireEvents(){
     this.classList.toggle('on', State.settings.allMode);
     document.getElementById('allToggle').classList.toggle('on', State.settings.allMode);
   });
-  document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
-    State.apiKeys.youtube = document.getElementById('ytApiKeyInput').value.trim();
-    State.apiKeys.audd = document.getElementById('auddApiKeyInput').value.trim();
-    saveJSON(LS.keys, State.apiKeys);
-    toast('Postavke spremljene', 'ok');
-    closeModal('settingsModal');
-  });
   document.getElementById('clearDataBtn').addEventListener('click', ()=>{
-    if(confirm('Obrisati sve lokalne podatke (favorite, playliste, API ključeve)?')){
-      localStorage.clear();
+    if(confirm('Obrisati sve lokalne podatke (favorite, playliste i postavke)?')){
+      localStorage.removeItem(LS.fav);
+      localStorage.removeItem(LS.pl);
+      localStorage.removeItem(LS.settings);
+      localStorage.removeItem(LS.history);
       location.reload();
     }
   });
+
+  // legal modals (accessible from the settings/menu, do not alter main page layout)
+  document.getElementById('openPrivacyBtn').addEventListener('click', ()=>{ closeModal('settingsModal'); openModal('privacyModal'); });
+  document.getElementById('openTermsBtn').addEventListener('click', ()=>{ closeModal('settingsModal'); openModal('termsModal'); });
+  document.getElementById('closePrivacy').addEventListener('click', ()=> closeModal('privacyModal'));
+  document.getElementById('closeTerms').addEventListener('click', ()=> closeModal('termsModal'));
 
   // close modals on backdrop click
   document.querySelectorAll('.modal-overlay').forEach(ov=>{
@@ -1391,9 +1448,6 @@ function boot(){
   if(State.settings.alwaysListening) setAlwaysListening(true);
   renderFavorites();
   renderPlaylists();
-  if(!State.apiKeys.youtube){
-    setTimeout(()=> toast('Dobrodošao/la! Dodaj YouTube API ključ u Postavkama za početak pretrage.'), 900);
-  }
 }
 document.addEventListener('DOMContentLoaded', boot);
 
