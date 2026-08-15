@@ -1,4 +1,4 @@
-HTML
+
 <!DOCTYPE html>
 <html lang="hr">
 <head>
@@ -694,6 +694,139 @@ HTML
       .search-box { flex-direction: column; }
       .card-actions { grid-template-columns: 1fr; }
     }
+
+    /* ================= Legal pages (Privacy / Terms) — added, does not alter existing UI ================= */
+    .legal-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .legal-link-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent-cyan);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 2px 4px;
+    }
+
+    .legal-link-btn:hover {
+      color: var(--success);
+    }
+
+    .legal-sep {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .legal-disclaimer {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    .legal-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 11, 20, 0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .legal-modal-overlay.show {
+      display: flex;
+    }
+
+    .legal-modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      max-width: 680px;
+      width: 100%;
+      max-height: 82vh;
+      overflow-y: auto;
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    .legal-modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .legal-modal-head h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #fff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .legal-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid var(--border-glass);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .legal-close-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .legal-modal-box h3 {
+      font-size: 0.95rem;
+      color: var(--accent-cyan);
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .legal-modal-box p, .legal-modal-box li {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      margin-bottom: 0.6rem;
+    }
+
+    .legal-modal-box ul {
+      padding-left: 1.2rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .legal-modal-box strong {
+      color: var(--text-main);
+    }
+
+    .legal-updated {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -940,9 +1073,76 @@ HTML
 
   <footer>
     ResellWiseALL &copy; 2026 — Pokretač sa Stvarnim Tržišnim Podacima u jednoj datoteci (<code>resellwiseall.html</code>).
+    <div class="legal-links">
+      <button class="legal-link-btn" onclick="openLegalModal('privacy')">Privacy Policy</button>
+      <span class="legal-sep">·</span>
+      <button class="legal-link-btn" onclick="openLegalModal('terms')">Terms of Use</button>
+    </div>
+    <p class="legal-disclaimer">ResellWiseALL služi za pretragu i usporedbu proizvoda s vanjskih platformi. Dostupnost, cijene i ostale informacije određuju originalne platforme i mogu se promijeniti bez prethodne obavijesti.</p>
   </footer>
 
   <div class="toast" id="toast">Obavijest</div>
+
+  <!-- Privacy Policy Modal (added — does not alter main page layout or functionality) -->
+  <div class="legal-modal-overlay" id="privacyModal">
+    <div class="legal-modal-box">
+      <div class="legal-modal-head">
+        <h2>Privacy Policy</h2>
+        <button class="legal-close-btn" onclick="closeLegalModal('privacy')">✕</button>
+      </div>
+      <div class="legal-updated">Zadnje ažurirano: 2026.</div>
+
+      <h3>Koje podatke koristimo</h3>
+      <p>ResellWiseALL ne zahtijeva registraciju ni prijavu. Aplikacija lokalno, u tvom pregledniku (LocalStorage), sprema samo ono što sam izričito spremiš: omiljene (favorite) artikle i stavke inventara koje unesete. Ti se podaci ne šalju na naše poslužitelje niti se dijele s trećim stranama.</p>
+
+      <h3>Informacije o proizvodima i cijenama</h3>
+      <p>ResellWiseALL prikazuje informacije o proizvodima, cijenama i ponudama dohvaćene ili procijenjene na temelju podataka s vanjskih e-commerce platformi. Mi ne generiramo te podatke — samo ih prikazujemo radi lakše usporedbe i analize.</p>
+
+      <h3>Osnovni tehnički podaci</h3>
+      <p>Aplikacija može koristiti osnovne tehničke podatke potrebne za rad i poboljšanje usluge, uključujući anonimiziranu analitiku posjeta (Google Analytics) poput broja posjeta, korištenih funkcija i općih tehničkih informacija o uređaju/pregledniku. Ovi podaci se ne koriste za identifikaciju pojedinačnog korisnika u marketinške svrhe.</p>
+
+      <h3>Prodaja podataka</h3>
+      <p><strong>ResellWiseALL ne prodaje korisničke osobne podatke</strong> trećim stranama.</p>
+
+      <h3>Vanjske platforme</h3>
+      <p>Klikom na oglas ili gumb "Otvori Uživo" / "Detalji Oglasa" preusmjeravaš se na vanjsku platformu (npr. eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy i druge). Te platforme imaju vlastite politike privatnosti koje se primjenjuju od trenutka kad ih posjetiš, a ResellWiseALL nema uvid niti kontrolu nad podacima koje te platforme prikupljaju.</p>
+
+      <h3>Kontrola vlastitih podataka</h3>
+      <p>Spremljene favorite i inventar možeš u svakom trenutku ukloniti unutar same aplikacije (gumb "Ukloni" / klik na zvjezdicu) ili brisanjem podataka preglednika za ovu stranicu.</p>
+    </div>
+  </div>
+
+  <!-- Terms of Use Modal (added — does not alter main page layout or functionality) -->
+  <div class="legal-modal-overlay" id="termsModal">
+    <div class="legal-modal-box">
+      <div class="legal-modal-head">
+        <h2>Terms of Use</h2>
+        <button class="legal-close-btn" onclick="closeLegalModal('terms')">✕</button>
+      </div>
+      <div class="legal-updated">Zadnje ažurirano: 2026.</div>
+
+      <h3>Priroda usluge</h3>
+      <p>ResellWiseALL je informativna aplikacija za pretragu, usporedbu cijena i procjenu profitnog potencijala proizvoda s više e-commerce platformi. <strong>ResellWiseALL nije prodavatelj niti posrednik</strong> ni u jednoj transakciji između korisnika i trećih platformi.</p>
+
+      <h3>Izvor podataka</h3>
+      <p>Informacije o proizvodima, cijenama, dostupnosti i ponudama dolaze s vanjskih platformi i izvora te se dijelom izračunavaju automatski. Podaci mogu biti nepotpuni, zastarjeli ili netočni bez prethodne obavijesti, budući da ih ResellWiseALL ne kontrolira izravno.</p>
+
+      <h3>Provjera prije kupnje</h3>
+      <p>Korisnik je dužan provjeriti sve podatke (cijenu, dostupnost, stanje proizvoda i uvjete prodaje) izravno kod originalnog izvora odnosno platforme prije donošenja bilo kakve odluke o kupnji ili prodaji.</p>
+
+      <h3>Nema jamstva rezultata</h3>
+      <p>Izračuni profita, ROI-a i AI ocjene isplativosti prikazani u aplikaciji su okvirne procjene i ne predstavljaju jamstvo stvarne zarade ili uspješne prodaje.</p>
+
+      <h3>Odgovornost korisnika</h3>
+      <p>Korisnik koristi aplikaciju na vlastitu odgovornost. ResellWiseALL ne odgovara za štetu, gubitak ili nesporazum nastao korištenjem prikazanih informacija ili poveznica prema vanjskim platformama.</p>
+
+      <h3>Intelektualno vlasništvo</h3>
+      <p>Nazivi platformi i proizvoda prikazani unutar aplikacije vlasništvo su njihovih nositelja prava i navedeni su isključivo u informativne svrhe.</p>
+
+      <h3>Izmjene uvjeta</h3>
+      <p>Ovi uvjeti mogu se povremeno ažurirati. Nastavak korištenja aplikacije nakon izmjena smatra se prihvaćanjem novih uvjeta.</p>
+    </div>
+  </div>
 
   <script>
     /* Analytics tracking helper za resellwiseall.html */
@@ -951,6 +1151,32 @@ HTML
         gtag("event", eventName, params);
       }
     }
+
+    /* ================= Legal modal controls (added) ================= */
+    function openLegalModal(type) {
+      const id = type === 'privacy' ? 'privacyModal' : 'termsModal';
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('show');
+      trackGAEvent("open_legal_page", { page: type });
+    }
+
+    function closeLegalModal(type) {
+      const id = type === 'privacy' ? 'privacyModal' : 'termsModal';
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.remove('show');
+    }
+
+    document.addEventListener('click', function (e) {
+      if (e.target.classList && e.target.classList.contains('legal-modal-overlay')) {
+        e.target.classList.remove('show');
+      }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.legal-modal-overlay.show').forEach(m => m.classList.remove('show'));
+      }
+    });
 
     const PLATFORMS = [
       { name: "eBay Global", type: "global", url: "https://www.ebay.com/sch/i.html?_nkw=" },
