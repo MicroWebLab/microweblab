@@ -456,7 +456,7 @@
       <p><strong>Zadnje ažurirano:</strong> 2026.</p>
       <p>TuneWiseALL je aplikacija koja korisnicima omogućuje pretragu i reprodukciju javno dostupnog glazbenog sadržaja s YouTubea unutar jedinstvenog sučelja.</p>
       <p><strong>Podaci koje obrađujemo</strong></p>
-      <p>Upiti koje utipkate ili izgovorite šalju se YouTube Data API v3 servisu (Google) isključivo radi dohvaćanja rezultata pretrage. TuneWiseALL ne vodi korisničke račune i ne prikuplja osobne podatke na vlastitim poslužiteljima.</p>
+      <p>Upiti koje utipkate ili izgovorite šalju se našem sigurnom backend servisu (Cloud Run), koji ih prosljeđuje YouTube Data API v3 servisu (Google) isključivo radi dohvaćanja rezultata pretrage. YouTube API ključ nikad ne napušta naš poslužitelj i nije dio ove aplikacije. TuneWiseALL ne vodi korisničke račune i ne prikuplja osobne podatke na vlastitim poslužiteljima.</p>
       <p><strong>Mikrofon</strong></p>
       <p>Mikrofon se koristi samo kada aktivno pokreneš glasovnu pretragu, uključiš Always Listening način ili pritisneš „Prepoznaj pjesmu". Zvučni isječak za prepoznavanje pjesme šalje se vanjskom servisu za prepoznavanje glazbe samo u trenutku snimanja i ne pohranjuje se unutar aplikacije.</p>
       <p><strong>Lokalna pohrana</strong></p>
@@ -567,14 +567,19 @@ function svg(name,strokeW){
 function setIcon(el,name){ if(el) el.innerHTML = svg(name); }
 
 /* ============================= APP CONFIG (embedded, not user-facing) =============================
-   API ključevi su ugrađeni izravno u aplikaciju — korisnici ih nikad ne unose niti vide.
-   Zamijeni vrijednosti ispod svojim stvarnim ključevima prije objave na GitHub Pages.
-   YOUTUBE_API_KEY je obavezan za pretragu i reprodukciju.
-   AUDD_API_TOKEN je opcionalan — ako je prazan, samo je funkcija "Prepoznaj pjesmu" isključena,
-   dok tekstualna i glasovna pretraga rade normalno.
+   TuneWiseALL više NE sadrži YouTube API ključ na klijentu ni u ovoj datoteci.
+   Pretraga ide preko vlastitog Cloud Run backenda (vidi /backend u repozitoriju) koji čuva
+   YouTube API ključ kao environment variable / Secret Manager i poziva YouTube Data API v3
+   u ime aplikacije. Korisnik nikad ne vidi niti unosi API ključ.
+
+   Postavi BACKEND_BASE_URL na URL svog objavljenog Cloud Run servisa
+   (npr. "https://tunewiseall-backend-xxxxx-ew.a.run.app"), bez završne kose crte.
+
+   AUDD_API_TOKEN je opcionalan i koristi se samo za "Prepoznaj pjesmu" — ako je prazan,
+   ta je funkcija isključena, dok tekstualna i glasovna pretraga rade normalno.
 */
 const APP_CONFIG = {
-  YOUTUBE_API_KEY: "AIzaSyD-REPLACE-WITH-YOUR-OWN-YOUTUBE-API-KEY",
+  BACKEND_BASE_URL: "https://REPLACE-WITH-YOUR-CLOUD-RUN-URL.a.run.app",
   AUDD_API_TOKEN: ""
 };
 
@@ -588,7 +593,7 @@ function loadJSON(key, fallback){
 function saveJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
 
 const State = {
-  apiKeys: { youtube: APP_CONFIG.YOUTUBE_API_KEY, audd: APP_CONFIG.AUDD_API_TOKEN },
+  apiKeys: { audd: APP_CONFIG.AUDD_API_TOKEN },
   favorites: loadJSON(LS.fav, []),
   playlists: loadJSON(LS.pl, []),
   settings: loadJSON(LS.settings, {alwaysListening:false, allMode:true, volume:80}),
@@ -631,40 +636,72 @@ function isoDurationToSeconds(iso){
 }
 function debounce(fn, ms){ let t; return function(...a){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), ms); }; }
 
-/* ============================= YOUTUBE DATA API ============================= */
+/* ============================= BACKEND SEARCH (Cloud Run) =============================
+   TuneWiseALL no longer calls the YouTube Data API directly from the browser.
+   All searches go through our own Cloud Run backend, which holds the YouTube API key
+   server-side (environment variable / Secret Manager) and returns already-normalized,
+   ready-to-play results. See handleApiError() for the "backend unavailable" UX.
+*/
+async function fetchWithTimeout(url, ms){
+  ms = ms || 10000;
+  const controller = new AbortController();
+  const t = setTimeout(()=>controller.abort(), ms);
+  try{
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 async function ytSearch(query, maxResults){
   maxResults = maxResults || 12;
-  const key = State.apiKeys.youtube;
-  if(!key){
-    // App is misconfigured (developer hasn't embedded a key) — never surface this as a key prompt to end users.
+  const base = (APP_CONFIG.BACKEND_BASE_URL || '').replace(/\/+$/,'');
+  if(!base || base.indexOf('REPLACE-WITH-YOUR-CLOUD-RUN-URL') !== -1){
+    // App is misconfigured (developer hasn't set the backend URL) — never surface this as a key prompt to end users.
+    console.warn('TuneWiseALL: APP_CONFIG.BACKEND_BASE_URL is not configured.');
     throw {code:'UNAVAILABLE', message:'Glazbena usluga trenutno nije dostupna. Pokušaj ponovno malo kasnije.'};
   }
-  const searchUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=10&maxResults='+maxResults+'&q='+encodeURIComponent(query)+'&key='+encodeURIComponent(key);
-  const res = await fetch(searchUrl);
-  const data = await res.json();
-  if(data.error){
-    // Log the technical Google API error for developers, but never show raw API/key error text to end users.
-    console.warn('YouTube API error:', data.error.message || data.error);
+
+  const url = base + '/search?q=' + encodeURIComponent(query) + '&maxResults=' + encodeURIComponent(maxResults);
+  let res;
+  try{
+    res = await fetchWithTimeout(url, 10000);
+  }catch(err){
+    // Network failure, timeout, or Cloud Run cold-start/unreachable.
+    console.warn('TuneWiseALL backend unreachable:', err);
+    throw {code:'UNAVAILABLE', message:'Ne mogu se povezati s glazbenim servisom. Provjeri internetsku vezu i pokušaj ponovno.'};
+  }
+
+  if(!res.ok){
+    console.warn('TuneWiseALL backend returned HTTP', res.status);
+    throw {code:'UNAVAILABLE', message:'Glazbeni servis trenutno nije dostupan. Pokušaj ponovno za trenutak.'};
+  }
+
+  let data;
+  try{
+    data = await res.json();
+  }catch(err){
+    console.warn('TuneWiseALL backend returned invalid JSON:', err);
+    throw {code:'UNAVAILABLE', message:'Neočekivan odgovor glazbenog servisa. Pokušaj ponovno.'};
+  }
+
+  if(data && data.error){
+    console.warn('TuneWiseALL backend error:', data.error);
     throw {code:'UNAVAILABLE', message:'Trenutno ne mogu dovršiti pretragu. Pokušaj ponovno za trenutak.'};
   }
-  const items = (data.items||[]).filter(it=>it.id && it.id.videoId);
-  if(items.length===0) return [];
-  const ids = items.map(it=>it.id.videoId).join(',');
-  let durations = {};
-  try{
-    const durUrl = 'https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id='+ids+'&key='+encodeURIComponent(key);
-    const dres = await fetch(durUrl);
-    const ddata = await dres.json();
-    (ddata.items||[]).forEach(v=>{ durations[v.id] = isoDurationToSeconds(v.contentDetails.duration); });
-  }catch(e){ /* non-fatal */ }
-  return items.map(it=>({
-    id: it.id.videoId,
-    title: it.snippet.title,
-    artist: it.snippet.channelTitle,
-    thumbnail: (it.snippet.thumbnails.medium || it.snippet.thumbnails.default || {}).url || '',
-    duration: durations[it.id.videoId] || 0,
-    source: 'YouTube'
-  }));
+
+  const results = Array.isArray(data) ? data : (Array.isArray(data.results) ? data.results : []);
+  // Defensive normalization in case the backend response shape drifts slightly.
+  return results
+    .filter(it => it && it.id)
+    .map(it => ({
+      id: it.id,
+      title: it.title || '',
+      artist: it.artist || it.channelTitle || '',
+      thumbnail: it.thumbnail || '',
+      duration: Number(it.duration) || 0,
+      source: it.source || 'YouTube'
+    }));
 }
 
 /* ============================= RESULTS RENDER ============================= */
