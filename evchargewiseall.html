@@ -880,6 +880,12 @@
       margin-top: 6px;
     }
 
+    .roi-item-msg {
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
     /* ================= Google AdSense zones (added — hidden until a real Publisher ID is set) ================= */
     .ad-slot {
       display: none;
@@ -1167,9 +1173,13 @@
               <div class="ai-item-lbl">ROI (%)</div>
               <div class="ai-item-val" id="roiPercent">-- %</div>
             </div>
-            <div class="ai-item" id="roiPaybackCard" style="display:none;">
+            <div class="ai-item">
+              <div class="ai-item-lbl">Mjesečna Očekivana Dobit</div>
+              <div class="ai-item-val" style="color: var(--text-main);" id="roiMonthlyDisplay">-- €</div>
+            </div>
+            <div class="ai-item" id="roiPaybackCard">
               <div class="ai-item-lbl">Procijenjeni Povrat Ulaganja (Payback)</div>
-              <div class="ai-item-val" style="color: var(--accent-cyan);" id="roiPayback">-- mjeseci</div>
+              <div class="ai-item-val" style="color: var(--accent-cyan);" id="roiPayback">--</div>
             </div>
           </div>
         </div>
@@ -1786,12 +1796,15 @@
     }
 
     /* ================= ROI Kalkulator (added) =================
-       Radi isključivo lokalno u pregledniku, bez vanjskog API-ja.
-       Formule:
+       Zaseban je od TCO kalkulatora (Kalkulator Punjenja) i ne dira njegov kod/rezultate.
+       Radi isključivo lokalno u pregledniku, bez vanjskog API-ja, backend-a ili Google Cloud-a.
+       Formule (fiksna metodologija — ROI se uvijek računa u odnosu na UKUPNO ulaganje):
          Ukupno ulaganje = Nabavna cijena + Dodatni troškovi
-         Neto dobit      = Prodajna cijena - Ukupno ulaganje
-         ROI (%)         = (Neto dobit / Nabavna cijena) * 100
-         Payback (mj.)   = Ukupno ulaganje / Mjesečna očekivana dobit  (samo ako je uneseno) */
+         Neto dobit      = Prodajna cijena − Nabavna cijena − Dodatni troškovi
+         ROI (%)         = (Neto dobit / Ukupno ulaganje) × 100
+         Payback (mj.)   = Ukupno ulaganje / Mjesečna očekivana dobit
+       Provjereno na primjeru: 450 € nabavna, 680 € prodajna, 30 € troškovi
+         → Ukupno ulaganje 480 €, Neto dobit 200 €, ROI 41,67 %; uz 100 €/mj → Payback 4,8 mjeseci. */
     function formatEUR(value) {
       return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
     }
@@ -1800,9 +1813,14 @@
       document.getElementById('roiTotalInvest').innerText = '-- €';
       document.getElementById('roiNetProfit').innerText = '-- €';
       document.getElementById('roiPercent').innerText = '-- %';
+      document.getElementById('roiMonthlyDisplay').innerText = '-- €';
       document.getElementById('roiNetProfit').style.color = '';
       document.getElementById('roiPercent').style.color = '';
-      document.getElementById('roiPaybackCard').style.display = 'none';
+
+      const paybackEl = document.getElementById('roiPayback');
+      paybackEl.innerText = '--';
+      paybackEl.classList.remove('roi-item-msg');
+      paybackEl.style.color = 'var(--accent-cyan)';
     }
 
     function showROIError(message) {
@@ -1822,15 +1840,17 @@
       errorBox.style.display = 'none';
       errorBox.innerText = '';
 
+      // Zaštita od teksta umjesto brojeva: parseFloat + Number.isFinite hvata i NaN i Infinity.
       const buy = parseFloat(buyRaw);
       const sell = parseFloat(sellRaw);
-      // Dodatni troškovi i mjesečna dobit su opcionalni — prazno polje tretiramo kao 0 / nije uneseno.
+      // Dodatni troškovi su opcionalni — prazno polje tretiramo kao 0.
       const costs = costsRaw.trim() === '' ? 0 : parseFloat(costsRaw);
-      const monthlyProfit = monthlyRaw.trim() === '' ? null : parseFloat(monthlyRaw);
+      const monthlyEntered = monthlyRaw.trim() !== '';
+      const monthlyProfit = monthlyEntered ? parseFloat(monthlyRaw) : 0;
 
-      // Zaštita od praznih / nevažećih / negativnih unosa i dijeljenja s nulom.
-      if (buyRaw.trim() === '' || sellRaw.trim() === '' || isNaN(buy) || isNaN(sell)) {
-        showROIError('Molimo unesite ispravnu nabavnu cijenu i prodajnu cijenu.');
+      // Zaštita od praznih / nevažećih / negativnih unosa.
+      if (buyRaw.trim() === '' || sellRaw.trim() === '' || !Number.isFinite(buy) || !Number.isFinite(sell)) {
+        showROIError('Molimo unesite ispravnu nabavnu cijenu i prodajnu cijenu (brojevi, ne tekst).');
         return;
       }
       if (buy <= 0) {
@@ -1841,38 +1861,63 @@
         showROIError('Prodajna cijena ne smije biti negativna.');
         return;
       }
-      if (costsRaw.trim() !== '' && (isNaN(costs) || costs < 0)) {
+      if (costsRaw.trim() !== '' && (!Number.isFinite(costs) || costs < 0)) {
         showROIError('Dodatni troškovi ne smiju biti negativni.');
         return;
       }
-      if (monthlyProfit !== null && (isNaN(monthlyProfit) || monthlyProfit < 0)) {
+      if (monthlyEntered && (!Number.isFinite(monthlyProfit) || monthlyProfit < 0)) {
         showROIError('Mjesečna očekivana dobit ne smije biti negativna.');
         return;
       }
 
       const totalInvestment = buy + costs;
-      const netProfit = sell - totalInvestment;
-      const roiPercent = (netProfit / buy) * 100;
+
+      // Zaštita od dijeljenja s nulom: nabavna cijena > 0 je već provjerena gore, pa je
+      // totalInvestment (nabavna + troškovi, oboje ≥ 0 uz nabavnu > 0) uvijek veći od 0.
+      // Dodatna sigurnosna provjera ostaje kao krajnja brana protiv NaN/Infinity rezultata.
+      if (!Number.isFinite(totalInvestment) || totalInvestment <= 0) {
+        showROIError('Ukupno ulaganje mora biti veće od 0 € za izračun ROI-a.');
+        return;
+      }
+
+      const netProfit = sell - buy - costs;
+      const roiPercent = (netProfit / totalInvestment) * 100;
+
+      if (!Number.isFinite(netProfit) || !Number.isFinite(roiPercent)) {
+        showROIError('Nije moguće izračunati ROI s unesenim vrijednostima. Provjerite unos.');
+        return;
+      }
 
       document.getElementById('roiTotalInvest').innerText = formatEUR(totalInvestment);
       document.getElementById('roiNetProfit').innerText = formatEUR(netProfit);
       document.getElementById('roiPercent').innerText = `${roiPercent.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`;
+      document.getElementById('roiMonthlyDisplay').innerText = monthlyEntered ? formatEUR(monthlyProfit) : 'Nije uneseno';
 
       const profitColor = netProfit >= 0 ? 'var(--primary-green)' : 'var(--danger)';
       const roiColor = roiPercent >= 0 ? 'var(--primary-green)' : 'var(--danger)';
       document.getElementById('roiNetProfit').style.color = profitColor;
       document.getElementById('roiPercent').style.color = roiColor;
 
-      const paybackCard = document.getElementById('roiPaybackCard');
-      if (monthlyProfit !== null && monthlyProfit > 0) {
-        const paybackMonths = totalInvestment / monthlyProfit;
-        document.getElementById('roiPayback').innerText = `~ ${paybackMonths.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mjeseci`;
-        paybackCard.style.display = 'block';
+      // Payback Period: ako mjesečna dobit nije unesena ili je 0/negativna, ne dijelimo s nulom —
+      // prikazujemo jasnu poruku umjesto beskonačnog ili pogrešnog rezultata.
+      const paybackEl = document.getElementById('roiPayback');
+      if (!monthlyEntered || !Number.isFinite(monthlyProfit) || monthlyProfit <= 0) {
+        paybackEl.classList.add('roi-item-msg');
+        paybackEl.style.color = 'var(--warning)';
+        paybackEl.innerText = 'Unesite pozitivnu mjesečnu dobit za izračun povrata ulaganja.';
       } else {
-        paybackCard.style.display = 'none';
+        const paybackMonths = totalInvestment / monthlyProfit;
+        paybackEl.classList.remove('roi-item-msg');
+        paybackEl.style.color = 'var(--accent-cyan)';
+        paybackEl.innerText = Number.isFinite(paybackMonths)
+          ? `~ ${paybackMonths.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mjeseci`
+          : 'Nije moguće izračunati.';
       }
 
-      trackGAEvent('calculate_roi', { buy, sell, costs, roiPercent: Math.round(roiPercent) });
+      trackGAEvent('calculate_roi', {
+        buy, sell, costs,
+        roiPercent: Number.isFinite(roiPercent) ? Math.round(roiPercent * 100) / 100 : null
+      });
     }
 
     function renderInventory() {
