@@ -854,6 +854,74 @@
       color: var(--text-muted);
       margin-bottom: 1rem;
     }
+
+    /* ================= ROI Kalkulator (added — reuses existing card/form styles) ================= */
+    .roi-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-glass);
+    }
+
+    .roi-error-box {
+      display: none;
+      margin-top: 1rem;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .roi-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ================= Google AdSense zones (added — hidden until a real Publisher ID is set) ================= */
+    .ad-slot {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .ad-slot-sidebar {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 160px;
+      min-height: 600px;
+      z-index: 10;
+    }
+
+    .ad-slot-sidebar-left { left: 16px; }
+    .ad-slot-sidebar-right { right: 16px; }
+
+    /* Side ad zones only ever show on very wide screens, well outside the centered 1400px content column,
+       so they can never sit over the navigation, calculator, ROI results or buttons. */
+    @media (max-width: 1800px) {
+      .ad-slot-sidebar { display: none !important; }
+    }
+
+    .ad-slot-bottom {
+      max-width: 1400px;
+      width: calc(100% - 4rem);
+      margin: 2rem auto 0 auto;
+      min-height: 90px;
+    }
+
+    @media (max-width: 768px) {
+      .ad-slot-bottom { width: calc(100% - 2rem); min-height: 100px; }
+    }
   </style>
 </head>
 <body>
@@ -875,6 +943,11 @@
       <button class="nav-btn" onclick="switchTab('saved')">Spremljeno (<span id="saved-count">0</span>)</button>
     </nav>
   </header>
+
+  <!-- Google AdSense — predviđene bočne zone (added). Skrivene su dok se ne postavi stvarni Publisher ID
+       i nikad se ne preklapaju s navigacijom, karticama, kalkulatorom ni ROI rezultatima. -->
+  <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-left" data-ad-slot-key="sidebarLeft" aria-hidden="true"></div>
+  <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-right" data-ad-slot-key="sidebarRight" aria-hidden="true"></div>
 
   <main>
     <!-- Universal EV & Parts Search Engine -->
@@ -1049,6 +1122,57 @@
           </thead>
           <tbody id="invBody"></tbody>
         </table>
+
+        <!-- ROI Kalkulator (added — koristi iste postojeće stilove kartica/formi, ne mijenja Inventar iznad) -->
+        <div class="roi-section">
+          <h2 style="margin-bottom: 0.5rem;">ROI Kalkulator</h2>
+          <p class="search-subtitle">Izračunajte povrat ulaganja (ROI) i procijenjeno vrijeme povrata za vozilo, Wallbox punjač ili dio. Sve se računa lokalno u pregledniku.</p>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label for="roiBuy">Nabavna Cijena / Početno Ulaganje (€)</label>
+              <input type="number" id="roiBuy" class="calc-input" placeholder="450" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="roiSell">Prodajna Cijena / Prihod (€)</label>
+              <input type="number" id="roiSell" class="calc-input" placeholder="680" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="roiCosts">Dodatni Troškovi (€)</label>
+              <input type="number" id="roiCosts" class="calc-input" placeholder="30" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="roiMonthly">Mjesečna Očekivana Dobit (€)</label>
+              <input type="number" id="roiMonthly" class="calc-input" placeholder="npr. 50 (opcionalno)" min="0" step="0.01">
+              <span class="roi-hint">Opcionalno — unesi ako želiš procjenu Payback perioda u mjesecima.</span>
+            </div>
+          </div>
+
+          <button class="btn-search" style="width:100%; justify-content:center; padding:14px; margin-top:10px;" onclick="calculateROI()">
+            Izračunaj ROI
+          </button>
+
+          <div class="roi-error-box" id="roiError"></div>
+
+          <div class="ai-list" id="roiResults">
+            <div class="ai-item">
+              <div class="ai-item-lbl">Ukupno Ulaganje</div>
+              <div class="ai-item-val" id="roiTotalInvest">-- €</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-lbl">Neto Dobit</div>
+              <div class="ai-item-val" id="roiNetProfit">-- €</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-lbl">ROI (%)</div>
+              <div class="ai-item-val" id="roiPercent">-- %</div>
+            </div>
+            <div class="ai-item" id="roiPaybackCard" style="display:none;">
+              <div class="ai-item-lbl">Procijenjeni Povrat Ulaganja (Payback)</div>
+              <div class="ai-item-val" style="color: var(--accent-cyan);" id="roiPayback">-- mjeseci</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1122,6 +1246,9 @@
       <div class="marketplace-grid" id="savedGrid"></div>
     </div>
   </main>
+
+  <!-- Google AdSense — predviđena zona ispod glavnog sadržaja (added). Prazna/skrivena dok se ne aktivira. -->
+  <div class="ad-slot ad-slot-bottom" data-ad-slot-key="bottomBanner" aria-hidden="true"></div>
 
   <footer>
     EVChargeWiseALL &copy; 2026 — Pokretač za Električna Vozila, Dijelove i Punjenje u jednoj datoteci (<code>evchargewiseall.html</code>).
@@ -1225,6 +1352,55 @@
         document.querySelectorAll('.legal-modal-overlay.show').forEach(m => m.classList.remove('show'));
       }
     });
+
+    /* ================= Google AdSense priprema (added) =================
+       EVChargeWiseALL NE koristi lažni/izmišljeni AdSense ID.
+       Kada dobiješ stvaran Publisher ID i ID-jeve oglasnih jedinica (ad slotova),
+       samo ih upiši ispod — ništa drugo u kodu nije potrebno mijenjati.
+       Dok su ova polja prazna, stranica radi potpuno normalno, BEZ oglasa. */
+    const ADSENSE_CLIENT_ID = ''; // npr. 'ca-pub-1234567890123456'
+    const ADSENSE_SLOTS = {
+      sidebarLeft: '',   // ID oglasne jedinice za lijevu bočnu zonu
+      sidebarRight: '',  // ID oglasne jedinice za desnu bočnu zonu
+      bottomBanner: ''   // ID oglasne jedinice za zonu ispod glavnog sadržaja
+    };
+
+    function initAdSense() {
+      // Ako publisher ID nije postavljen, AdSense se ne aktivira i stranica radi normalno bez oglasa.
+      if (!ADSENSE_CLIENT_ID) return;
+
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+
+      document.querySelectorAll('.ad-slot').forEach(slot => {
+        const slotKey = slot.getAttribute('data-ad-slot-key');
+        const adSlotId = ADSENSE_SLOTS[slotKey];
+        if (!adSlotId) return; // ta zona ostaje skrivena dok nema svoj ID
+
+        const ins = document.createElement('ins');
+        ins.className = 'adsbygoogle';
+        ins.style.display = 'block';
+        ins.style.width = '100%';
+        ins.style.height = '100%';
+        ins.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
+        ins.setAttribute('data-ad-slot', adSlotId);
+        ins.setAttribute('data-ad-format', 'auto');
+        ins.setAttribute('data-full-width-responsive', 'true');
+
+        slot.innerHTML = '';
+        slot.appendChild(ins);
+        slot.style.display = 'flex';
+
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {
+          console.warn('AdSense push nije uspio:', e);
+        }
+      });
+    }
 
     const EV_PLATFORMS = [
       { name: "Mobile.de EV & Parts", type: "eu", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&ft=ELECTRICITY&q=" },
@@ -1609,6 +1785,96 @@
       renderInventory();
     }
 
+    /* ================= ROI Kalkulator (added) =================
+       Radi isključivo lokalno u pregledniku, bez vanjskog API-ja.
+       Formule:
+         Ukupno ulaganje = Nabavna cijena + Dodatni troškovi
+         Neto dobit      = Prodajna cijena - Ukupno ulaganje
+         ROI (%)         = (Neto dobit / Nabavna cijena) * 100
+         Payback (mj.)   = Ukupno ulaganje / Mjesečna očekivana dobit  (samo ako je uneseno) */
+    function formatEUR(value) {
+      return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+    }
+
+    function resetROIResults() {
+      document.getElementById('roiTotalInvest').innerText = '-- €';
+      document.getElementById('roiNetProfit').innerText = '-- €';
+      document.getElementById('roiPercent').innerText = '-- %';
+      document.getElementById('roiNetProfit').style.color = '';
+      document.getElementById('roiPercent').style.color = '';
+      document.getElementById('roiPaybackCard').style.display = 'none';
+    }
+
+    function showROIError(message) {
+      const errorBox = document.getElementById('roiError');
+      errorBox.innerText = message;
+      errorBox.style.display = 'block';
+      resetROIResults();
+    }
+
+    function calculateROI() {
+      const buyRaw = document.getElementById('roiBuy').value;
+      const sellRaw = document.getElementById('roiSell').value;
+      const costsRaw = document.getElementById('roiCosts').value;
+      const monthlyRaw = document.getElementById('roiMonthly').value;
+
+      const errorBox = document.getElementById('roiError');
+      errorBox.style.display = 'none';
+      errorBox.innerText = '';
+
+      const buy = parseFloat(buyRaw);
+      const sell = parseFloat(sellRaw);
+      // Dodatni troškovi i mjesečna dobit su opcionalni — prazno polje tretiramo kao 0 / nije uneseno.
+      const costs = costsRaw.trim() === '' ? 0 : parseFloat(costsRaw);
+      const monthlyProfit = monthlyRaw.trim() === '' ? null : parseFloat(monthlyRaw);
+
+      // Zaštita od praznih / nevažećih / negativnih unosa i dijeljenja s nulom.
+      if (buyRaw.trim() === '' || sellRaw.trim() === '' || isNaN(buy) || isNaN(sell)) {
+        showROIError('Molimo unesite ispravnu nabavnu cijenu i prodajnu cijenu.');
+        return;
+      }
+      if (buy <= 0) {
+        showROIError('Nabavna cijena / početno ulaganje mora biti veće od 0 €.');
+        return;
+      }
+      if (sell < 0) {
+        showROIError('Prodajna cijena ne smije biti negativna.');
+        return;
+      }
+      if (costsRaw.trim() !== '' && (isNaN(costs) || costs < 0)) {
+        showROIError('Dodatni troškovi ne smiju biti negativni.');
+        return;
+      }
+      if (monthlyProfit !== null && (isNaN(monthlyProfit) || monthlyProfit < 0)) {
+        showROIError('Mjesečna očekivana dobit ne smije biti negativna.');
+        return;
+      }
+
+      const totalInvestment = buy + costs;
+      const netProfit = sell - totalInvestment;
+      const roiPercent = (netProfit / buy) * 100;
+
+      document.getElementById('roiTotalInvest').innerText = formatEUR(totalInvestment);
+      document.getElementById('roiNetProfit').innerText = formatEUR(netProfit);
+      document.getElementById('roiPercent').innerText = `${roiPercent.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`;
+
+      const profitColor = netProfit >= 0 ? 'var(--primary-green)' : 'var(--danger)';
+      const roiColor = roiPercent >= 0 ? 'var(--primary-green)' : 'var(--danger)';
+      document.getElementById('roiNetProfit').style.color = profitColor;
+      document.getElementById('roiPercent').style.color = roiColor;
+
+      const paybackCard = document.getElementById('roiPaybackCard');
+      if (monthlyProfit !== null && monthlyProfit > 0) {
+        const paybackMonths = totalInvestment / monthlyProfit;
+        document.getElementById('roiPayback').innerText = `~ ${paybackMonths.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mjeseci`;
+        paybackCard.style.display = 'block';
+      } else {
+        paybackCard.style.display = 'none';
+      }
+
+      trackGAEvent('calculate_roi', { buy, sell, costs, roiPercent: Math.round(roiPercent) });
+    }
+
     function renderInventory() {
       const body = document.getElementById('invBody');
       const countEl = document.getElementById('invCount');
@@ -1727,6 +1993,7 @@
       document.getElementById('saved-count').innerText = savedItems.length;
       runSearch();
       calculateCharging();
+      initAdSense();
     });
   </script>
 </body>
