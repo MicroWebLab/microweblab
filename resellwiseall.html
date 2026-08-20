@@ -827,7 +827,7 @@
       margin-bottom: 1rem;
     }
 
-    /* ================= ROI Kalkulator (added — modularan, odvojen od Kalkulatora Profita; koristi postojeće stilove) ================= */
+    /* ================= ROI Calculator (added — modular, separate from the Profit Calculator; reuses existing styles) ================= */
     .roi-section {
       margin-top: 2rem;
       padding-top: 2rem;
@@ -858,7 +858,7 @@
       line-height: 1.4;
     }
 
-    /* ================= ResellWise Insights (added — unutar postojećeg Analitika taba) ================= */
+    /* ================= ResellWise Insights (added — inside the existing Analytics tab) ================= */
     .insights-section {
       margin-top: 2rem;
       padding-top: 2rem;
@@ -874,6 +874,49 @@
       padding: 4px 10px;
       border-radius: 20px;
       text-transform: uppercase;
+    }
+
+    /* ================= Advertising Consent Banner (added — inert unless AdSense is actually configured) ================= */
+    .consent-banner {
+      display: none;
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      max-width: 640px;
+      margin: 0 auto;
+      z-index: 900;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+      padding: 1.2rem 1.5rem;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .consent-banner.show {
+      display: flex;
+    }
+
+    .consent-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .consent-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .consent-actions .btn-card {
+      flex: 0 0 auto;
+      padding: 10px 18px;
     }
 
     /* ================= Google AdSense zone (added — skriveno dok se ne postavi stvarni Publisher ID) ================= */
@@ -902,8 +945,8 @@
     .ad-slot-sidebar-left { left: 16px; }
     .ad-slot-sidebar-right { right: 16px; }
 
-    /* Bočne ad zone prikazuju se samo na vrlo širokim ekranima, izvan centriranog stupca sadržaja,
-       pa nikad ne mogu prekriti navigaciju, kalkulatore, ROI rezultate ni gumbe. */
+    /* Sidebar ad zones are shown only on very wide screens, outside the centered content column,
+       so they can never cover the navigation, calculators, ROI results or buttons. */
     @media (max-width: 1800px) {
       .ad-slot-sidebar { display: none !important; }
     }
@@ -940,8 +983,8 @@
     </nav>
   </header>
 
-  <!-- Google AdSense — predviđene bočne zone (added). Skrivene su dok se ne postavi stvarni Publisher ID
-       i nikad se ne preklapaju s navigacijom, karticama, kalkulatorima ni ROI/Insights rezultatima. -->
+  <!-- Google AdSense — designated sidebar zones (added). Hidden until a real Publisher ID is set,
+       and never overlap the navigation, cards, calculators or ROI/Insights results. -->
   <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-left" data-ad-slot-key="sidebarLeft" aria-hidden="true"></div>
   <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-right" data-ad-slot-key="sidebarRight" aria-hidden="true"></div>
 
@@ -1096,44 +1139,44 @@
           <tbody id="invBody"></tbody>
         </table>
 
-        <!-- ROI Kalkulator (added — zaseban od Kalkulatora Profita, koristi iste postojeće stilove kartica/formi) -->
+        <!-- ROI Calculator (added — separate from the Profit Calculator, uses the same existing card/form styles) -->
         <div class="roi-section">
-          <h2 style="margin-bottom: 0.5rem;">ROI Kalkulator za Reselling</h2>
-          <p class="search-subtitle">Zaseban izračun povrata ulaganja za artikal, neovisan o Kalkulatoru Profita iznad. Sve se računa lokalno u pregledniku.</p>
+          <h2 style="margin-bottom: 0.5rem;">ROI Calculator</h2>
+          <p class="search-subtitle">A separate return-on-investment calculation for an item, independent from the Profit Calculator above. Everything is computed locally in your browser.</p>
 
           <div class="form-grid-3">
             <div class="form-group">
-              <label for="roiBuy">Nabavna Cijena (€)</label>
-              <input type="number" id="roiBuy" class="calc-input" placeholder="npr. 450" min="0" step="0.01">
+              <label for="roiBuy">Purchase Price / Initial Investment (€)</label>
+              <input type="number" id="roiBuy" class="calc-input" placeholder="e.g. 450" min="0" step="0.01">
             </div>
             <div class="form-group">
-              <label for="roiSell">Prodajna Cijena / Prihod (€)</label>
-              <input type="number" id="roiSell" class="calc-input" placeholder="npr. 680" min="0" step="0.01">
+              <label for="roiSell">Selling Price / Revenue (€)</label>
+              <input type="number" id="roiSell" class="calc-input" placeholder="e.g. 680" min="0" step="0.01">
             </div>
             <div class="form-group">
-              <label for="roiCosts">Dodatni Troškovi (€)</label>
-              <input type="number" id="roiCosts" class="calc-input" placeholder="npr. 30" min="0" step="0.01">
+              <label for="roiCosts">Additional Costs (€)</label>
+              <input type="number" id="roiCosts" class="calc-input" placeholder="e.g. 30" min="0" step="0.01">
             </div>
             <div class="form-group">
-              <label for="roiMonthly">Očekivana Mjesečna Dobit (€)</label>
-              <input type="number" id="roiMonthly" class="calc-input" placeholder="npr. 100 (opcionalno)" min="0" step="0.01">
-              <span class="roi-hint">Opcionalno — unesi za procjenu Payback perioda u mjesecima.</span>
+              <label for="roiMonthly">Expected Monthly Profit (€)</label>
+              <input type="number" id="roiMonthly" class="calc-input" placeholder="e.g. 100 (optional)" min="0" step="0.01">
+              <span class="roi-hint">Optional — enter this to estimate the Payback Period in months.</span>
             </div>
           </div>
 
           <button class="btn-search" style="width:100%; justify-content:center; padding:14px; margin-top:10px;" onclick="calculateROI()">
-            Izračunaj ROI
+            Calculate ROI
           </button>
 
-          <div class="roi-error-box" id="roiError"></div>
+          <div class="roi-error-box" id="roiError" role="alert"></div>
 
           <div class="ai-list" id="roiResults">
             <div class="ai-item">
-              <div class="ai-item-lbl">Ukupno Ulaganje</div>
+              <div class="ai-item-lbl">Total Investment</div>
               <div class="ai-item-val" id="roiTotalInvest">-- €</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Neto Dobit</div>
+              <div class="ai-item-lbl">Net Profit</div>
               <div class="ai-item-val" id="roiNetProfit">-- €</div>
             </div>
             <div class="ai-item">
@@ -1141,11 +1184,11 @@
               <div class="ai-item-val" id="roiPercent">-- %</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Mjesečna Očekivana Dobit</div>
+              <div class="ai-item-lbl">Expected Monthly Profit</div>
               <div class="ai-item-val" style="color: var(--text-main);" id="roiMonthlyDisplay">-- €</div>
             </div>
             <div class="ai-item" id="roiPaybackCard">
-              <div class="ai-item-lbl">Procijenjeni Payback</div>
+              <div class="ai-item-lbl">Estimated Payback Period</div>
               <div class="ai-item-val" style="color: var(--accent-cyan);" id="roiPayback">--</div>
             </div>
           </div>
@@ -1216,37 +1259,37 @@
         </div>
       </div>
 
-      <!-- ResellWise Insights (added — zaseban odjeljak, ne dira gornje grafove) -->
+      <!-- ResellWise Insights (added — separate section, does not touch the charts above) -->
       <div class="insights-section">
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <h2 style="margin:0;">ResellWise Insights</h2>
-          <span class="insights-badge">Demo / Procijenjeni Podaci</span>
+          <span class="insights-badge">Demo / Estimated Data</span>
         </div>
-        <p class="search-subtitle" style="margin-top:6px;">Pregled na temelju tvog lokalnog Inventara i procijenjenih tržišnih podataka iz pretrage. Ovo NISU potvrđeni stvarni tržišni podaci.</p>
+        <p class="search-subtitle" style="margin-top:6px;">An overview based on your local Inventory and estimated market data from search. This is NOT verified real market data.</p>
 
         <div class="ai-list" id="insightsGrid">
           <div class="ai-item">
-            <div class="ai-item-lbl">Prosječna Nabavna Cijena</div>
+            <div class="ai-item-lbl">Average Purchase Price</div>
             <div class="ai-item-val" id="insAvgBuy">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">Prosječna Prodajna/Ciljana Cijena</div>
+            <div class="ai-item-lbl">Average Selling / Target Price</div>
             <div class="ai-item-val" id="insAvgSell">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">Prosječna Marža</div>
+            <div class="ai-item-lbl">Average Margin</div>
             <div class="ai-item-val" style="color: var(--success);" id="insAvgMargin">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">Ukupna Potencijalna Dobit (Inventar)</div>
+            <div class="ai-item-lbl">Total Potential Profit (Inventory)</div>
             <div class="ai-item-val" style="color: var(--success);" id="insTotalProfit">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">ROI Trend (Procjena iz Pretrage)</div>
+            <div class="ai-item-lbl">ROI Trend (Estimated from Search)</div>
             <div class="ai-item-val" style="color: var(--accent-cyan);" id="insRoiTrend">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">Najbolja Platforma (Procjena)</div>
+            <div class="ai-item-lbl">Best Platform (Estimated)</div>
             <div class="ai-item-val" style="color: var(--purple-accent);" id="insBestPlatform">--</div>
           </div>
         </div>
@@ -1260,7 +1303,7 @@
     </div>
   </main>
 
-  <!-- Google AdSense — predviđena zona ispod glavnog sadržaja (added). Prazna/skrivena dok se ne aktivira. -->
+  <!-- Google AdSense — designated zone below the main content (added). Empty/hidden until activated. -->
   <div class="ad-slot ad-slot-bottom" data-ad-slot-key="bottomBanner" aria-hidden="true"></div>
 
   <footer>
@@ -1269,76 +1312,173 @@
       <button class="legal-link-btn" onclick="openLegalModal('privacy')">Privacy Policy</button>
       <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('terms')">Terms of Use</button>
+      <span class="legal-sep">·</span>
+      <button class="legal-link-btn" onclick="openLegalModal('legal')">Legal Notice</button>
+      <span class="legal-sep">·</span>
+      <button class="legal-link-btn" onclick="openLegalModal('disclaimer')">Disclaimer</button>
     </div>
     <p class="legal-disclaimer">ResellWiseALL služi za pretragu i usporedbu proizvoda s vanjskih platformi. Dostupnost, cijene i ostale informacije određuju originalne platforme i mogu se promijeniti bez prethodne obavijesti.</p>
   </footer>
 
   <div class="toast" id="toast">Obavijest</div>
 
-  <!-- Privacy Policy Modal (added — does not alter main page layout or functionality) -->
+  <!-- Cookie / Advertising Consent Banner (added). Inert while ADSENSE_CLIENT_ID is empty — only ever
+       shown once a real AdSense Publisher ID is configured and no consent choice has been stored yet. -->
+  <div class="consent-banner" id="consentBanner" role="dialog" aria-label="Advertising consent">
+    <p class="consent-text">
+      ResellWiseALL uses Google AdSense to display ads that help keep this tool free. Accepting allows AdSense
+      to load ads (which may use cookies for ad measurement and, where applicable, personalization) consistent
+      with Google's advertising policies. You can decline and continue using ResellWiseALL without ads.
+    </p>
+    <div class="consent-actions">
+      <button class="btn-card btn-secondary" onclick="handleAdsConsent(false)">Decline</button>
+      <button class="btn-card btn-primary-card" onclick="handleAdsConsent(true)">Accept</button>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal (rewritten in English — expanded per current app behavior; does not alter main page layout or functionality) -->
   <div class="legal-modal-overlay" id="privacyModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
         <h2>Privacy Policy</h2>
-        <button class="legal-close-btn" onclick="closeLegalModal('privacy')">✕</button>
+        <button class="legal-close-btn" onclick="closeLegalModal('privacy')" aria-label="Close">✕</button>
       </div>
-      <div class="legal-updated">Zadnje ažurirano: 2026.</div>
+      <div class="legal-updated">Last updated: 2026.</div>
 
-      <h3>Koje podatke koristimo</h3>
-      <p>ResellWiseALL ne zahtijeva registraciju ni prijavu. Aplikacija lokalno, u tvom pregledniku (LocalStorage), sprema samo ono što sam izričito spremiš: omiljene (favorite) artikle i stavke inventara koje unesete. Ti se podaci ne šalju na naše poslužitelje niti se dijele s trećim stranama. ROI kalkulator radi isključivo lokalno u pregledniku i ne sprema unesene vrijednosti trajno — izračun se briše osvježavanjem stranice, osim ako podatke ručno dodaš u Inventar.</p>
+      <h3>No Account Required</h3>
+      <p>ResellWiseALL does not require registration or login. All core features — marketplace search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis and Analytics/Insights — work without creating an account.</p>
 
-      <h3>Informacije o proizvodima i cijenama</h3>
-      <p>ResellWiseALL prikazuje informacije o proizvodima, cijenama i ponudama dohvaćene ili procijenjene na temelju podataka s vanjskih e-commerce platformi. Mi ne generiramo te podatke — samo ih prikazujemo radi lakše usporedbe i analize. Odjeljak "ResellWise Insights" prikazuje procijenjene/demo podatke izračunate iz tvog lokalnog inventara i procijenjenih rezultata pretrage te je jasno označen kao takav.</p>
+      <h3>What We Store Locally</h3>
+      <p>ResellWiseALL stores data locally in your browser using <strong>LocalStorage</strong> — specifically, the favorite (saved) items and Inventory entries you explicitly add. This data stays on your device and is not transmitted to our servers or shared with third parties. The ROI Calculator runs entirely in your browser and does not persist its input values — a calculation is cleared on page refresh unless you manually save the item to Inventory.</p>
 
-      <h3>Osnovni tehnički podaci</h3>
-      <p>Aplikacija može koristiti osnovne tehničke podatke potrebne za rad i poboljšanje usluge, uključujući anonimiziranu analitiku posjeta (Google Analytics) poput broja posjeta, korištenih funkcija i općih tehničkih informacija o uređaju/pregledniku. Ovi podaci se ne koriste za identifikaciju pojedinačnog korisnika u marketinške svrhe.</p>
+      <h3>Product and Pricing Information</h3>
+      <p>Product, pricing and offer information shown in the app is fetched or estimated from external e-commerce sources. We do not generate this data ourselves — we only display it to help you compare and analyze. The "ResellWise Insights" section displays estimated/demo figures computed from your local Inventory and from estimated search results, and is clearly labeled as such — it is not verified real market data.</p>
+
+      <h3>Analytics</h3>
+      <p>ResellWiseALL uses Google Analytics (via Google's gtag.js) to collect anonymized usage data such as visit counts, feature usage and general technical/device information. This data is not used to identify you individually for marketing purposes.</p>
 
       <h3>Google AdSense</h3>
-      <p>ResellWiseALL je pripremljen za buduću Google AdSense monetizaciju, no oglasi trenutno nisu aktivni. Dok se ne postavi stvarni AdSense Publisher ID, aplikacija ne prikazuje nikakve oglase niti učitava AdSense skriptu. Kada oglasi budu aktivirani, njima će upravljati Google prema vlastitim pravilima privatnosti, a oglasne zone bit će jasno odvojene od kalkulatora, inventara i navigacije.</p>
+      <p>ResellWiseALL is prepared for future Google AdSense monetization, but ads are <strong>not currently active</strong>. Until a real AdSense Publisher ID is configured, no ad script is loaded and no ads are shown. Once ads are enabled, you will be shown a consent banner before any ad-related script loads (see "Cookies &amp; Advertising Consent" below). Ad placements will remain visually separate from calculators, inventory, results and navigation.</p>
 
-      <h3>Prodaja podataka</h3>
-      <p><strong>ResellWiseALL ne prodaje korisničke osobne podatke</strong> trećim stranama.</p>
+      <h3>Cookies &amp; Advertising Consent</h3>
+      <p>Google Analytics may use cookies or similar technologies to measure usage. If and when AdSense is activated, Google AdSense may also use cookies for ad delivery and, where applicable, ad personalization, under Google's own advertising and privacy policies. In that case, ResellWiseALL will show a clear, non-intrusive consent banner asking you to Accept or Decline before any AdSense script or ad-related cookie is loaded. Declining will not prevent you from using any other feature of ResellWiseALL.</p>
 
-      <h3>Vanjske platforme</h3>
-      <p>Klikom na oglas ili gumb "Otvori Uživo" / "Detalji Oglasa" preusmjeravaš se na vanjsku platformu (npr. eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy i druge). Te platforme imaju vlastite politike privatnosti koje se primjenjuju od trenutka kad ih posjetiš, a ResellWiseALL nema uvid niti kontrolu nad podacima koje te platforme prikupljaju.</p>
+      <h3>We Do Not Sell Your Data</h3>
+      <p><strong>ResellWiseALL does not sell personal data</strong> to third parties.</p>
 
-      <h3>Kontrola vlastitih podataka</h3>
-      <p>Spremljene favorite i inventar možeš u svakom trenutku ukloniti unutar same aplikacije (gumb "Ukloni" / klik na zvjezdicu) ili brisanjem podataka preglednika za ovu stranicu.</p>
+      <h3>Third-Party Marketplaces</h3>
+      <p>Clicking a listing or a button such as "Open Live" / "Listing Details" takes you to an external platform (e.g. eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, Mobile.de or AutoScout24). Those platforms have their own privacy policies, which apply once you visit them. ResellWiseALL has no visibility into, or control over, data collected by those platforms.</p>
+
+      <h3>Your Rights &amp; Control Over Your Data</h3>
+      <p>Because ResellWiseALL does not use accounts or a backend database, most data protection rights apply directly to the data stored in your own browser:</p>
+      <ul>
+        <li><strong>Access</strong> — you can view everything ResellWiseALL has stored for you directly within the app (Saved/Favorites and Inventory tabs), since nothing is stored elsewhere.</li>
+        <li><strong>Correction</strong> — you can edit your Inventory by removing an entry and re-adding it with corrected values, using the existing "Remove" button.</li>
+        <li><strong>Deletion</strong> — you can remove individual saved items or inventory entries at any time using the in-app "Remove" button or the favorite star, or clear all data at once by clearing this site's browsing data/LocalStorage in your browser settings.</li>
+        <li><strong>Objection / Restriction</strong> — since no account or server-side processing is involved, you can restrict processing simply by not using the Saved/Inventory features, or by declining AdSense consent once it becomes available.</li>
+        <li><strong>Privacy contact</strong> — for any privacy-related question, contact: <strong>[ADD PRIVACY CONTACT EMAIL HERE]</strong> <em>(placeholder — to be completed with a real contact address)</em>.</li>
+      </ul>
     </div>
   </div>
 
-  <!-- Terms of Use Modal (added — does not alter main page layout or functionality) -->
+  <!-- Terms of Use Modal (rewritten in English — expanded per current app behavior; does not alter main page layout or functionality) -->
   <div class="legal-modal-overlay" id="termsModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
         <h2>Terms of Use</h2>
-        <button class="legal-close-btn" onclick="closeLegalModal('terms')">✕</button>
+        <button class="legal-close-btn" onclick="closeLegalModal('terms')" aria-label="Close">✕</button>
       </div>
-      <div class="legal-updated">Zadnje ažurirano: 2026.</div>
+      <div class="legal-updated">Last updated: 2026.</div>
 
-      <h3>Priroda usluge</h3>
-      <p>ResellWiseALL je informativna aplikacija za pretragu, usporedbu cijena i procjenu profitnog potencijala proizvoda s više e-commerce platformi. <strong>ResellWiseALL nije prodavatelj niti posrednik</strong> ni u jednoj transakciji između korisnika i trećih platformi.</p>
+      <h3>Acceptance of These Terms</h3>
+      <p>By using ResellWiseALL, you agree to these Terms of Use. If you do not agree, please discontinue use of the application.</p>
 
-      <h3>Izvor podataka</h3>
-      <p>Informacije o proizvodima, cijenama, dostupnosti i ponudama dolaze s vanjskih platformi i izvora te se dijelom izračunavaju automatski. Podaci mogu biti nepotpuni, zastarjeli ili netočni bez prethodne obavijesti, budući da ih ResellWiseALL ne kontrolira izravno.</p>
+      <h3>Nature of the Service</h3>
+      <p>ResellWiseALL is an informational application for searching, comparing prices and estimating the resale profit potential of products across multiple e-commerce platforms. <strong>ResellWiseALL is not a seller or intermediary</strong> in any transaction between a user and a third-party platform.</p>
 
-      <h3>Provjera prije kupnje</h3>
-      <p>Korisnik je dužan provjeriti sve podatke (cijenu, dostupnost, stanje proizvoda i uvjete prodaje) izravno kod originalnog izvora odnosno platforme prije donošenja bilo kakve odluke o kupnji ili prodaji.</p>
+      <h3>Permitted Use</h3>
+      <p>You may use ResellWiseALL for personal, non-commercial evaluation of resale opportunities, in compliance with applicable law and the terms of any third-party platform you visit through the app. You agree not to misuse the application (e.g. attempting to disrupt its operation or automate abusive requests against it).</p>
 
-      <h3>Nema jamstva rezultata</h3>
-      <p>Izračuni profita, ROI-a i AI ocjene isplativosti prikazani u aplikaciji su okvirne procjene i ne predstavljaju jamstvo stvarne zarade ili uspješne prodaje.</p>
+      <h3>Data Source</h3>
+      <p>Product, pricing, availability and offer information comes from external platforms and sources, and is partly calculated automatically. Data may be incomplete, outdated or inaccurate without prior notice, as ResellWiseALL does not directly control these external sources.</p>
 
-      <h3>ROI Kalkulator i Insights</h3>
-      <p>ROI kalkulator i odjeljak "ResellWise Insights" prikazuju procjene izračunate lokalno na temelju podataka koje uneseš ili na temelju procijenjenih/demo tržišnih podataka. Ovi izračuni ne predstavljaju financijski savjet niti jamstvo stvarne dobiti, ROI-a ili brzine prodaje.</p>
+      <h3>Check Before You Buy or Sell</h3>
+      <p>You are responsible for verifying all information (price, availability, item condition and sale terms) directly with the original source or platform before making any purchasing or selling decision.</p>
 
-      <h3>Odgovornost korisnika</h3>
-      <p>Korisnik koristi aplikaciju na vlastitu odgovornost. ResellWiseALL ne odgovara za štetu, gubitak ili nesporazum nastao korištenjem prikazanih informacija ili poveznica prema vanjskim platformama.</p>
+      <h3>No Guarantee of Results</h3>
+      <p>Profit, ROI and AI profitability score calculations shown in the app are rough estimates and do not represent a guarantee of actual earnings or a successful sale.</p>
 
-      <h3>Intelektualno vlasništvo</h3>
-      <p>Nazivi platformi i proizvoda prikazani unutar aplikacije vlasništvo su njihovih nositelja prava i navedeni su isključivo u informativne svrhe.</p>
+      <h3>ROI Calculator &amp; Insights Disclaimer</h3>
+      <p>The ROI Calculator and the "ResellWise Insights" section display estimates computed locally from data you enter, or from estimated/demo market data. These calculations do not constitute financial, investment, tax or legal advice, and are not a guarantee of actual profit, ROI or resale speed.</p>
 
-      <h3>Izmjene uvjeta</h3>
-      <p>Ovi uvjeti mogu se povremeno ažurirati. Nastavak korištenja aplikacije nakon izmjena smatra se prihvaćanjem novih uvjeta.</p>
+      <h3>Third-Party Marketplaces &amp; Services</h3>
+      <p>ResellWiseALL links to and references third-party marketplaces (including eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, Mobile.de and AutoScout24). ResellWiseALL is <strong>not affiliated with, endorsed by, or an official partner or representative of</strong> any of these platforms unless explicitly and separately confirmed. All trademarks and platform names belong to their respective owners and are used solely for identification and informational purposes.</p>
+
+      <h3>Limitation of Liability</h3>
+      <p>You use ResellWiseALL at your own risk. To the fullest extent permitted by applicable law, ResellWiseALL shall not be liable for any damage, loss or dispute arising from your use of the information displayed, the calculators provided, or links to third-party platforms.</p>
+
+      <h3>Intellectual Property</h3>
+      <p>Platform and product names shown within the application are the property of their respective rights holders and are listed solely for informational purposes.</p>
+
+      <h3>Changes to These Terms</h3>
+      <p>These terms may be updated from time to time. Continued use of the application after changes are made constitutes acceptance of the updated terms.</p>
+
+      <h3>Contact / Legal Information</h3>
+      <p>For legal questions about these Terms, see the "Legal Notice" section, accessible from the footer.</p>
+    </div>
+  </div>
+
+  <!-- Legal Notice / Contact Modal (added — reuses the existing legal-modal styling) -->
+  <div class="legal-modal-overlay" id="legalNoticeModal">
+    <div class="legal-modal-box">
+      <div class="legal-modal-head">
+        <h2>Legal Notice</h2>
+        <button class="legal-close-btn" onclick="closeLegalModal('legal')" aria-label="Close">✕</button>
+      </div>
+      <div class="legal-updated">Last updated: 2026.</div>
+
+      <h3>Operator Information</h3>
+      <p>
+        Legal entity name: <strong>[ADD LEGAL ENTITY / OWNER NAME HERE]</strong><br>
+        Registered address: <strong>[ADD REGISTERED ADDRESS HERE]</strong><br>
+        Company/VAT registration number: <strong>[ADD REGISTRATION / VAT NUMBER HERE, IF APPLICABLE]</strong>
+      </p>
+      <p><em>The fields above are placeholders and must be completed with accurate, real information before this application is used commercially or ads are activated. No fictional legal, address or registration details have been entered.</em></p>
+
+      <h3>Contact</h3>
+      <p>
+        General &amp; legal contact: <strong>[ADD CONTACT EMAIL HERE]</strong><br>
+        Privacy-related requests: <strong>[ADD PRIVACY CONTACT EMAIL HERE]</strong>
+      </p>
+
+      <h3>Advertising Disclosure</h3>
+      <p>ResellWiseALL is prepared to display Google AdSense advertising in designated ad zones once a real Publisher ID is configured. This will be clearly disclosed here once ads are active.</p>
+    </div>
+  </div>
+
+  <!-- Reselling / Marketplace Disclaimer Modal (added — reuses the existing legal-modal styling) -->
+  <div class="legal-modal-overlay" id="disclaimerModal">
+    <div class="legal-modal-box">
+      <div class="legal-modal-head">
+        <h2>Disclaimer</h2>
+        <button class="legal-close-btn" onclick="closeLegalModal('disclaimer')" aria-label="Close">✕</button>
+      </div>
+      <div class="legal-updated">Last updated: 2026.</div>
+
+      <h3>Informational Tool Only</h3>
+      <p>ResellWiseALL is a tool for searching, comparing and estimating the potential resale value of products. It does not process transactions, hold inventory, or act as a marketplace itself.</p>
+
+      <h3>Prices &amp; Availability May Change</h3>
+      <p>Prices, availability, item condition, shipping costs, platform fees and other details shown in the app may change at any time and may not reflect the current state of the original listing. Always verify details directly on the source platform before buying or selling.</p>
+
+      <h3>Third-Party Data</h3>
+      <p>Data from third-party platforms is not under the direct control of ResellWiseALL and may be delayed, incomplete or inaccurate.</p>
+
+      <h3>ROI &amp; Profit Estimates</h3>
+      <p>ROI, profit margin and payback period figures shown by the ROI Calculator, the Profit Calculator and the Insights section are estimates based on the values you provide or on estimated market data. They are <strong>not a guarantee of actual earnings</strong>.</p>
+
+      <h3>No Financial, Investment, Tax or Legal Advice</h3>
+      <p>ResellWiseALL does not provide financial, investment, tax or legal advice. Decisions about buying, selling or reselling any item are made solely at your own discretion and risk.</p>
     </div>
   </div>
 
@@ -1351,15 +1491,25 @@
     }
 
     /* ================= Legal modal controls (added) ================= */
+    /* ================= Legal modal controls (extended) =================
+       Generalized to a lookup map so it supports Privacy, Terms, Legal Notice and Disclaimer
+       modals; the original privacy/terms behavior is unchanged. */
+    const LEGAL_MODAL_IDS = {
+      privacy: 'privacyModal',
+      terms: 'termsModal',
+      legal: 'legalNoticeModal',
+      disclaimer: 'disclaimerModal'
+    };
+
     function openLegalModal(type) {
-      const id = type === 'privacy' ? 'privacyModal' : 'termsModal';
+      const id = LEGAL_MODAL_IDS[type] || 'privacyModal';
       const modal = document.getElementById(id);
       if (modal) modal.classList.add('show');
       trackGAEvent("open_legal_page", { page: type });
     }
 
     function closeLegalModal(type) {
-      const id = type === 'privacy' ? 'privacyModal' : 'termsModal';
+      const id = LEGAL_MODAL_IDS[type] || 'privacyModal';
       const modal = document.getElementById(id);
       if (modal) modal.classList.remove('show');
     }
@@ -1376,20 +1526,46 @@
       }
     });
 
-    /* ================= Google AdSense priprema (added) =================
-       ResellWiseALL NE koristi lažni/izmišljeni AdSense Publisher ID.
-       Kada dobiješ stvaran Publisher ID i ID-jeve oglasnih jedinica (ad slotova),
-       samo ih upiši ispod — ništa drugo u kodu nije potrebno mijenjati.
-       Dok su ova polja prazna, aplikacija radi potpuno normalno, BEZ oglasa. */
-    const ADSENSE_CLIENT_ID = ''; // npr. 'ca-pub-1234567890123456'
+    /* ================= Google AdSense preparation (added) =================
+       ResellWiseALL does NOT use a fake/invented AdSense Publisher ID.
+       Once you have a real Publisher ID and real ad slot IDs, just fill them in below —
+       nothing else in the code needs to change. While these fields are empty, the app
+       works completely normally, WITH NO ads and no consent banner shown. */
+    const ADSENSE_CLIENT_ID = ''; // e.g. 'ca-pub-1234567890123456'
     const ADSENSE_SLOTS = {
-      sidebarLeft: '',   // ID oglasne jedinice za lijevu bočnu zonu
-      sidebarRight: '',  // ID oglasne jedinice za desnu bočnu zonu
-      bottomBanner: ''   // ID oglasne jedinice za zonu ispod glavnog sadržaja
+      sidebarLeft: '',   // ad unit ID for the left sidebar zone
+      sidebarRight: '',  // ad unit ID for the right sidebar zone
+      bottomBanner: ''   // ad unit ID for the zone below the main content
     };
+    const ADS_CONSENT_STORAGE_KEY = 'resellwiseall_ads_consent';
 
     function initAdSense() {
-      // Ako publisher ID nije postavljen, AdSense se ne učitava i ad zone ostaju skrivene.
+      // If no Publisher ID is configured, AdSense never loads and the consent banner never appears.
+      if (!ADSENSE_CLIENT_ID) return;
+
+      const storedConsent = localStorage.getItem(ADS_CONSENT_STORAGE_KEY);
+      if (storedConsent === 'granted') {
+        loadAdSenseAds();
+      } else if (storedConsent !== 'denied') {
+        showAdsConsentBanner();
+      }
+      // If storedConsent === 'denied', respect the user's earlier choice and do nothing.
+    }
+
+    function showAdsConsentBanner() {
+      const banner = document.getElementById('consentBanner');
+      if (banner) banner.classList.add('show');
+    }
+
+    function handleAdsConsent(granted) {
+      localStorage.setItem(ADS_CONSENT_STORAGE_KEY, granted ? 'granted' : 'denied');
+      const banner = document.getElementById('consentBanner');
+      if (banner) banner.classList.remove('show');
+      if (granted) loadAdSenseAds();
+      trackGAEvent('resellwiseall_ads_consent', { granted });
+    }
+
+    function loadAdSenseAds() {
       if (!ADSENSE_CLIENT_ID) return;
 
       const script = document.createElement('script');
@@ -1401,7 +1577,7 @@
       document.querySelectorAll('.ad-slot').forEach(slot => {
         const slotKey = slot.getAttribute('data-ad-slot-key');
         const adSlotId = ADSENSE_SLOTS[slotKey];
-        if (!adSlotId) return; // ta zona ostaje skrivena dok nema svoj ID
+        if (!adSlotId) return; // this zone stays hidden until it has its own slot ID
 
         const ins = document.createElement('ins');
         ins.className = 'adsbygoogle';
@@ -1420,7 +1596,7 @@
         try {
           (window.adsbygoogle = window.adsbygoogle || []).push({});
         } catch (e) {
-          console.warn('AdSense push nije uspio:', e);
+          console.warn('AdSense push failed:', e);
         }
       });
     }
@@ -1773,16 +1949,16 @@
       renderInsights();
     }
 
-    /* ================= ROI Kalkulator (added) =================
-       Zaseban je od postojećeg Kalkulatora Profita i ne dira njegov kod/rezultate.
-       Radi isključivo lokalno u pregledniku, bez vanjskog API-ja, backend-a ili baze podataka.
-       Formule:
-         Ukupno ulaganje = Nabavna cijena + Dodatni troškovi
-         Neto dobit      = Prodajna cijena − Nabavna cijena − Dodatni troškovi
-         ROI (%)         = (Neto dobit / Ukupno ulaganje) × 100
-         Payback (mj.)   = Ukupno ulaganje / Mjesečna očekivana dobit
-       Provjereno na primjeru: 450 € nabavna, 680 € prodajna, 30 € troškovi
-         → Ukupno ulaganje 480 €, Neto dobit 200 €, ROI 41,67 %; uz 100 €/mj → Payback 4,8 mjeseci. */
+    /* ================= ROI Calculator (added) =================
+       Separate from the existing Profit Calculator — does not touch its code or results.
+       Runs entirely locally in the browser, with no external API, backend or database.
+       Formulas:
+         Total Investment = Purchase Price + Additional Costs
+         Net Profit       = Selling Price − Purchase Price − Additional Costs
+         ROI (%)          = (Net Profit / Total Investment) × 100
+         Payback (months) = Total Investment / Expected Monthly Profit
+       Verified against the example: €450 purchase, €680 selling price, €30 additional costs
+         → Total Investment €480, Net Profit €200, ROI 41.67%; with €100/month → Payback 4.8 months. */
     function formatEUR(value) {
       return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
     }
@@ -1818,43 +1994,43 @@
       errorBox.style.display = 'none';
       errorBox.innerText = '';
 
-      // Zaštita od teksta umjesto brojeva: parseFloat + Number.isFinite hvata i NaN i Infinity.
+      // Guard against text instead of numbers: parseFloat + Number.isFinite catches both NaN and Infinity.
       const buy = parseFloat(buyRaw);
       const sell = parseFloat(sellRaw);
-      // Dodatni troškovi su opcionalni — prazno polje tretiramo kao 0.
+      // Additional costs are optional — an empty field is treated as 0.
       const costs = costsRaw.trim() === '' ? 0 : parseFloat(costsRaw);
       const monthlyEntered = monthlyRaw.trim() !== '';
       const monthlyProfit = monthlyEntered ? parseFloat(monthlyRaw) : 0;
 
-      // Zaštita od praznih / nevažećih / negativnih unosa.
+      // Guard against empty / invalid / negative input.
       if (buyRaw.trim() === '' || sellRaw.trim() === '' || !Number.isFinite(buy) || !Number.isFinite(sell)) {
-        showROIError('Molimo unesite ispravnu nabavnu cijenu i prodajnu cijenu (brojevi, ne tekst).');
+        showROIError('Please enter a valid Purchase Price and Selling Price (numbers, not text).');
         return;
       }
       if (buy <= 0) {
-        showROIError('Nabavna cijena mora biti veća od 0 €.');
+        showROIError('Purchase Price / Initial Investment must be greater than €0.');
         return;
       }
       if (sell < 0) {
-        showROIError('Prodajna cijena ne smije biti negativna.');
+        showROIError('Selling Price cannot be negative.');
         return;
       }
       if (costsRaw.trim() !== '' && (!Number.isFinite(costs) || costs < 0)) {
-        showROIError('Dodatni troškovi ne smiju biti negativni.');
+        showROIError('Additional Costs cannot be negative.');
         return;
       }
       if (monthlyEntered && (!Number.isFinite(monthlyProfit) || monthlyProfit < 0)) {
-        showROIError('Očekivana mjesečna dobit ne smije biti negativna.');
+        showROIError('Expected Monthly Profit cannot be negative.');
         return;
       }
 
       const totalInvestment = buy + costs;
 
-      // Zaštita od dijeljenja s nulom: nabavna cijena > 0 je već provjerena gore, pa je
-      // totalInvestment (nabavna + troškovi, oboje ≥ 0 uz nabavnu > 0) uvijek veći od 0.
-      // Dodatna sigurnosna provjera ostaje kao krajnja brana protiv NaN/Infinity rezultata.
+      // Guard against division by zero: Purchase Price > 0 is already checked above, so
+      // totalInvestment (purchase + costs, both ≥ 0 with purchase > 0) is always greater than 0.
+      // This extra check remains as a final safeguard against NaN/Infinity results.
       if (!Number.isFinite(totalInvestment) || totalInvestment <= 0) {
-        showROIError('Ukupno ulaganje mora biti veće od 0 € za izračun ROI-a.');
+        showROIError('Total Investment must be greater than €0 to calculate ROI.');
         return;
       }
 
@@ -1862,34 +2038,34 @@
       const roiPercent = (netProfit / totalInvestment) * 100;
 
       if (!Number.isFinite(netProfit) || !Number.isFinite(roiPercent)) {
-        showROIError('Nije moguće izračunati ROI s unesenim vrijednostima. Provjerite unos.');
+        showROIError('Unable to calculate ROI with the values entered. Please check your input.');
         return;
       }
 
       document.getElementById('roiTotalInvest').innerText = formatEUR(totalInvestment);
       document.getElementById('roiNetProfit').innerText = formatEUR(netProfit);
       document.getElementById('roiPercent').innerText = `${roiPercent.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`;
-      document.getElementById('roiMonthlyDisplay').innerText = monthlyEntered ? formatEUR(monthlyProfit) : 'Nije uneseno';
+      document.getElementById('roiMonthlyDisplay').innerText = monthlyEntered ? formatEUR(monthlyProfit) : 'Not entered';
 
       const profitColor = netProfit >= 0 ? 'var(--success)' : 'var(--danger)';
       const roiColor = roiPercent >= 0 ? 'var(--success)' : 'var(--danger)';
       document.getElementById('roiNetProfit').style.color = profitColor;
       document.getElementById('roiPercent').style.color = roiColor;
 
-      // Payback Period: ako mjesečna dobit nije unesena ili je 0/negativna, ne dijelimo s nulom —
-      // prikazujemo jasnu poruku umjesto beskonačnog ili pogrešnog rezultata.
+      // Payback Period: if monthly profit is not entered or is 0/negative, avoid dividing by zero —
+      // show a clear message instead of an infinite or incorrect result.
       const paybackEl = document.getElementById('roiPayback');
       if (!monthlyEntered || !Number.isFinite(monthlyProfit) || monthlyProfit <= 0) {
         paybackEl.classList.add('calc-msg');
         paybackEl.style.color = 'var(--warning)';
-        paybackEl.innerText = 'Unesite pozitivnu mjesečnu dobit za izračun povrata ulaganja.';
+        paybackEl.innerText = 'Enter a positive expected monthly profit to calculate the payback period.';
       } else {
         const paybackMonths = totalInvestment / monthlyProfit;
         paybackEl.classList.remove('calc-msg');
         paybackEl.style.color = 'var(--accent-cyan)';
         paybackEl.innerText = Number.isFinite(paybackMonths)
-          ? `~ ${paybackMonths.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mjeseci`
-          : 'Nije moguće izračunati.';
+          ? `~ ${paybackMonths.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} months`
+          : 'Unable to calculate.';
       }
 
       trackGAEvent('resellwiseall_calc_roi', {
@@ -1899,10 +2075,10 @@
     }
 
     /* ================= ResellWise Insights (added) =================
-       Zaseban odjeljak unutar postojećeg Analitika taba. Ne dira drawPlatformChart/drawTrendChart.
-       Prosjeci nabavne/prodajne cijene i marže računaju se iz lokalnog Inventara (localStorage).
-       ROI trend i usporedba platformi računaju se iz trenutnih rezultata pretrage (currentResults) —
-       ti podaci su procjene/demo vrijednosti, jasno označene kao takve u sučelju, nikad prikazane kao stvarni tržišni podaci. */
+       Separate section within the existing Analytics tab. Does not touch drawPlatformChart/drawTrendChart.
+       Average purchase/selling price and margin are computed from the local Inventory (localStorage).
+       ROI trend and platform comparison are computed from the current search results (currentResults) —
+       this data is an estimate/demo value, clearly labeled as such in the UI, never shown as real market data. */
     function renderInsights() {
       const avgBuyEl = document.getElementById('insAvgBuy');
       const avgSellEl = document.getElementById('insAvgSell');
@@ -1911,7 +2087,7 @@
       const roiTrendEl = document.getElementById('insRoiTrend');
       const bestPlatformEl = document.getElementById('insBestPlatform');
 
-      if (!avgBuyEl || !roiTrendEl) return; // Insights DOM još nije spreman
+      if (!avgBuyEl || !roiTrendEl) return; // Insights DOM not ready yet
 
       if (inventory.length > 0) {
         const avgBuy = inventory.reduce((acc, i) => acc + i.buy, 0) / inventory.length;
@@ -1928,9 +2104,9 @@
         totalProfitEl.innerText = formatEUR(totalPotentialProfit);
         totalProfitEl.style.color = totalPotentialProfit >= 0 ? 'var(--success)' : 'var(--danger)';
       } else {
-        avgBuyEl.innerText = 'Dodaj artikal u Inventar';
+        avgBuyEl.innerText = 'Add an item to Inventory';
         avgBuyEl.classList.add('calc-msg');
-        avgSellEl.innerText = 'Dodaj artikal u Inventar';
+        avgSellEl.innerText = 'Add an item to Inventory';
         avgSellEl.classList.add('calc-msg');
         avgMarginEl.innerText = '--';
         totalProfitEl.innerText = '--';
@@ -1938,7 +2114,7 @@
 
       if (currentResults.length > 0) {
         const avgRoi = Math.round(currentResults.reduce((acc, i) => acc + i.roi, 0) / currentResults.length);
-        roiTrendEl.innerText = `~ ${avgRoi} % (procjena)`;
+        roiTrendEl.innerText = `~ ${avgRoi} % (estimated)`;
         const bestPlatform = [...currentResults].sort((a, b) => b.roi - a.roi)[0];
         bestPlatformEl.innerText = bestPlatform ? `${bestPlatform.platform} (~${bestPlatform.roi}%)` : '--';
       } else {
