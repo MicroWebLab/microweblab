@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hr">
 <head>
@@ -827,6 +826,98 @@
       color: var(--text-muted);
       margin-bottom: 1rem;
     }
+
+    /* ================= ROI Kalkulator (added — modularan, odvojen od Kalkulatora Profita; koristi postojeće stilove) ================= */
+    .roi-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-glass);
+    }
+
+    .roi-error-box {
+      display: none;
+      margin-top: 1rem;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .roi-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .calc-msg {
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* ================= ResellWise Insights (added — unutar postojećeg Analitika taba) ================= */
+    .insights-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-glass);
+    }
+
+    .insights-badge {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    /* ================= Google AdSense zone (added — skriveno dok se ne postavi stvarni Publisher ID) ================= */
+    .ad-slot {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .ad-slot-sidebar {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 160px;
+      min-height: 600px;
+      z-index: 10;
+    }
+
+    .ad-slot-sidebar-left { left: 16px; }
+    .ad-slot-sidebar-right { right: 16px; }
+
+    /* Bočne ad zone prikazuju se samo na vrlo širokim ekranima, izvan centriranog stupca sadržaja,
+       pa nikad ne mogu prekriti navigaciju, kalkulatore, ROI rezultate ni gumbe. */
+    @media (max-width: 1800px) {
+      .ad-slot-sidebar { display: none !important; }
+    }
+
+    .ad-slot-bottom {
+      max-width: 1400px;
+      width: calc(100% - 4rem);
+      margin: 2rem auto 0 auto;
+      min-height: 90px;
+    }
+
+    @media (max-width: 768px) {
+      .ad-slot-bottom { width: calc(100% - 2rem); min-height: 100px; }
+    }
   </style>
 </head>
 <body>
@@ -848,6 +939,11 @@
       <button class="nav-btn" onclick="switchTab('saved')">Spremljeno (<span id="saved-count">0</span>)</button>
     </nav>
   </header>
+
+  <!-- Google AdSense — predviđene bočne zone (added). Skrivene su dok se ne postavi stvarni Publisher ID
+       i nikad se ne preklapaju s navigacijom, karticama, kalkulatorima ni ROI/Insights rezultatima. -->
+  <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-left" data-ad-slot-key="sidebarLeft" aria-hidden="true"></div>
+  <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-right" data-ad-slot-key="sidebarRight" aria-hidden="true"></div>
 
   <main>
     <!-- Universal Search Engine -->
@@ -992,11 +1088,68 @@
               <th>Artikal</th>
               <th>Plaćeno (€)</th>
               <th>Cilj (€)</th>
+              <th>Profit (€)</th>
+              <th>ROI (%)</th>
               <th>Akcija</th>
             </tr>
           </thead>
           <tbody id="invBody"></tbody>
         </table>
+
+        <!-- ROI Kalkulator (added — zaseban od Kalkulatora Profita, koristi iste postojeće stilove kartica/formi) -->
+        <div class="roi-section">
+          <h2 style="margin-bottom: 0.5rem;">ROI Kalkulator za Reselling</h2>
+          <p class="search-subtitle">Zaseban izračun povrata ulaganja za artikal, neovisan o Kalkulatoru Profita iznad. Sve se računa lokalno u pregledniku.</p>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label for="roiBuy">Nabavna Cijena (€)</label>
+              <input type="number" id="roiBuy" class="calc-input" placeholder="npr. 450" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="roiSell">Prodajna Cijena / Prihod (€)</label>
+              <input type="number" id="roiSell" class="calc-input" placeholder="npr. 680" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="roiCosts">Dodatni Troškovi (€)</label>
+              <input type="number" id="roiCosts" class="calc-input" placeholder="npr. 30" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label for="roiMonthly">Očekivana Mjesečna Dobit (€)</label>
+              <input type="number" id="roiMonthly" class="calc-input" placeholder="npr. 100 (opcionalno)" min="0" step="0.01">
+              <span class="roi-hint">Opcionalno — unesi za procjenu Payback perioda u mjesecima.</span>
+            </div>
+          </div>
+
+          <button class="btn-search" style="width:100%; justify-content:center; padding:14px; margin-top:10px;" onclick="calculateROI()">
+            Izračunaj ROI
+          </button>
+
+          <div class="roi-error-box" id="roiError"></div>
+
+          <div class="ai-list" id="roiResults">
+            <div class="ai-item">
+              <div class="ai-item-lbl">Ukupno Ulaganje</div>
+              <div class="ai-item-val" id="roiTotalInvest">-- €</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-lbl">Neto Dobit</div>
+              <div class="ai-item-val" id="roiNetProfit">-- €</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-lbl">ROI (%)</div>
+              <div class="ai-item-val" id="roiPercent">-- %</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-lbl">Mjesečna Očekivana Dobit</div>
+              <div class="ai-item-val" style="color: var(--text-main);" id="roiMonthlyDisplay">-- €</div>
+            </div>
+            <div class="ai-item" id="roiPaybackCard">
+              <div class="ai-item-lbl">Procijenjeni Payback</div>
+              <div class="ai-item-val" style="color: var(--accent-cyan);" id="roiPayback">--</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1062,6 +1215,42 @@
           <canvas id="chartTrend"></canvas>
         </div>
       </div>
+
+      <!-- ResellWise Insights (added — zaseban odjeljak, ne dira gornje grafove) -->
+      <div class="insights-section">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <h2 style="margin:0;">ResellWise Insights</h2>
+          <span class="insights-badge">Demo / Procijenjeni Podaci</span>
+        </div>
+        <p class="search-subtitle" style="margin-top:6px;">Pregled na temelju tvog lokalnog Inventara i procijenjenih tržišnih podataka iz pretrage. Ovo NISU potvrđeni stvarni tržišni podaci.</p>
+
+        <div class="ai-list" id="insightsGrid">
+          <div class="ai-item">
+            <div class="ai-item-lbl">Prosječna Nabavna Cijena</div>
+            <div class="ai-item-val" id="insAvgBuy">--</div>
+          </div>
+          <div class="ai-item">
+            <div class="ai-item-lbl">Prosječna Prodajna/Ciljana Cijena</div>
+            <div class="ai-item-val" id="insAvgSell">--</div>
+          </div>
+          <div class="ai-item">
+            <div class="ai-item-lbl">Prosječna Marža</div>
+            <div class="ai-item-val" style="color: var(--success);" id="insAvgMargin">--</div>
+          </div>
+          <div class="ai-item">
+            <div class="ai-item-lbl">Ukupna Potencijalna Dobit (Inventar)</div>
+            <div class="ai-item-val" style="color: var(--success);" id="insTotalProfit">--</div>
+          </div>
+          <div class="ai-item">
+            <div class="ai-item-lbl">ROI Trend (Procjena iz Pretrage)</div>
+            <div class="ai-item-val" style="color: var(--accent-cyan);" id="insRoiTrend">--</div>
+          </div>
+          <div class="ai-item">
+            <div class="ai-item-lbl">Najbolja Platforma (Procjena)</div>
+            <div class="ai-item-val" style="color: var(--purple-accent);" id="insBestPlatform">--</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- TAB 6: Saved Items -->
@@ -1070,6 +1259,9 @@
       <div class="marketplace-grid" id="savedGrid"></div>
     </div>
   </main>
+
+  <!-- Google AdSense — predviđena zona ispod glavnog sadržaja (added). Prazna/skrivena dok se ne aktivira. -->
+  <div class="ad-slot ad-slot-bottom" data-ad-slot-key="bottomBanner" aria-hidden="true"></div>
 
   <footer>
     ResellWiseALL &copy; 2026 — Pokretač sa Stvarnim Tržišnim Podacima u jednoj datoteci (<code>resellwiseall.html</code>).
@@ -1093,13 +1285,16 @@
       <div class="legal-updated">Zadnje ažurirano: 2026.</div>
 
       <h3>Koje podatke koristimo</h3>
-      <p>ResellWiseALL ne zahtijeva registraciju ni prijavu. Aplikacija lokalno, u tvom pregledniku (LocalStorage), sprema samo ono što sam izričito spremiš: omiljene (favorite) artikle i stavke inventara koje unesete. Ti se podaci ne šalju na naše poslužitelje niti se dijele s trećim stranama.</p>
+      <p>ResellWiseALL ne zahtijeva registraciju ni prijavu. Aplikacija lokalno, u tvom pregledniku (LocalStorage), sprema samo ono što sam izričito spremiš: omiljene (favorite) artikle i stavke inventara koje unesete. Ti se podaci ne šalju na naše poslužitelje niti se dijele s trećim stranama. ROI kalkulator radi isključivo lokalno u pregledniku i ne sprema unesene vrijednosti trajno — izračun se briše osvježavanjem stranice, osim ako podatke ručno dodaš u Inventar.</p>
 
       <h3>Informacije o proizvodima i cijenama</h3>
-      <p>ResellWiseALL prikazuje informacije o proizvodima, cijenama i ponudama dohvaćene ili procijenjene na temelju podataka s vanjskih e-commerce platformi. Mi ne generiramo te podatke — samo ih prikazujemo radi lakše usporedbe i analize.</p>
+      <p>ResellWiseALL prikazuje informacije o proizvodima, cijenama i ponudama dohvaćene ili procijenjene na temelju podataka s vanjskih e-commerce platformi. Mi ne generiramo te podatke — samo ih prikazujemo radi lakše usporedbe i analize. Odjeljak "ResellWise Insights" prikazuje procijenjene/demo podatke izračunate iz tvog lokalnog inventara i procijenjenih rezultata pretrage te je jasno označen kao takav.</p>
 
       <h3>Osnovni tehnički podaci</h3>
       <p>Aplikacija može koristiti osnovne tehničke podatke potrebne za rad i poboljšanje usluge, uključujući anonimiziranu analitiku posjeta (Google Analytics) poput broja posjeta, korištenih funkcija i općih tehničkih informacija o uređaju/pregledniku. Ovi podaci se ne koriste za identifikaciju pojedinačnog korisnika u marketinške svrhe.</p>
+
+      <h3>Google AdSense</h3>
+      <p>ResellWiseALL je pripremljen za buduću Google AdSense monetizaciju, no oglasi trenutno nisu aktivni. Dok se ne postavi stvarni AdSense Publisher ID, aplikacija ne prikazuje nikakve oglase niti učitava AdSense skriptu. Kada oglasi budu aktivirani, njima će upravljati Google prema vlastitim pravilima privatnosti, a oglasne zone bit će jasno odvojene od kalkulatora, inventara i navigacije.</p>
 
       <h3>Prodaja podataka</h3>
       <p><strong>ResellWiseALL ne prodaje korisničke osobne podatke</strong> trećim stranama.</p>
@@ -1132,6 +1327,9 @@
 
       <h3>Nema jamstva rezultata</h3>
       <p>Izračuni profita, ROI-a i AI ocjene isplativosti prikazani u aplikaciji su okvirne procjene i ne predstavljaju jamstvo stvarne zarade ili uspješne prodaje.</p>
+
+      <h3>ROI Kalkulator i Insights</h3>
+      <p>ROI kalkulator i odjeljak "ResellWise Insights" prikazuju procjene izračunate lokalno na temelju podataka koje uneseš ili na temelju procijenjenih/demo tržišnih podataka. Ovi izračuni ne predstavljaju financijski savjet niti jamstvo stvarne dobiti, ROI-a ili brzine prodaje.</p>
 
       <h3>Odgovornost korisnika</h3>
       <p>Korisnik koristi aplikaciju na vlastitu odgovornost. ResellWiseALL ne odgovara za štetu, gubitak ili nesporazum nastao korištenjem prikazanih informacija ili poveznica prema vanjskim platformama.</p>
@@ -1178,6 +1376,55 @@
       }
     });
 
+    /* ================= Google AdSense priprema (added) =================
+       ResellWiseALL NE koristi lažni/izmišljeni AdSense Publisher ID.
+       Kada dobiješ stvaran Publisher ID i ID-jeve oglasnih jedinica (ad slotova),
+       samo ih upiši ispod — ništa drugo u kodu nije potrebno mijenjati.
+       Dok su ova polja prazna, aplikacija radi potpuno normalno, BEZ oglasa. */
+    const ADSENSE_CLIENT_ID = ''; // npr. 'ca-pub-1234567890123456'
+    const ADSENSE_SLOTS = {
+      sidebarLeft: '',   // ID oglasne jedinice za lijevu bočnu zonu
+      sidebarRight: '',  // ID oglasne jedinice za desnu bočnu zonu
+      bottomBanner: ''   // ID oglasne jedinice za zonu ispod glavnog sadržaja
+    };
+
+    function initAdSense() {
+      // Ako publisher ID nije postavljen, AdSense se ne učitava i ad zone ostaju skrivene.
+      if (!ADSENSE_CLIENT_ID) return;
+
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+
+      document.querySelectorAll('.ad-slot').forEach(slot => {
+        const slotKey = slot.getAttribute('data-ad-slot-key');
+        const adSlotId = ADSENSE_SLOTS[slotKey];
+        if (!adSlotId) return; // ta zona ostaje skrivena dok nema svoj ID
+
+        const ins = document.createElement('ins');
+        ins.className = 'adsbygoogle';
+        ins.style.display = 'block';
+        ins.style.width = '100%';
+        ins.style.height = '100%';
+        ins.setAttribute('data-ad-client', ADSENSE_CLIENT_ID);
+        ins.setAttribute('data-ad-slot', adSlotId);
+        ins.setAttribute('data-ad-format', 'auto');
+        ins.setAttribute('data-full-width-responsive', 'true');
+
+        slot.innerHTML = '';
+        slot.appendChild(ins);
+        slot.style.display = 'flex';
+
+        try {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {
+          console.warn('AdSense push nije uspio:', e);
+        }
+      });
+    }
+
     const PLATFORMS = [
       { name: "eBay Global", type: "global", url: "https://www.ebay.com/sch/i.html?_nkw=" },
       { name: "Amazon", type: "global", url: "https://www.amazon.com/s?k=" },
@@ -1205,6 +1452,8 @@
       renderInventory();
       updateSavedCount();
       calculateProfit();
+      initAdSense();
+      renderInsights();
     });
 
     function showToast(msg) {
@@ -1225,6 +1474,7 @@
 
       if(tabId === 'analytics') {
         setTimeout(renderCharts, 100);
+        renderInsights();
       } else if(tabId === 'saved') {
         renderSavedItems();
       }
@@ -1472,11 +1722,19 @@
       tbody.innerHTML = "";
 
       inventory.forEach((item, index) => {
+        // Profit i ROI po artiklu (added) — izračunato prilikom prikaza, ne mijenja spremljenu strukturu podataka.
+        const profit = item.target - item.buy;
+        const roiVal = item.buy > 0 ? (profit / item.buy) * 100 : null;
+        const roiDisplay = roiVal === null ? 'N/A' : `${roiVal.toFixed(1)} %`;
+        const profitColor = profit >= 0 ? 'var(--success)' : 'var(--danger)';
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>${item.name}</strong></td>
           <td>${item.buy.toFixed(2)} €</td>
           <td>${item.target.toFixed(2)} €</td>
+          <td style="color:${profitColor}; font-weight:700;">${profit >= 0 ? '+' : ''}${profit.toFixed(2)} €</td>
+          <td>${roiDisplay}</td>
           <td><button class="btn-del" onclick="removeInventory(${index})">Ukloni</button></td>
         `;
         tbody.appendChild(tr);
@@ -1505,12 +1763,188 @@
       renderInventory();
       showToast("Artikal spremljen u ResellWiseALL inventar!");
       trackGAEvent("resellwiseall_add_inventory", { item_name: name });
+      renderInsights();
     }
 
     function removeInventory(index) {
       inventory.splice(index, 1);
       localStorage.setItem("resellwiseall_inventory", JSON.stringify(inventory));
       renderInventory();
+      renderInsights();
+    }
+
+    /* ================= ROI Kalkulator (added) =================
+       Zaseban je od postojećeg Kalkulatora Profita i ne dira njegov kod/rezultate.
+       Radi isključivo lokalno u pregledniku, bez vanjskog API-ja, backend-a ili baze podataka.
+       Formule:
+         Ukupno ulaganje = Nabavna cijena + Dodatni troškovi
+         Neto dobit      = Prodajna cijena − Nabavna cijena − Dodatni troškovi
+         ROI (%)         = (Neto dobit / Ukupno ulaganje) × 100
+         Payback (mj.)   = Ukupno ulaganje / Mjesečna očekivana dobit
+       Provjereno na primjeru: 450 € nabavna, 680 € prodajna, 30 € troškovi
+         → Ukupno ulaganje 480 €, Neto dobit 200 €, ROI 41,67 %; uz 100 €/mj → Payback 4,8 mjeseci. */
+    function formatEUR(value) {
+      return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+    }
+
+    function resetROIResults() {
+      document.getElementById('roiTotalInvest').innerText = '-- €';
+      document.getElementById('roiNetProfit').innerText = '-- €';
+      document.getElementById('roiPercent').innerText = '-- %';
+      document.getElementById('roiMonthlyDisplay').innerText = '-- €';
+      document.getElementById('roiNetProfit').style.color = '';
+      document.getElementById('roiPercent').style.color = '';
+
+      const paybackEl = document.getElementById('roiPayback');
+      paybackEl.innerText = '--';
+      paybackEl.classList.remove('calc-msg');
+      paybackEl.style.color = 'var(--accent-cyan)';
+    }
+
+    function showROIError(message) {
+      const errorBox = document.getElementById('roiError');
+      errorBox.innerText = message;
+      errorBox.style.display = 'block';
+      resetROIResults();
+    }
+
+    function calculateROI() {
+      const buyRaw = document.getElementById('roiBuy').value;
+      const sellRaw = document.getElementById('roiSell').value;
+      const costsRaw = document.getElementById('roiCosts').value;
+      const monthlyRaw = document.getElementById('roiMonthly').value;
+
+      const errorBox = document.getElementById('roiError');
+      errorBox.style.display = 'none';
+      errorBox.innerText = '';
+
+      // Zaštita od teksta umjesto brojeva: parseFloat + Number.isFinite hvata i NaN i Infinity.
+      const buy = parseFloat(buyRaw);
+      const sell = parseFloat(sellRaw);
+      // Dodatni troškovi su opcionalni — prazno polje tretiramo kao 0.
+      const costs = costsRaw.trim() === '' ? 0 : parseFloat(costsRaw);
+      const monthlyEntered = monthlyRaw.trim() !== '';
+      const monthlyProfit = monthlyEntered ? parseFloat(monthlyRaw) : 0;
+
+      // Zaštita od praznih / nevažećih / negativnih unosa.
+      if (buyRaw.trim() === '' || sellRaw.trim() === '' || !Number.isFinite(buy) || !Number.isFinite(sell)) {
+        showROIError('Molimo unesite ispravnu nabavnu cijenu i prodajnu cijenu (brojevi, ne tekst).');
+        return;
+      }
+      if (buy <= 0) {
+        showROIError('Nabavna cijena mora biti veća od 0 €.');
+        return;
+      }
+      if (sell < 0) {
+        showROIError('Prodajna cijena ne smije biti negativna.');
+        return;
+      }
+      if (costsRaw.trim() !== '' && (!Number.isFinite(costs) || costs < 0)) {
+        showROIError('Dodatni troškovi ne smiju biti negativni.');
+        return;
+      }
+      if (monthlyEntered && (!Number.isFinite(monthlyProfit) || monthlyProfit < 0)) {
+        showROIError('Očekivana mjesečna dobit ne smije biti negativna.');
+        return;
+      }
+
+      const totalInvestment = buy + costs;
+
+      // Zaštita od dijeljenja s nulom: nabavna cijena > 0 je već provjerena gore, pa je
+      // totalInvestment (nabavna + troškovi, oboje ≥ 0 uz nabavnu > 0) uvijek veći od 0.
+      // Dodatna sigurnosna provjera ostaje kao krajnja brana protiv NaN/Infinity rezultata.
+      if (!Number.isFinite(totalInvestment) || totalInvestment <= 0) {
+        showROIError('Ukupno ulaganje mora biti veće od 0 € za izračun ROI-a.');
+        return;
+      }
+
+      const netProfit = sell - buy - costs;
+      const roiPercent = (netProfit / totalInvestment) * 100;
+
+      if (!Number.isFinite(netProfit) || !Number.isFinite(roiPercent)) {
+        showROIError('Nije moguće izračunati ROI s unesenim vrijednostima. Provjerite unos.');
+        return;
+      }
+
+      document.getElementById('roiTotalInvest').innerText = formatEUR(totalInvestment);
+      document.getElementById('roiNetProfit').innerText = formatEUR(netProfit);
+      document.getElementById('roiPercent').innerText = `${roiPercent.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`;
+      document.getElementById('roiMonthlyDisplay').innerText = monthlyEntered ? formatEUR(monthlyProfit) : 'Nije uneseno';
+
+      const profitColor = netProfit >= 0 ? 'var(--success)' : 'var(--danger)';
+      const roiColor = roiPercent >= 0 ? 'var(--success)' : 'var(--danger)';
+      document.getElementById('roiNetProfit').style.color = profitColor;
+      document.getElementById('roiPercent').style.color = roiColor;
+
+      // Payback Period: ako mjesečna dobit nije unesena ili je 0/negativna, ne dijelimo s nulom —
+      // prikazujemo jasnu poruku umjesto beskonačnog ili pogrešnog rezultata.
+      const paybackEl = document.getElementById('roiPayback');
+      if (!monthlyEntered || !Number.isFinite(monthlyProfit) || monthlyProfit <= 0) {
+        paybackEl.classList.add('calc-msg');
+        paybackEl.style.color = 'var(--warning)';
+        paybackEl.innerText = 'Unesite pozitivnu mjesečnu dobit za izračun povrata ulaganja.';
+      } else {
+        const paybackMonths = totalInvestment / monthlyProfit;
+        paybackEl.classList.remove('calc-msg');
+        paybackEl.style.color = 'var(--accent-cyan)';
+        paybackEl.innerText = Number.isFinite(paybackMonths)
+          ? `~ ${paybackMonths.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} mjeseci`
+          : 'Nije moguće izračunati.';
+      }
+
+      trackGAEvent('resellwiseall_calc_roi', {
+        buy, sell, costs,
+        roiPercent: Number.isFinite(roiPercent) ? Math.round(roiPercent * 100) / 100 : null
+      });
+    }
+
+    /* ================= ResellWise Insights (added) =================
+       Zaseban odjeljak unutar postojećeg Analitika taba. Ne dira drawPlatformChart/drawTrendChart.
+       Prosjeci nabavne/prodajne cijene i marže računaju se iz lokalnog Inventara (localStorage).
+       ROI trend i usporedba platformi računaju se iz trenutnih rezultata pretrage (currentResults) —
+       ti podaci su procjene/demo vrijednosti, jasno označene kao takve u sučelju, nikad prikazane kao stvarni tržišni podaci. */
+    function renderInsights() {
+      const avgBuyEl = document.getElementById('insAvgBuy');
+      const avgSellEl = document.getElementById('insAvgSell');
+      const avgMarginEl = document.getElementById('insAvgMargin');
+      const totalProfitEl = document.getElementById('insTotalProfit');
+      const roiTrendEl = document.getElementById('insRoiTrend');
+      const bestPlatformEl = document.getElementById('insBestPlatform');
+
+      if (!avgBuyEl || !roiTrendEl) return; // Insights DOM još nije spreman
+
+      if (inventory.length > 0) {
+        const avgBuy = inventory.reduce((acc, i) => acc + i.buy, 0) / inventory.length;
+        const avgSell = inventory.reduce((acc, i) => acc + i.target, 0) / inventory.length;
+        const margins = inventory.map(i => i.target > 0 ? ((i.target - i.buy) / i.target) * 100 : 0);
+        const avgMargin = margins.reduce((a, b) => a + b, 0) / margins.length;
+        const totalPotentialProfit = inventory.reduce((acc, i) => acc + (i.target - i.buy), 0);
+
+        avgBuyEl.innerText = formatEUR(avgBuy);
+        avgBuyEl.classList.remove('calc-msg');
+        avgSellEl.innerText = formatEUR(avgSell);
+        avgSellEl.classList.remove('calc-msg');
+        avgMarginEl.innerText = `${avgMargin.toFixed(1)} %`;
+        totalProfitEl.innerText = formatEUR(totalPotentialProfit);
+        totalProfitEl.style.color = totalPotentialProfit >= 0 ? 'var(--success)' : 'var(--danger)';
+      } else {
+        avgBuyEl.innerText = 'Dodaj artikal u Inventar';
+        avgBuyEl.classList.add('calc-msg');
+        avgSellEl.innerText = 'Dodaj artikal u Inventar';
+        avgSellEl.classList.add('calc-msg');
+        avgMarginEl.innerText = '--';
+        totalProfitEl.innerText = '--';
+      }
+
+      if (currentResults.length > 0) {
+        const avgRoi = Math.round(currentResults.reduce((acc, i) => acc + i.roi, 0) / currentResults.length);
+        roiTrendEl.innerText = `~ ${avgRoi} % (procjena)`;
+        const bestPlatform = [...currentResults].sort((a, b) => b.roi - a.roi)[0];
+        bestPlatformEl.innerText = bestPlatform ? `${bestPlatform.platform} (~${bestPlatform.roi}%)` : '--';
+      } else {
+        roiTrendEl.innerText = '--';
+        bestPlatformEl.innerText = '--';
+      }
     }
 
     /* Favorites Tracker */
