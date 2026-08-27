@@ -14,7 +14,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EVChargeWiseALL - Universal EV & Parts Marketplace Engine</title>
   <meta name="description" content="EVChargeWiseALL - Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja i analitiku.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="evchargewiseall.html">
+  <!-- SEO / Open Graph / Twitter Card — added.
+       Canonical i og:url su namjerno ostavljeni relativni jer stvarna domena još nije poznata.
+       Kada domena bude poznata, zamijeni SAMO donje dvije vrijednosti apsolutnim URL-om, npr.:
+       <link rel="canonical" href="https://vasa-domena.hr/evchargewiseall.html">
+       <meta property="og:url" content="https://vasa-domena.hr/evchargewiseall.html">
+       og:image nije dodan jer ne postoji stvarna slika za pregled — dodaj kad bude dostupna. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="EVChargeWiseALL - Universal EV & Parts Marketplace Engine">
+  <meta property="og:description" content="Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja i analitiku.">
+  <meta property="og:url" content="evchargewiseall.html">
+  <meta property="og:locale" content="hr_HR">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="EVChargeWiseALL - Universal EV & Parts Marketplace Engine">
+  <meta name="twitter:description" content="Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja i analitiku.">
 
   <style>
     :root {
@@ -928,6 +943,58 @@
     @media (max-width: 768px) {
       .ad-slot-bottom { width: calc(100% - 2rem); min-height: 100px; }
     }
+
+    /* ================= Kontakt (added) — koristi identičan stil kao postojeći legal linkovi ================= */
+    .contact-line {
+      margin-top: 8px;
+    }
+
+    /* ================= Affiliate oznaka (added) — vidljiva SAMO kad je stvarna affiliate poveznica aktivna ================= */
+    .affiliate-badge {
+      display: inline-block;
+      background: rgba(168, 85, 247, 0.18);
+      color: var(--purple-accent);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* ================= Napomena o indikativnim podacima (added) =================
+       Jasno, ali diskretno (isti stil kao postojeći .roi-hint / .legal-disclaimer)
+       komunicira korisniku da su cijene interna procjena, a ne uživo dohvaćeni podaci. */
+    .search-disclaimer {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      line-height: 1.55;
+      max-width: 900px;
+    }
+
+    .price-note {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .chart-note {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .ai-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      line-height: 1.55;
+    }
   </style>
 </head>
 <body>
@@ -977,13 +1044,13 @@
           Pretraži Tržište
         </button>
         <button class="btn-ai-prompt" onclick="searchWithAI()">
-          ✨ ChatGPT EV Procjena
+          ✨ AI Procjena (Interno)
         </button>
       </div>
 
       <div class="loading-status" id="loadingStatus">
         <div class="spinner"></div>
-        <span>EVChargeWiseALL pretražuje 14 EV i Parts platformi...</span>
+        <span>EVChargeWiseALL priprema indikativnu procjenu i poveznice na 14 EV & Parts platformi...</span>
       </div>
 
       <div class="preset-pills">
@@ -998,29 +1065,33 @@
         <span class="preset-pill" onclick="setPreset('Portable EV Charger 11kW')">⚡ Prijenosni Punjač 11kW</span>
         <span class="preset-pill" onclick="setPreset('Volkswagen ID.4')">🌐 VW ID.4</span>
       </div>
+
+      <p class="search-disclaimer">
+        <strong style="color: var(--text-main);">Napomena:</strong> Prikazane cijene su interna indikativna procjena izračunata lokalno u aplikaciji na temelju referentnih vrijednosti — nisu uživo dohvaćeni podaci, stvarna dostupnost ni potvrđena ponuda s navedenih platformi. Prije kupnje uvijek provjeri stvarnu cijenu, dostupnost i uvjete izravno na izvornom servisu klikom na poveznicu unutar kartice.
+      </p>
     </section>
 
     <!-- Stat Metrics -->
     <div class="metrics-row">
       <div class="metric-card">
-        <div class="metric-label">Analizirano Oglasa</div>
+        <div class="metric-label">Prikazano Procjena</div>
         <div class="metric-value" id="statTotalItems">--</div>
-        <div class="metric-sub">▲ S 14 aktivnih izvora</div>
+        <div class="metric-sub">▲ Poveznice na 14 EV & Parts servisa</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Prosječna Cijena</div>
+        <div class="metric-label">Prosječna Indikativna Cijena</div>
         <div class="metric-value" id="statAvgPrice">-- €</div>
-        <div class="metric-sub">Za odabranu pretragu</div>
+        <div class="metric-sub">Za odabranu pretragu · procjena</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Specifikacija / Domet</div>
         <div class="metric-value" style="color: var(--accent-cyan);" id="statAvgRange">--</div>
-        <div class="metric-sub" id="statRealRangeSub">Stvarni domet/snaga: --</div>
+        <div class="metric-sub" id="statRealRangeSub">Procijenjeni domet/snaga: --</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Najpovoljniji Izvor</div>
+        <div class="metric-label">Najniža Indikativna Cijena</div>
         <div class="metric-value" style="color: var(--primary-green);" id="statBestPlatform">--</div>
-        <div class="metric-sub">Najniža ulazna ponuda</div>
+        <div class="metric-sub">Provjeri stvarnu cijenu na izvoru</div>
       </div>
     </div>
 
@@ -1205,6 +1276,7 @@
           <p style="color: var(--text-muted); margin-top: 6px;" id="aiSummaryText">
             Algoritam analizira specifikacije baterije, kompatibilnost punjača i dijelova te predviđa zadržavanje vrijednosti i ROI.
           </p>
+          <p class="ai-note">Napomena: SoH, godišnja degradacija, predviđena vrijednost, tržišni rizik i ROI preprodaje ispod su <strong style="color: var(--text-main);">interna, model-generirana referentna procjena</strong> — nisu mjereni podaci za konkretan oglas niti potvrđeni podaci s vanjske platforme.</p>
 
           <div class="ai-list">
             <div class="ai-item">
@@ -1241,10 +1313,12 @@
       <div class="charts-grid">
         <div class="chart-card">
           <div class="chart-title">Usporedba Cijena Po Platformama (€)</div>
+          <div class="chart-note">Indikativne cijene generirane lokalno u aplikaciji, nisu uživo dohvaćeni podaci s platformi.</div>
           <canvas id="chartPlatforms"></canvas>
         </div>
         <div class="chart-card">
           <div class="chart-title">Trend Cijene i Zadržavanje Vrijednosti</div>
+          <div class="chart-note">Ilustrativni demo trend — nije stvarni povijesni podatak za odabrani model.</div>
           <canvas id="chartTrend"></canvas>
         </div>
       </div>
@@ -1267,7 +1341,11 @@
       <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('terms')">Terms of Use</button>
     </div>
-    <p class="legal-disclaimer">EVChargeWiseALL prikazuje informacije o EV punionicama i povezane podatke iz vanjskih izvora. Dostupnost, cijene i ostale informacije određuju originalni izvori podataka i mogu se promijeniti bez prethodne obavijesti.</p>
+    <!-- Kontakt (added) — koristi identičan vizualni stil kao postojeći legal linkovi, ne mijenja raspored -->
+    <div class="legal-links contact-line">
+      <a class="legal-link-btn" href="mailto:microweblabinfo@gmail.com">Kontakt: microweblabinfo@gmail.com</a>
+    </div>
+    <p class="legal-disclaimer">EVChargeWiseALL prikazuje osnovne informacije o vozilima, punjačima i dijelovima te internu indikativnu procjenu cijene za lakšu usporedbu — to NISU uživo dohvaćene cijene ni potvrđene ponude s prikazanih platformi. Stvarnu dostupnost, cijenu i uvjete kupnje određuju isključivo originalni izvori i mogu se promijeniti bez prethodne obavijesti — provjeri ih izravno na izvornoj platformi prije donošenja odluke.</p>
   </footer>
 
   <div class="toast" id="toast">Obavijest</div>
@@ -1284,8 +1362,11 @@
       <h3>Koje podatke koristimo</h3>
       <p>EVChargeWiseALL ne zahtijeva registraciju ni prijavu. Aplikacija lokalno, u tvom pregledniku (LocalStorage), sprema samo ono što sam izričito spremiš: favorite oglase i stavke inventara. Ti se podaci ne šalju na naše poslužitelje.</p>
 
-      <h3>Informacije o punionicama, vozilima i dijelovima</h3>
-      <p>EVChargeWiseALL prikazuje informacije o EV punionicama i povezane podatke (vozila, Wallbox punjači, kabeli, baterije i dijelovi) iz vanjskih izvora i partnerskih platformi. Mi ne generiramo te podatke — samo ih prikazujemo radi lakše pretrage i usporedbe.</p>
+      <h3>Informacije o vozilima, punjačima i dijelovima</h3>
+      <p>EVChargeWiseALL prikazuje osnovne referentne informacije o vozilima, Wallbox punjačima, kabelima, baterijama i dijelovima.</p>
+
+      <h3>Indikativne cijene — kako nastaju</h3>
+      <p>Cijene prikazane na karticama su <strong>interna indikativna procjena</strong> koju aplikacija izračunava lokalno, u tvom pregledniku, na temelju referentnih vrijednosti — to NISU stvarne, uživo dohvaćene cijene niti potvrđene ponude preuzete s Mobile.de, AutoScout24, eBay Motors ili drugih navedenih platformi. EVChargeWiseALL trenutno ne dohvaća podatke uživo putem službenih API-ja tih platformi. Za stvarnu, trenutnu cijenu i dostupnost uvijek provjeri izravno na izvornoj platformi klikom na poveznicu unutar kartice.</p>
 
       <h3>Osnovni tehnički podaci</h3>
       <p>Aplikacija može koristiti osnovne tehničke podatke potrebne za rad i poboljšanje usluge, uključujući anonimiziranu analitiku posjeta (Google Analytics) poput broja posjeta, korištenih funkcija i općih tehničkih informacija o uređaju/pregledniku. Ovi podaci se ne koriste za identifikaciju pojedinačnog korisnika u marketinške svrhe.</p>
@@ -1293,11 +1374,14 @@
       <h3>Prodaja podataka</h3>
       <p><strong>EVChargeWiseALL ne prodaje korisničke osobne podatke</strong> trećim stranama.</p>
 
-      <h3>Vanjski servisi</h3>
-      <p>Klikom na ponudu unutar aplikacije preusmjeravaš se na vanjsku platformu (npr. Mobile.de, AutoScout24, eBay Motors, Tesla Shop i druge). Ti servisi imaju vlastita pravila privatnosti koja se primjenjuju od trenutka kad ih posjetiš.</p>
+      <h3>Vanjski servisi i affiliate poveznice</h3>
+      <p>Klikom na ponudu unutar aplikacije preusmjeravaš se na vanjsku platformu (npr. Mobile.de, AutoScout24, eBay Motors, Tesla Shop i druge). Ti servisi imaju vlastita pravila privatnosti koja se primjenjuju od trenutka kad ih posjetiš. Pojedine poveznice mogu biti affiliate/partnerske poveznice — takve poveznice su jasno označene kada su aktivne, a njihova aktivacija ne mijenja koje podatke EVChargeWiseALL prikuplja o tebi.</p>
 
       <h3>Kontrola vlastitih podataka</h3>
       <p>Spremljene favorite i inventar možeš u svakom trenutku ukloniti unutar same aplikacije (gumb za uklanjanje) ili brisanjem podataka preglednika za ovu stranicu.</p>
+
+      <h3>Kontakt</h3>
+      <p>Za sva pitanja vezana uz privatnost podataka, obratite nam se na: <a href="mailto:microweblabinfo@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">microweblabinfo@gmail.com</a></p>
     </div>
   </div>
 
@@ -1313,11 +1397,17 @@
       <h3>Priroda usluge</h3>
       <p>EVChargeWiseALL je informativna aplikacija za pretragu i usporedbu električnih vozila, EV punionica, dijelova i opreme. Aplikacija ne prodaje vozila ni dijelove i nije strana u bilo kojoj transakciji između korisnika i trećih platformi.</p>
 
-      <h3>Izvor podataka</h3>
-      <p>Informacije o punionicama, dostupnosti, cijenama i drugim podacima dolaze iz vanjskih izvora i partnerskih platformi. Podaci mogu biti promijenjeni, zastarjeli ili netočni bez prethodne obavijesti, budući da ih EVChargeWiseALL ne kontrolira izravno.</p>
+      <h3>Indikativne cijene — nisu stvarne, uživo dohvaćene ponude</h3>
+      <p>Cijene i "AI ocjene" prikazane na karticama unutar EVChargeWiseALL su <strong>interna indikativna procjena</strong>, izračunata lokalno u aplikaciji na temelju referentnih vrijednosti. One NE predstavljaju stvarnu, trenutnu, uživo dohvaćenu cijenu, potvrđenu ponudu ili stvarnu dostupnost s Mobile.de, AutoScout24, eBay Motors, Tesla Shop, Wallbox ili bilo koje druge navedene platforme. EVChargeWiseALL trenutno ne povlači podatke uživo putem službenih API-ja ili feedova tih platformi. Isto vrijedi za specifikacije baterije (SoH, degradacija), predviđenu vrijednost i tržišni rizik u AI Analizi te za grafove u Analitici — riječ je o referentnim/ilustrativnim procjenama, a ne o mjerenim ili potvrđenim podacima za konkretan oglas.</p>
 
-      <h3>Nema jamstva dostupnosti</h3>
-      <p>EVChargeWiseALL ne jamči dostupnost punionica, vozila, dijelova niti navedenih cijena. Preporučujemo da svaku informaciju provjeriš izravno kod originalnog izvora prije donošenja odluke.</p>
+      <h3>Izvor podataka</h3>
+      <p>Stvarna dostupnost, cijena i uvjeti kupnje za bilo koje vozilo, punjač ili dio određuje isključivo originalna platforma na koju te poveznica unutar kartice preusmjerava. Ti se podaci mogu razlikovati od indikativne procjene prikazane u EVChargeWiseALL, mogu biti promijenjeni, zastarjeli ili netočni bez prethodne obavijesti, budući da ih EVChargeWiseALL ne kontrolira izravno.</p>
+
+      <h3>Nema jamstva dostupnosti ni cijene</h3>
+      <p>EVChargeWiseALL ne jamči dostupnost punionica, vozila, dijelova niti stvarnu cijenu kod izvora. Prikazana indikativna cijena služi isključivo za grubu usporedbu i orijentaciju. Prije donošenja odluke o kupnji obavezno provjeri stvarnu cijenu, dostupnost i uvjete izravno kod originalnog izvora.</p>
+
+      <h3>Affiliate i oglasne poveznice</h3>
+      <p>Pojedine poveznice prema vanjskim platformama mogu biti affiliate/partnerske poveznice, putem kojih EVChargeWiseALL može ostvariti proviziju ako korisnik izvrši kvalificiranu radnju prema pravilima tog partnerskog programa. Takve poveznice su jasno označene kada su stvarno aktivne. Dok partnerski program nije aktivan, poveznica vodi na uobičajenu službenu stranicu platforme bez ikakve provizije.</p>
 
       <h3>Odgovornost korisnika</h3>
       <p>Korisnik koristi aplikaciju na vlastitu odgovornost. EVChargeWiseALL ne odgovara za štetu, gubitak ili nesporazum nastao korištenjem prikazanih informacija ili poveznica prema vanjskim platformama.</p>
@@ -1327,6 +1417,9 @@
 
       <h3>Izmjene uvjeta</h3>
       <p>Ovi uvjeti mogu se povremeno ažurirati. Nastavak korištenja aplikacije nakon izmjena smatra se prihvaćanjem novih uvjeta.</p>
+
+      <h3>Kontakt</h3>
+      <p>Za sva pitanja vezana uz ove uvjete korištenja, obratite nam se na: <a href="mailto:microweblabinfo@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">microweblabinfo@gmail.com</a></p>
     </div>
   </div>
 
@@ -1335,6 +1428,19 @@
       if (typeof gtag === "function") {
         gtag("event", eventName, params);
       }
+    }
+
+    /* ================= Sigurnost: HTML escaping (added) =================
+       Sav tekst koji potječe od korisničkog unosa (npr. tražilica, naziv stavke u inventaru)
+       mora se escapeati prije umetanja u innerHTML, kako se ne bi mogao izvršiti kao HTML/JS (XSS). */
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[ch]));
     }
 
     /* ================= Legal modal controls (added) ================= */
@@ -1412,17 +1518,43 @@
       });
     }
 
+    /* ================= Affiliate konfiguracija (added) =================
+       EVChargeWiseALL NE izmišlja affiliate partnerstva niti tracking URL-ove.
+       Dok je vrijednost za neku platformu prazna ('' ), koristi se obični službeni link
+       (kao i do sada) i NIGDJE se ne tvrdi da je affiliate program aktivan.
+       Kada dobijemo stvaran affiliate/partner URL predložak za neku platformu, upiši ga ovdje —
+       ništa drugo u kodu nije potrebno mijenjati. Predložak treba završavati na mjestu gdje se
+       nadopunjuje pretraživani pojam (isto ponašanje kao i kod običnog platform.url). */
+    const AFFILIATE_LINKS = {
+      mobileDe: '',
+      autoScout24: '',
+      ebayMotors: '',
+      wallbox: '',
+      allegro: ''
+    };
+
+    // Vraća { url, isAffiliate } za danu platformu i upit — koristi affiliate predložak SAMO ako je
+    // stvarno postavljen u AFFILIATE_LINKS, inače pada natrag na uobičajeni službeni URL platforme.
+    function resolvePlatformLink(platform, query) {
+      const key = platform.affiliateKey;
+      const affiliateBase = key ? AFFILIATE_LINKS[key] : '';
+      if (affiliateBase) {
+        return { url: affiliateBase + encodeURIComponent(query), isAffiliate: true };
+      }
+      return { url: platform.url + encodeURIComponent(query), isAffiliate: false };
+    }
+
     const EV_PLATFORMS = [
-      { name: "Mobile.de EV & Parts", type: "eu", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&ft=ELECTRICITY&q=" },
-      { name: "AutoScout24", type: "eu", url: "https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&fuel=E&query=" },
-      { name: "eBay Motors Parts", type: "global", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=" },
+      { name: "Mobile.de EV & Parts", type: "eu", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&ft=ELECTRICITY&q=", affiliateKey: "mobileDe" },
+      { name: "AutoScout24", type: "eu", url: "https://www.autoscout24.com/lst?atype=C&ustate=N%2CU&fuel=E&query=", affiliateKey: "autoScout24" },
+      { name: "eBay Motors Parts", type: "global", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=", affiliateKey: "ebayMotors" },
       { name: "Facebook Marketplace", type: "general", url: "https://www.facebook.com/marketplace/search/?query=" },
       { name: "Tesla Inventory & Gear", type: "brand", url: "https://shop.tesla.com/category/vehicle-accessories?q=" },
       { name: "BMW Approved & Parts", type: "brand", url: "https://shop.bmw.com/search?q=" },
       { name: "Mercedes Certified", type: "brand", url: "https://www.mercedes-benz.de/passengercars/buy/used-cars.html?q=" },
       { name: "EV Parts Direct", type: "parts", url: "https://www.google.com/search?q=EV+Parts+Direct+" },
-      { name: "Wallbox Official Store", type: "parts", url: "https://wallbox.com/search?q=" },
-      { name: "Allegro EV Parts", type: "parts", url: "https://allegro.pl/listing?string=" },
+      { name: "Wallbox Official Store", type: "parts", url: "https://wallbox.com/search?q=", affiliateKey: "wallbox" },
+      { name: "Allegro EV Parts", type: "parts", url: "https://allegro.pl/listing?string=", affiliateKey: "allegro" },
       { name: "Hyundai Approved", type: "brand", url: "https://www.hyundai.com/check/used-cars?q=" },
       { name: "Kia Approved", type: "brand", url: "https://www.kia.com/used-cars?q=" },
       { name: "Polestar Pre-owned", type: "brand", url: "https://www.polestar.com/pre-owned/search?q=" },
@@ -1531,11 +1663,13 @@
         currentResults = EV_PLATFORMS.map((platform, idx) => {
           const varFactor = 0.88 + (idx * 0.025);
           const calculatedPrice = Math.round(baseData.basePrice * varFactor);
+          const link = resolvePlatformLink(platform, query);
 
           return {
             id: `ev-${idx}-${Date.now()}`,
             platform: platform.name,
-            platformUrl: platform.url + encodeURIComponent(query),
+            platformUrl: link.url,
+            isAffiliate: link.isAffiliate,
             model: query,
             isPart: baseData.isPart,
             category: baseData.category || "vehicles",
@@ -1570,7 +1704,7 @@
         renderCharts();
 
         loading.style.display = 'none';
-        showToast(`Dohvaćeno ${currentResults.length} ponuda s EV & Parts servisa!`);
+        showToast(`Prikazano ${currentResults.length} indikativnih procjena i poveznica na EV & Parts servise!`);
       }, 400);
     }
 
@@ -1585,35 +1719,47 @@
 
       grid.innerHTML = items.map(item => {
         const isFav = savedItems.some(s => s.id === item.id || (s.platform === item.platform && s.price === item.price));
+        const safeModel = escapeHtml(item.model);
+        const safePlatform = escapeHtml(item.platform);
+        const safeItemType = escapeHtml(item.itemType);
+        const safeSpecVal = escapeHtml(item.specVal);
+        const safeSpecSubVal = escapeHtml(item.specSubVal);
+        const safeSpecLabel = escapeHtml(item.specLabel);
+        const safeSpecSubLabel = escapeHtml(item.specSubLabel);
+        // rel="noopener noreferrer" na svim vanjskim linkovima (sigurnost); "sponsored" dodatno
+        // kada je poveznica stvarno affiliate — transparentno i u skladu s pravilima oglašavanja.
+        const linkRel = item.isAffiliate ? 'sponsored noopener noreferrer' : 'noopener noreferrer';
+        const affiliateBadge = item.isAffiliate ? '<span class="affiliate-badge">Partner</span>' : '';
+
         return `
           <div class="card">
             <div>
               <div class="card-header">
-                <span class="platform-tag">${item.platform}</span>
-                <span class="type-badge">${item.isPart ? '🔧 ' + item.itemType : '🚗 EV Vozilo'}</span>
+                <span class="platform-tag">${safePlatform}${affiliateBadge}</span>
+                <span class="type-badge">${item.isPart ? '🔧 ' + safeItemType : '🚗 EV Vozilo'}</span>
                 <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${item.id}')">★</button>
               </div>
-              <div class="product-title">${item.model}</div>
+              <div class="product-title">${safeModel}</div>
               
               <div class="ai-badge">
                 ${item.isPart 
-                  ? `⚙️ Oprema / Dio: Zajamčena kompatibilnost s Type 2 / EV standardom` 
-                  : `⚡ DC Brzo Punjenje: do ${item.dcKw} kW (~${item.chargeTimeMins} min 20-80%)`}
+                  ? `⚙️ Oprema / Dio: Kompatibilno s Type 2 / EV standardom (referentna specifikacija)` 
+                  : `⚡ DC Brzo Punjenje: do ${item.dcKw} kW (~${item.chargeTimeMins} min 20-80%, referentna specifikacija)`}
               </div>
 
               <div class="ev-specs-grid">
                 ${item.isPart ? `
                   <div class="spec-item">
-                    <span class="spec-lbl">${item.specLabel}</span>
-                    <span class="spec-val highlight">${item.specVal}</span>
+                    <span class="spec-lbl">${safeSpecLabel}</span>
+                    <span class="spec-val highlight">${safeSpecVal}</span>
                   </div>
                   <div class="spec-item">
-                    <span class="spec-lbl">${item.specSubLabel}</span>
-                    <span class="spec-val">${item.specSubVal}</span>
+                    <span class="spec-lbl">${safeSpecSubLabel}</span>
+                    <span class="spec-val">${safeSpecSubVal}</span>
                   </div>
                   <div class="spec-item">
-                    <span class="spec-lbl">Garancija</span>
-                    <span class="spec-val">24 Mjeseca</span>
+                    <span class="spec-lbl">Garancija (referentno)</span>
+                    <span class="spec-val">do 24 mj.</span>
                   </div>
                   <div class="spec-item">
                     <span class="spec-lbl">AI Ocjena</span>
@@ -1629,7 +1775,7 @@
                     <span class="spec-val highlight">${item.wltp} km</span>
                   </div>
                   <div class="spec-item">
-                    <span class="spec-lbl">Stvarni Domet</span>
+                    <span class="spec-lbl">Procijenjeni Domet</span>
                     <span class="spec-val">${item.realRange} km</span>
                   </div>
                   <div class="spec-item">
@@ -1641,18 +1787,19 @@
 
               <div class="price-block">
                 <div class="price-row">
-                  <span class="price-label">Tržišna Ponuda</span>
+                  <span class="price-label">Indikativna Cijena</span>
                   <span class="price-val">${item.price.toLocaleString()} €</span>
                 </div>
+                <div class="price-note">Interna procjena · nije uživo dohvaćena cijena s platforme — provjeri na izvoru</div>
               </div>
             </div>
 
             <div class="card-actions">
               ${item.isPart 
-                ? `<button class="btn-card btn-secondary" onclick="addPartToInventory('${item.model.replace(/'/g, "\'")}', ${item.price})">+ Inventar</button>`
+                ? `<button class="btn-card btn-secondary" data-model="${escapeHtml(item.model)}" data-price="${item.price}" onclick="addPartToInventory(this.dataset.model, parseFloat(this.dataset.price))">+ Inventar</button>`
                 : `<button class="btn-card btn-secondary" onclick="loadToCalc(${item.battery}, ${item.price})">Kalkulator</button>`
               }
-              <a href="${item.platformUrl}" target="_blank" class="btn-card btn-primary-card">Otvori Ponudu ↗</a>
+              <a href="${item.platformUrl}" target="_blank" rel="${linkRel}" class="btn-card btn-primary-card">Otvori kod izvora ↗</a>
             </div>
           </div>
         `;
@@ -1698,7 +1845,7 @@
         document.getElementById('statRealRangeSub').innerText = `${baseData.specSubLabel || 'Info'}: ${baseData.specSubVal || 'Oprema'}`;
       } else {
         document.getElementById('statAvgRange').innerText = `${baseData.wltp || 500} km`;
-        document.getElementById('statRealRangeSub').innerText = `Stvarni domet: ~${baseData.real || 400} km`;
+        document.getElementById('statRealRangeSub').innerText = `Procijenjeni domet: ~${baseData.real || 400} km`;
       }
 
       document.getElementById('statBestPlatform').innerText = minPriceItem.platform;
@@ -1720,7 +1867,7 @@
 
     function searchWithAI() {
       switchTab('ai');
-      showToast("Generirana detaljna ChatGPT EV & Parts procjena!");
+      showToast("Prikazan AI izvještaj — interna indikativna procjena, nije uživo upit prema vanjskom AI servisu.");
     }
 
     function loadToCalc(battery, price) {
@@ -1933,7 +2080,7 @@
 
       body.innerHTML = inventoryItems.map(item => `
         <tr>
-          <td><strong>${item.name}</strong></td>
+          <td><strong>${escapeHtml(item.name)}</strong></td>
           <td>${item.buy.toLocaleString()} €</td>
           <td>${item.target.toLocaleString()} €</td>
           <td style="color:var(--primary-green); font-weight:700;">+${item.profit.toLocaleString()} €</td>
