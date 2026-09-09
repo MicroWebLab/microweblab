@@ -6,6 +6,15 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
+    // Google Consent Mode v2 default: analytics/ad storage stays denied until the user makes a
+    // choice via the consent banner or Cookie Settings. This does not change the Measurement ID
+    // or any gtag('event', ...) calls elsewhere in this file — those are unchanged.
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied'
+    });
     gtag('js', new Date());
     gtag('config', 'G-Q5J05KH0J6');
   </script>
@@ -1313,26 +1322,39 @@
       <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('terms')">Terms of Use</button>
       <span class="legal-sep">·</span>
+      <button class="legal-link-btn" onclick="openLegalModal('cookiePolicy')">Cookie Policy</button>
+      <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('legal')">Legal Notice</button>
       <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('disclaimer')">Disclaimer</button>
+      <span class="legal-sep">·</span>
+      <button class="legal-link-btn" onclick="openCookieSettings()">Cookie Settings</button>
+    </div>
+    <!-- Contact (added — same visual pattern as EVChargeWiseALL's footer contact line) -->
+    <div class="legal-links" style="margin-top:6px;">
+      <a class="legal-link-btn" href="mailto:microweblabinfo@gmail.com">Contact: microweblabinfo@gmail.com</a>
     </div>
     <p class="legal-disclaimer">ResellWiseALL služi za pretragu i usporedbu proizvoda s vanjskih platformi. Dostupnost, cijene i ostale informacije određuju originalne platforme i mogu se promijeniti bez prethodne obavijesti.</p>
   </footer>
 
   <div class="toast" id="toast">Obavijest</div>
 
-  <!-- Cookie / Advertising Consent Banner (added). Inert while ADSENSE_CLIENT_ID is empty — only ever
-       shown once a real AdSense Publisher ID is configured and no consent choice has been stored yet. -->
-  <div class="consent-banner" id="consentBanner" role="dialog" aria-label="Advertising consent">
+  <!-- Cookie / Consent Banner (extended). Reuses the same existing visual style. Now covers both
+       Google Analytics and (future) Google AdSense — shown once, before any non-essential cookie
+       is set, until the user makes a choice. Choices can always be changed later via the
+       "Cookie Settings" footer link. -->
+  <div class="consent-banner" id="consentBanner" role="dialog" aria-label="Cookie and advertising consent">
     <p class="consent-text">
-      ResellWiseALL uses Google AdSense to display ads that help keep this tool free. Accepting allows AdSense
-      to load ads (which may use cookies for ad measurement and, where applicable, personalization) consistent
-      with Google's advertising policies. You can decline and continue using ResellWiseALL without ads.
+      ResellWiseALL uses Google Analytics to understand how the app is used, and is prepared for future
+      Google AdSense advertising to help keep this tool free. Some of these technologies use cookies or
+      similar storage. You can accept all, reject all, or choose your preferences in Settings. Your choice
+      can be changed anytime via "Cookie Settings" in the footer, and declining will not prevent you from
+      using any feature of ResellWiseALL.
     </p>
     <div class="consent-actions">
-      <button class="btn-card btn-secondary" onclick="handleAdsConsent(false)">Decline</button>
-      <button class="btn-card btn-primary-card" onclick="handleAdsConsent(true)">Accept</button>
+      <button class="btn-card btn-secondary" onclick="handleBannerChoice('reject')">Reject</button>
+      <button class="btn-card btn-secondary" onclick="openCookieSettings()">Settings</button>
+      <button class="btn-card btn-primary-card" onclick="handleBannerChoice('accept')">Accept</button>
     </div>
   </div>
 
@@ -1345,38 +1367,59 @@
       </div>
       <div class="legal-updated">Last updated: 2026.</div>
 
+      <h3>Data Controller &amp; Contact</h3>
+      <p>ResellWiseALL is operated by MicroWebLab. For any privacy question or request, contact: <a href="mailto:microweblabinfo@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">microweblabinfo@gmail.com</a>. Full operator details (legal entity name, registered address and registration number, where applicable) are provided in the <strong>Legal Notice</strong>, accessible from the footer.</p>
+
       <h3>No Account Required</h3>
       <p>ResellWiseALL does not require registration or login. All core features — marketplace search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis and Analytics/Insights — work without creating an account.</p>
 
       <h3>What We Store Locally</h3>
-      <p>ResellWiseALL stores data locally in your browser using <strong>LocalStorage</strong> — specifically, the favorite (saved) items and Inventory entries you explicitly add. This data stays on your device and is not transmitted to our servers or shared with third parties. The ROI Calculator runs entirely in your browser and does not persist its input values — a calculation is cleared on page refresh unless you manually save the item to Inventory.</p>
+      <p>ResellWiseALL stores data locally in your browser using <strong>LocalStorage</strong> — specifically, the favorite (saved) items and Inventory entries you explicitly add, and your cookie/consent preferences. This data stays on your device and is not transmitted to our servers or shared with third parties. The ROI Calculator runs entirely in your browser and does not persist its input values — a calculation is cleared on page refresh unless you manually save the item to Inventory.</p>
+
+      <h3>Purposes and Legal Basis for Processing (GDPR)</h3>
+      <p>Where the GDPR applies, ResellWiseALL relies on the following purposes and legal bases:</p>
+      <ul>
+        <li><strong>Providing the service itself</strong> (search, calculators, LocalStorage-based Favorites/Inventory) — this does not involve us receiving or processing personal data on a server, so it is not "processing" by ResellWiseALL in the GDPR sense; where it is, the basis is performance of a contract at your request (Art. 6(1)(b)) / legitimate interest in operating the tool you requested (Art. 6(1)(f)).</li>
+        <li><strong>Analytics (Google Analytics)</strong> — based on your consent (Art. 6(1)(a)), given via the consent banner or Cookie Settings. No analytics cookies are set before you consent.</li>
+        <li><strong>Advertising (Google AdSense, once activated)</strong> — based on your consent (Art. 6(1)(a)), given separately from Analytics via the same banner or Cookie Settings. No advertising cookies are set before you consent, and no ads load at all until a real AdSense Publisher ID is configured.</li>
+        <li><strong>Fetching live pricing data</strong> — see "Product and Pricing Information" below for the specific third-party service involved.</li>
+      </ul>
 
       <h3>Product and Pricing Information</h3>
-      <p>Product, pricing and offer information shown in the app is fetched or estimated from external e-commerce sources. We do not generate this data ourselves — we only display it to help you compare and analyze. The "ResellWise Insights" section displays estimated/demo figures computed from your local Inventory and from estimated search results, and is clearly labeled as such — it is not verified real market data.</p>
+      <p>Product, pricing and offer information shown in the app is fetched or estimated from external e-commerce sources. We do not generate this data ourselves — we only display it to help you compare and analyze. To fetch live eBay listings, your search term is sent, client-side, to a public CORS proxy service (<strong>api.allorigins.win</strong>), which in turn requests the corresponding public eBay search page; if that fetch is unavailable, ResellWiseALL falls back to an estimated calculation instead. This only transmits the text you typed into the search box — no other personal data is sent as part of this request. The "ResellWise Insights" section displays estimated/demo figures computed from your local Inventory and from estimated search results, and is clearly labeled as such — it is not verified real market data.</p>
+
+      <h3>"ChatGPT Analiza" Button</h3>
+      <p>If you click the <strong>"✨ ChatGPT Analiza"</strong> button, your search term is included in a URL and a new browser tab is opened to chatgpt.com (operated by OpenAI), pre-filled with a prompt containing your search term. This sends your search term to OpenAI as part of that page load, governed by OpenAI's own privacy policy — ResellWiseALL has no visibility into, or control over, how OpenAI processes it. This only happens if you click that specific button.</p>
 
       <h3>Analytics</h3>
-      <p>ResellWiseALL uses Google Analytics (via Google's gtag.js) to collect anonymized usage data such as visit counts, feature usage and general technical/device information. This data is not used to identify you individually for marketing purposes.</p>
+      <p>ResellWiseALL uses Google Analytics (via Google's gtag.js, Measurement ID G-Q5J05KH0J6) to collect usage data such as visit counts, feature usage and general technical/device information. We do not claim this data is fully anonymous, as that cannot be technically guaranteed — Analytics is governed by Google's own terms and privacy policy. Analytics storage/cookies are set to "denied" by default (Google Consent Mode) and are only enabled after you accept Analytics via the consent banner or Cookie Settings; this data is not used to identify you individually for marketing purposes by us.</p>
 
-      <h3>Google AdSense</h3>
-      <p>ResellWiseALL is prepared for future Google AdSense monetization, but ads are <strong>not currently active</strong>. Until a real AdSense Publisher ID is configured, no ad script is loaded and no ads are shown. Once ads are enabled, you will be shown a consent banner before any ad-related script loads (see "Cookies &amp; Advertising Consent" below). Ad placements will remain visually separate from calculators, inventory, results and navigation.</p>
+      <h3>Google AdSense and Advertising</h3>
+      <p>ResellWiseALL is prepared for future Google AdSense monetization, but ads are <strong>not currently active</strong>. Until a real AdSense Publisher ID is configured, no ad script is loaded and no ads are shown, regardless of your consent choice. Once ads are enabled, Google and third-party advertising partners may use cookies, device identifiers or similar technologies to deliver, measure and, where applicable and permitted, personalize ads. We do not claim personalized advertising is always enabled — this depends on your consent choice and Google's own policies. Ad placements will remain visually separate from calculators, inventory, results and navigation.</p>
 
-      <h3>Cookies &amp; Advertising Consent</h3>
-      <p>Google Analytics may use cookies or similar technologies to measure usage. If and when AdSense is activated, Google AdSense may also use cookies for ad delivery and, where applicable, ad personalization, under Google's own advertising and privacy policies. In that case, ResellWiseALL will show a clear, non-intrusive consent banner asking you to Accept or Decline before any AdSense script or ad-related cookie is loaded. Declining will not prevent you from using any other feature of ResellWiseALL.</p>
+      <h3>Cookies, Consent &amp; Your Choices</h3>
+      <p>ResellWiseALL distinguishes between LocalStorage (used for your Favorites/Inventory/consent choice, described above) and cookies/similar technologies that Google Analytics and, in the future, Google AdSense may use. Where consent is legally required, this processing depends on your choice: on your first visit you're shown a banner to Accept all, Reject all, or open Settings to choose Analytics and Advertising separately. No Analytics or Advertising cookies are set before you make a choice. You can review or change your choice at any time via the <strong>"Cookie Settings"</strong> link in the footer — see also the separate <strong>Cookie Policy</strong>, also linked in the footer. For more on how Google handles data and uses advertising cookies, see Google's own pages: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan); text-decoration: underline;">Google Privacy Policy</a>, <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan); text-decoration: underline;">How Google uses cookies in advertising</a>, and <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan); text-decoration: underline;">Google Ads Settings</a>.</p>
 
       <h3>We Do Not Sell Your Data</h3>
       <p><strong>ResellWiseALL does not sell personal data</strong> to third parties.</p>
 
+      <h3>Affiliate / Partner Links</h3>
+      <p>ResellWiseALL <strong>does not currently use any affiliate or partner links</strong> — marketplace links go directly to the platform's own search results, with no tracking parameters or commission arrangement. If an affiliate or partner program is introduced in the future, this Privacy Policy and the relevant links will be updated to clearly disclose it before it takes effect.</p>
+
       <h3>Third-Party Marketplaces</h3>
-      <p>Clicking a listing or a button such as "Open Live" / "Listing Details" takes you to an external platform (e.g. eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, Mobile.de or AutoScout24). Those platforms have their own privacy policies, which apply once you visit them. ResellWiseALL has no visibility into, or control over, data collected by those platforms.</p>
+      <p>Clicking a listing or a button such as "Open Live" / "Listing Details" takes you to an external platform (e.g. eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de or AutoScout24). Those platforms have their own privacy policies, which apply once you visit them. ResellWiseALL has no visibility into, or control over, data collected by those platforms.</p>
 
       <h3>Your Rights &amp; Control Over Your Data</h3>
-      <p>Because ResellWiseALL does not use accounts or a backend database, most data protection rights apply directly to the data stored in your own browser:</p>
+      <p>Because ResellWiseALL does not use accounts or a backend database, most data protection rights apply directly to the data stored in your own browser, and to your Analytics/Advertising consent choice:</p>
       <ul>
         <li><strong>Access</strong> — you can view everything ResellWiseALL has stored for you directly within the app (Saved/Favorites and Inventory tabs), since nothing is stored elsewhere.</li>
         <li><strong>Correction</strong> — you can edit your Inventory by removing an entry and re-adding it with corrected values, using the existing "Remove" button.</li>
         <li><strong>Deletion</strong> — you can remove individual saved items or inventory entries at any time using the in-app "Remove" button or the favorite star, or clear all data at once by clearing this site's browsing data/LocalStorage in your browser settings.</li>
-        <li><strong>Objection / Restriction</strong> — since no account or server-side processing is involved, you can restrict processing simply by not using the Saved/Inventory features, or by declining AdSense consent once it becomes available.</li>
-        <li><strong>Privacy contact</strong> — for any privacy-related question, contact: <strong>[ADD PRIVACY CONTACT EMAIL HERE]</strong> <em>(placeholder — to be completed with a real contact address)</em>.</li>
+        <li><strong>Restriction of processing</strong> — you can restrict processing simply by not using the Saved/Inventory features, or by choosing "Reject" in the consent banner or Cookie Settings.</li>
+        <li><strong>Objection</strong> — where processing is based on legitimate interest, you may object at any time by contacting us using the details below.</li>
+        <li><strong>Withdrawing consent</strong> — where processing is based on your consent (Analytics, Advertising), you can withdraw it at any time via "Cookie Settings" in the footer, with the same effect as never having consented.</li>
+        <li><strong>Complaint to a supervisory authority</strong> — if you are in Croatia or otherwise within the EU/EEA, you have the right to lodge a complaint with your national data protection authority. In Croatia, this is the Croatian Personal Data Protection Agency (Agencija za zaštitu osobnih podataka, AZOP), <a href="https://azop.hr" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan); text-decoration: underline;">azop.hr</a>.</li>
+        <li><strong>Privacy contact</strong> — for any privacy-related question or request, contact: <a href="mailto:microweblabinfo@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">microweblabinfo@gmail.com</a>.</li>
       </ul>
     </div>
   </div>
@@ -1412,7 +1455,13 @@
       <p>The ROI Calculator and the "ResellWise Insights" section display estimates computed locally from data you enter, or from estimated/demo market data. These calculations do not constitute financial, investment, tax or legal advice, and are not a guarantee of actual profit, ROI or resale speed.</p>
 
       <h3>Third-Party Marketplaces &amp; Services</h3>
-      <p>ResellWiseALL links to and references third-party marketplaces (including eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, Mobile.de and AutoScout24). ResellWiseALL is <strong>not affiliated with, endorsed by, or an official partner or representative of</strong> any of these platforms unless explicitly and separately confirmed. All trademarks and platform names belong to their respective owners and are used solely for identification and informational purposes.</p>
+      <p>ResellWiseALL links to and references third-party marketplaces (including eBay, eBay Motors, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, Mobile.de and AutoScout24). ResellWiseALL is <strong>not affiliated with, endorsed by, or an official partner or representative of</strong> any of these platforms unless explicitly and separately confirmed. All trademarks and platform names belong to their respective owners and are used solely for identification and informational purposes. ResellWiseALL <strong>does not currently use affiliate or partner links</strong>; if this changes, this section will be updated.</p>
+
+      <h3>Third-Party AI Tool ("ChatGPT Analiza")</h3>
+      <p>The "✨ ChatGPT Analiza" button opens a new tab to chatgpt.com (operated by OpenAI) with your search term included in the page URL. This feature is provided for your convenience only; ResellWiseALL is not affiliated with OpenAI, does not control the output shown there, and is not responsible for its accuracy.</p>
+
+      <h3>Advertising</h3>
+      <p>ResellWiseALL is prepared to display Google AdSense advertising once a real Publisher ID is configured; ads are not active today. When ads are enabled, they will be subject to Google's own advertising policies and to the consent choices described in the Privacy Policy and Cookie Policy.</p>
 
       <h3>Limitation of Liability</h3>
       <p>You use ResellWiseALL at your own risk. To the fullest extent permitted by applicable law, ResellWiseALL shall not be liable for any damage, loss or dispute arising from your use of the information displayed, the calculators provided, or links to third-party platforms.</p>
@@ -1447,8 +1496,8 @@
 
       <h3>Contact</h3>
       <p>
-        General &amp; legal contact: <strong>[ADD CONTACT EMAIL HERE]</strong><br>
-        Privacy-related requests: <strong>[ADD PRIVACY CONTACT EMAIL HERE]</strong>
+        General &amp; legal contact: <a href="mailto:microweblabinfo@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">microweblabinfo@gmail.com</a><br>
+        Privacy-related requests: <a href="mailto:microweblabinfo@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">microweblabinfo@gmail.com</a>
       </p>
 
       <h3>Advertising Disclosure</h3>
@@ -1482,6 +1531,67 @@
     </div>
   </div>
 
+  <!-- Cookie Settings Modal (added — reuses the existing legal-modal styling and existing btn-card
+       button styles; no new CSS classes were introduced for this modal). Lets the user grant or
+       withdraw consent per category at any time, satisfying the "change your decision later" requirement. -->
+  <div class="legal-modal-overlay" id="cookieSettingsModal">
+    <div class="legal-modal-box">
+      <div class="legal-modal-head">
+        <h2>Cookie Settings</h2>
+        <button class="legal-close-btn" onclick="closeLegalModal('cookieSettings')" aria-label="Close">✕</button>
+      </div>
+      <div class="legal-updated">Manage your consent choices for ResellWiseALL. You can change these at any time.</div>
+
+      <h3>Essential</h3>
+      <p>Required for the app to work at all — e.g. LocalStorage used for your Favorites and Inventory. These are not cookies, cannot be disabled, and are never sent to our servers.</p>
+
+      <h3>Analytics</h3>
+      <p>Google Analytics helps us understand how ResellWiseALL is used (visits, feature usage, general device/browser info). Uses cookies/similar technology only when allowed below.</p>
+      <div class="consent-actions" style="justify-content:flex-start; margin-bottom:1.2rem;">
+        <button class="btn-card btn-secondary" id="analyticsToggleOff" onclick="setConsentCategory('analytics', false)">Block</button>
+        <button class="btn-card btn-secondary" id="analyticsToggleOn" onclick="setConsentCategory('analytics', true)">Allow</button>
+      </div>
+
+      <h3>Advertising (Google AdSense)</h3>
+      <p>ResellWiseALL is prepared for future Google AdSense advertising. Ads are not active yet regardless of this setting — but once a real Publisher ID is configured, AdSense will only load and use cookies if this is set to Allow.</p>
+      <div class="consent-actions" style="justify-content:flex-start; margin-bottom:1.2rem;">
+        <button class="btn-card btn-secondary" id="adsToggleOff" onclick="setConsentCategory('ads', false)">Block</button>
+        <button class="btn-card btn-secondary" id="adsToggleOn" onclick="setConsentCategory('ads', true)">Allow</button>
+      </div>
+
+      <button class="btn-search" style="width:100%; justify-content:center; padding:12px; margin-top:6px;" onclick="saveConsentSettings()">
+        Save Preferences
+      </button>
+    </div>
+  </div>
+
+  <!-- Cookie Policy Modal (added — read-only explanation, separate from the interactive Cookie
+       Settings modal above; reuses the same existing legal-modal CSS classes) -->
+  <div class="legal-modal-overlay" id="cookiePolicyModal">
+    <div class="legal-modal-box">
+      <div class="legal-modal-head">
+        <h2>Cookie Policy</h2>
+        <button class="legal-close-btn" onclick="closeLegalModal('cookiePolicy')" aria-label="Close">✕</button>
+      </div>
+      <div class="legal-updated">Last updated: 2026.</div>
+
+      <h3>Essential / Local Storage</h3>
+      <p>ResellWiseALL uses your browser's <strong>LocalStorage</strong> (not a cookie) to keep the app itself working: your saved Favorites, your Inventory entries, and your cookie/consent choice. This is required for those specific features and stays entirely on your device — it is never sent to our servers and cannot be "rejected" without simply not using Favorites/Inventory.</p>
+
+      <h3>Analytics Cookies</h3>
+      <p>Google Analytics may use cookies or similar technologies to measure how ResellWiseALL is used (visits, feature usage, general device/browser information). These are only set if you choose "Allow" for Analytics in the consent banner or Cookie Settings — by default, this is denied (Google Consent Mode).</p>
+
+      <h3>Advertising Cookies (Not Yet Active)</h3>
+      <p>ResellWiseALL is prepared for future Google AdSense advertising, but no advertising script or cookie loads today — a real AdSense Publisher ID has not been configured. Once it is, advertising cookies will still only be set if you choose "Allow" for Advertising.</p>
+
+      <h3>Changing or Withdrawing Your Choice</h3>
+      <p>You can change your Analytics/Advertising cookie choice at any time via <strong>"Cookie Settings"</strong> in the footer — including rejecting previously-allowed categories. This has the same effect as never having consented, going forward.</p>
+
+      <h3>Declining Non-Essential Cookies</h3>
+      <p>You are always free to reject Analytics and Advertising cookies. Doing so does not prevent you from using marketplace search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis or any other feature of ResellWiseALL.</p>
+    </div>
+  </div>
+
   <script>
     /* Analytics tracking helper za resellwiseall.html */
     function trackGAEvent(eventName, params = {}) {
@@ -1498,7 +1608,9 @@
       privacy: 'privacyModal',
       terms: 'termsModal',
       legal: 'legalNoticeModal',
-      disclaimer: 'disclaimerModal'
+      disclaimer: 'disclaimerModal',
+      cookieSettings: 'cookieSettingsModal',
+      cookiePolicy: 'cookiePolicyModal'
     };
 
     function openLegalModal(type) {
@@ -1537,32 +1649,121 @@
       sidebarRight: '',  // ad unit ID for the right sidebar zone
       bottomBanner: ''   // ad unit ID for the zone below the main content
     };
-    const ADS_CONSENT_STORAGE_KEY = 'resellwiseall_ads_consent';
 
-    function initAdSense() {
-      // If no Publisher ID is configured, AdSense never loads and the consent banner never appears.
-      if (!ADSENSE_CLIENT_ID) return;
+    /* ================= Consent management (extended) =================
+       Originally this only gated AdSense (and only appeared once a Publisher ID was set),
+       which left Google Analytics running with no consent gate at all. This is now generalized
+       to two categories — "analytics" and "ads" — using Google's own Consent Mode v2 API
+       (gtag('consent', 'update', ...)), which was already initialized to "denied" by default in
+       the <head> script above. The banner now always appears (regardless of AdSense status)
+       until the user makes a choice, and that choice can be revisited anytime via the
+       "Cookie Settings" footer link. loadAdSenseAds() itself is unchanged — ads still never load
+       without both a real ADSENSE_CLIENT_ID and the user's "ads" consent. */
+    const CONSENT_STORAGE_KEY = 'resellwiseall_consent_v1';
+    let pendingConsent = { analytics: false, ads: false };
 
-      const storedConsent = localStorage.getItem(ADS_CONSENT_STORAGE_KEY);
-      if (storedConsent === 'granted') {
-        loadAdSenseAds();
-      } else if (storedConsent !== 'denied') {
-        showAdsConsentBanner();
+    function getStoredConsent() {
+      try {
+        const raw = localStorage.getItem(CONSENT_STORAGE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
       }
-      // If storedConsent === 'denied', respect the user's earlier choice and do nothing.
     }
 
-    function showAdsConsentBanner() {
+    function persistConsent(consent) {
+      localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(consent));
+    }
+
+    function applyConsentToGtag(consent) {
+      if (typeof gtag === 'function') {
+        gtag('consent', 'update', {
+          'analytics_storage': consent.analytics ? 'granted' : 'denied',
+          'ad_storage': consent.ads ? 'granted' : 'denied',
+          'ad_user_data': consent.ads ? 'granted' : 'denied',
+          'ad_personalization': consent.ads ? 'granted' : 'denied'
+        });
+      }
+    }
+
+    function initConsent() {
+      const stored = getStoredConsent();
+      if (stored) {
+        applyConsentToGtag(stored);
+        reflectConsentInSettingsUI(stored);
+        if (stored.ads) loadAdSenseAds();
+        return;
+      }
+      // No stored decision yet — ask before anything non-essential is set.
+      showConsentBanner();
+    }
+
+    function showConsentBanner() {
       const banner = document.getElementById('consentBanner');
       if (banner) banner.classList.add('show');
     }
 
-    function handleAdsConsent(granted) {
-      localStorage.setItem(ADS_CONSENT_STORAGE_KEY, granted ? 'granted' : 'denied');
+    function hideConsentBanner() {
       const banner = document.getElementById('consentBanner');
       if (banner) banner.classList.remove('show');
-      if (granted) loadAdSenseAds();
-      trackGAEvent('resellwiseall_ads_consent', { granted });
+    }
+
+    function handleBannerChoice(choice) {
+      // choice: 'accept' | 'reject'
+      const consent = { analytics: choice === 'accept', ads: choice === 'accept' };
+      persistConsent(consent);
+      applyConsentToGtag(consent);
+      reflectConsentInSettingsUI(consent);
+      hideConsentBanner();
+      if (consent.ads) loadAdSenseAds();
+      trackGAEvent('resellwiseall_consent_choice', { choice });
+    }
+
+    function openCookieSettings() {
+      hideConsentBanner();
+      const stored = getStoredConsent() || { analytics: false, ads: false };
+      reflectConsentInSettingsUI(stored);
+      openLegalModal('cookieSettings');
+    }
+
+    function reflectConsentInSettingsUI(consent) {
+      pendingConsent = { analytics: !!consent.analytics, ads: !!consent.ads };
+      updateToggleButtons();
+    }
+
+    function updateToggleButtons() {
+      const map = [
+        ['analyticsToggleOn', 'analyticsToggleOff', pendingConsent.analytics],
+        ['adsToggleOn', 'adsToggleOff', pendingConsent.ads]
+      ];
+      map.forEach(([onId, offId, isOn]) => {
+        const onBtn = document.getElementById(onId);
+        const offBtn = document.getElementById(offId);
+        if (!onBtn || !offBtn) return;
+        onBtn.classList.toggle('btn-primary-card', isOn);
+        onBtn.classList.toggle('btn-secondary', !isOn);
+        offBtn.classList.toggle('btn-primary-card', !isOn);
+        offBtn.classList.toggle('btn-secondary', isOn);
+      });
+    }
+
+    function setConsentCategory(category, allowed) {
+      pendingConsent[category] = allowed;
+      updateToggleButtons();
+    }
+
+    function saveConsentSettings() {
+      persistConsent(pendingConsent);
+      applyConsentToGtag(pendingConsent);
+      closeLegalModal('cookieSettings');
+      hideConsentBanner();
+      if (pendingConsent.ads) loadAdSenseAds();
+      showToast('Cookie preferences saved.');
+      trackGAEvent('resellwiseall_consent_choice', {
+        choice: 'custom',
+        analytics: pendingConsent.analytics,
+        ads: pendingConsent.ads
+      });
     }
 
     function loadAdSenseAds() {
@@ -1628,7 +1829,7 @@
       renderInventory();
       updateSavedCount();
       calculateProfit();
-      initAdSense();
+      initConsent();
       renderInsights();
     });
 
