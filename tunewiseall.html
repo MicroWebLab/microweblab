@@ -30,7 +30,7 @@
     --radius-sm:10px;
     --font-display:'Space Grotesk',system-ui,sans-serif;
     --font-body:'Inter',system-ui,sans-serif;
-    --player-h:150px;
+    --player-h:300px;
     --shadow-lg:0 20px 50px -20px rgba(0,0,0,.6);
   }
   *{box-sizing:border-box;}
@@ -171,6 +171,7 @@
   }
   .result-card:hover{border-color:var(--accent);transform:translateY(-1px);}
   .result-card.playing{border-color:var(--accent);background:var(--accent-dim);}
+  .result-card.queued{border-color:var(--accent);}
   .result-thumb{
     width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--surface-3);
   }
@@ -185,7 +186,7 @@
   .heart-btn.faved{color:var(--danger);}
   .heart-btn.faved svg{fill:var(--danger);}
 
-  .loading-row{display:flex;align-items:center;gap:10px;color:var(--text-dim);padding:30px 4px;justify-content:center;font-size:14px;}
+  .loading-row{display:flex;align-items:center;gap:10px;color:var(--text-dim);padding:30px 4px;justify-content:center;font-size:14px;text-align:center;}
   .spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border);border-top-color:var(--accent);animation:spin .8s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
 
@@ -198,34 +199,35 @@
     padding:9px 12px 12px;
   }
   .player-track{display:flex;align-items:center;gap:11px;}
+  /* YouTube compliance: the embedded player is always visible and never smaller than 200x200 CSS px. */
   .yt-frame-wrap{
-    width:50px;height:50px;border-radius:10px;overflow:hidden;flex-shrink:0;
-    background:var(--surface-3);position:relative;cursor:pointer;
-    transition:.2s;
+    width:200px;height:200px;min-width:200px;min-height:200px;
+    border-radius:10px;overflow:hidden;flex-shrink:0;
+    background:var(--surface-3);position:relative;
+    opacity:1;visibility:visible;transition:.2s;
   }
   .yt-frame-wrap.expanded{
-    position:fixed;inset:0;width:100vw;height:100vh;border-radius:0;z-index:100;
+    position:fixed;inset:0;width:100vw;height:100vh;min-width:200px;min-height:200px;border-radius:0;z-index:100;
   }
-  #ytPlayer{width:100%;height:100%;pointer-events:none;}
-  .yt-frame-wrap.expanded #ytPlayer{pointer-events:auto;}
-  .yt-frame-wrap .expand-hint{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    background:rgba(0,0,0,.25);color:#fff;opacity:0;transition:.15s;
+  #ytPlayer{width:100%;height:100%;opacity:1;visibility:visible;}
+  .expand-toggle-btn{
+    position:absolute;bottom:6px;right:6px;z-index:2;
+    width:28px;height:28px;border-radius:50%;border:none;
+    background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;
   }
-  .yt-frame-wrap:hover .expand-hint{opacity:1;}
-  .yt-frame-wrap .expand-hint svg{width:16px;height:16px;}
+  .expand-toggle-btn svg{width:14px;height:14px;}
   .collapse-btn{position:fixed;top:16px;right:16px;z-index:101;display:none;}
-  .yt-frame-wrap.expanded ~ .collapse-btn, .collapse-btn.show{display:flex;}
+  .collapse-btn.show{display:flex;}
 
   .track-meta{min-width:0;flex:1;}
   .track-meta .track-title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .track-meta .track-artist{font-size:12.5px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
-  .autoplay-notice{
+  .player-notice{
     display:none;align-items:center;justify-content:center;gap:8px;width:100%;
     margin-top:8px;padding:9px 12px;border-radius:10px;border:1px solid var(--accent);
     background:var(--accent-dim);color:var(--accent-2);font-size:12.5px;font-weight:700;
-    animation:pulse 1.6s infinite;
   }
+  .player-notice.neutral{border-color:var(--border);background:var(--surface-2);color:var(--text-dim);font-weight:600;}
   .player-progress{display:flex;align-items:center;gap:8px;margin-top:8px;}
   .player-progress span{font-size:10.5px;color:var(--text-faint);font-variant-numeric:tabular-nums;width:32px;flex-shrink:0;}
   .player-progress span:last-child{text-align:right;}
@@ -240,7 +242,7 @@
   input[type=range]::-moz-range-thumb{width:12px;height:12px;border:none;border-radius:50%;background:var(--accent);}
   #progressBar{background:linear-gradient(90deg,var(--accent) 0%,var(--accent) var(--pct,0%),var(--surface-3) var(--pct,0%));}
 
-  .player-controls{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:9px;}
+  .player-controls{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:9px;flex-wrap:wrap;}
   .ctrl-btn{background:none;border:none;color:var(--text-dim);width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
   .ctrl-btn svg{width:19px;height:19px;}
   .ctrl-btn:hover{color:var(--text);}
@@ -275,7 +277,7 @@
     padding:11px 13px;color:var(--text);font-size:14px;
   }
   .field-hint{font-size:11.5px;color:var(--text-faint);margin-top:5px;line-height:1.4;}
-  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border-soft);}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border-soft);gap:12px;}
   .toggle-row:last-child{border-bottom:none;}
   .toggle-row .tr-label{font-size:14px;font-weight:600;}
   .toggle-row .tr-sub{font-size:12px;color:var(--text-faint);margin-top:2px;}
@@ -292,7 +294,7 @@
     padding:11px;border-radius:12px;font-weight:600;font-size:13.5px;margin-top:9px;
   }
   .playlist-item,.fav-item{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid var(--border-soft);}
-  .playlist-item img,.fav-item img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+  .playlist-item img,.fav-item img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--surface-3);}
   .playlist-item .pl-info,.fav-item .fv-info{flex:1;min-width:0;}
   .playlist-item .pl-info div:first-child,.fav-item .fv-info div:first-child{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .playlist-item .pl-info div:last-child,.fav-item .fv-info div:last-child{font-size:12px;color:var(--text-faint);}
@@ -300,9 +302,23 @@
   .legal-text{font-size:13.5px;line-height:1.6;color:var(--text-dim);}
   .legal-text p{margin:0 0 12px;}
   .legal-text strong{color:var(--text);}
+  .legal-text a{color:var(--accent-2);}
+  .legal-text ul{margin:0 0 12px;padding-left:18px;}
+  .legal-text li{margin-bottom:6px;}
+  .placeholder-line{color:var(--text-faint);font-style:italic;}
   .new-pl-row{display:flex;gap:8px;margin-top:6px;}
   .new-pl-row input{flex:1;}
   .new-pl-row button{background:var(--accent);border:none;color:#1a0d08;border-radius:10px;padding:0 16px;font-weight:700;}
+
+  /* ===== Footer ===== */
+  .app-footer{
+    max-width:1180px;margin:22px auto 0;padding:16px 16px 6px;
+    border-top:1px solid var(--border-soft);
+    color:var(--text-faint);font-size:12px;line-height:1.7;text-align:center;
+  }
+  .app-footer a{color:var(--text-dim);}
+  .footer-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:8px;}
+  .footer-links button{background:none;border:none;color:var(--text-dim);font-size:12px;text-decoration:underline;padding:0;}
 
   /* Toasts */
   #toastContainer{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;width:calc(100% - 32px);max-width:420px;}
@@ -317,7 +333,7 @@
 
   /* Desktop */
   @media (min-width:760px){
-    body{padding-bottom:calc(var(--player-h) + 8px);}
+    :root{--player-h:250px;}
     main{padding:26px 24px 8px;}
     .results-grid{grid-template-columns:repeat(2,1fr);}
     .brand{font-size:21px;}
@@ -329,6 +345,16 @@
   }
   @media (min-width:1040px){
     .results-grid{grid-template-columns:repeat(3,1fr);}
+  }
+  /* Mobile: player stays fully visible and at least 200x200; the track meta wraps below it. */
+  @media (max-width:759px){
+    .player-track{flex-wrap:wrap;}
+    .track-meta{flex-basis:calc(100% - 260px);}
+  }
+  @media (max-width:420px){
+    .player-track{justify-content:center;}
+    .track-meta{flex-basis:100%;order:3;text-align:center;}
+    .yt-frame-wrap{width:200px;height:200px;min-width:200px;min-height:200px;}
   }
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
   @media (prefers-reduced-motion:reduce){
@@ -376,8 +402,8 @@
 
   <div class="hero-empty" id="heroEmpty">
     <div class="wave-big"><span></span><span></span><span></span><span></span><span></span></div>
-    <h1>Reci ili upiši, ALL svira.</h1>
-    <p>TuneWiseAll pretražuje, prepoznaje i pušta glazbu unutar aplikacije — bez preusmjeravanja na YouTube ili Spotify. Probaj: „TuneWise, pusti Bijelo Dugme – Đurđevdan".</p>
+    <h1>Reci ili upiši, ALL pripremi.</h1>
+    <p>TuneWiseAll pretražuje i prepoznaje glazbu te je pušta u ugrađenom YouTube playeru. Reprodukciju uvijek pokrećeš ti — klikom na rezultat ili na Play.</p>
     <div class="example-chips">
       <button data-ex="Jelena Rozga Bižuterija">Jelena Rozga – Bižuterija</button>
       <button data-ex="Đurđevdan Bijelo Dugme">Đurđevdan – Bijelo Dugme</button>
@@ -385,6 +411,16 @@
       <button data-ex="rock iz 80-ih">Rock iz 80-ih</button>
     </div>
   </div>
+
+  <footer class="app-footer">
+    <div class="footer-links">
+      <button id="footerPrivacyBtn">Pravila privatnosti</button>
+      <button id="footerTermsBtn">Uvjeti korištenja</button>
+      <button id="footerLegalBtn">Pravne informacije</button>
+    </div>
+    <div>TuneWiseALL koristi YouTube API Services. Korištenjem prihvaćaš <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a> i <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>.</div>
+    <div>Kontakt: <a href="mailto:microweblabinfo@gmail.com">microweblabinfo@gmail.com</a></div>
+  </footer>
 </main>
 
 <div id="toastContainer"></div>
@@ -394,19 +430,20 @@
   <div class="player-track">
     <div class="yt-frame-wrap" id="ytFrameWrap">
       <div id="ytPlayer"></div>
-      <div class="expand-hint" id="expandHint"></div>
+      <button class="expand-toggle-btn" id="expandToggleBtn" type="button" aria-label="Povećaj player"></button>
     </div>
     <div class="track-meta">
       <div class="track-title" id="npTitle">Nema aktivne pjesme</div>
-      <div class="track-artist" id="npArtist">Reci ili upiši naziv pjesme za početak</div>
+      <div class="track-artist" id="npArtist">Pretraži, pa odaberi pjesmu za reprodukciju</div>
     </div>
     <button class="heart-btn" id="npFavBtn" aria-label="Favorit"></button>
     <button class="icon-btn small" id="queueBtn" aria-label="Red čekanja"></button>
   </div>
-  <button id="autoplayNotice" class="autoplay-notice" type="button">▶ Dodirni Play za početak reprodukcije</button>
+  <button id="readyNotice" class="player-notice" type="button">▶ Pjesma je spremna — dodirni Play za reprodukciju</button>
+  <button id="endedNotice" class="player-notice neutral" type="button">Pjesma je završila — dodirni Sljedeća za nastavak</button>
   <div class="player-progress">
     <span id="curTime">0:00</span>
-    <input type="range" id="progressBar" min="0" max="1000" value="0">
+    <input type="range" id="progressBar" min="0" max="1000" value="0" aria-label="Napredak reprodukcije">
     <span id="durTime">0:00</span>
   </div>
   <div class="player-controls">
@@ -417,32 +454,33 @@
     <button class="ctrl-btn" id="repeatBtn" aria-label="Repeat"></button>
     <div class="vol-wrap">
       <span id="volIcon" class="icon-btn small" style="border:none;background:none;width:22px;height:22px;"></span>
-      <input type="range" id="volumeBar" min="0" max="100" value="80">
+      <input type="range" id="volumeBar" min="0" max="100" value="80" aria-label="Glasnoća">
     </div>
   </div>
 </div>
-<button class="icon-btn collapse-btn" id="collapseBtn" aria-label="Zatvori prikaz videa"></button>
+<button class="icon-btn collapse-btn" id="collapseBtn" aria-label="Zatvori povećani prikaz"></button>
 
 <!-- Settings Modal -->
 <div class="modal-overlay" id="settingsModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-head"><h3>Postavke</h3><button class="icon-btn small" id="closeSettings"></button></div>
+    <div class="modal-head"><h3>Postavke</h3><button class="icon-btn small" id="closeSettings" aria-label="Zatvori"></button></div>
 
     <div class="field-label">Ponašanje</div>
     <div class="toggle-row">
-      <div><div class="tr-label">Always Listening</div><div class="tr-sub">Sluša riječ „TuneWise" u pozadini</div></div>
+      <div><div class="tr-label">Always Listening</div><div class="tr-sub">Nakon što je uključiš klikom, sluša riječ „TuneWise"</div></div>
       <div class="switch" id="settingsAlwaysSwitch"></div>
     </div>
     <div class="toggle-row">
-      <div><div class="tr-label">ALL način</div><div class="tr-sub">Automatski pusti najbolji rezultat pretrage</div></div>
+      <div><div class="tr-label">ALL način</div><div class="tr-sub">Automatski odabire najbolji rezultat i sprema ga u player — reprodukciju pokrećeš gumbom Play</div></div>
       <div class="switch" id="settingsAllSwitch"></div>
     </div>
 
     <div class="field-label">O aplikaciji</div>
-    <div class="field-hint">TuneWiseALL koristi YouTube Data API v3 i YouTube IFrame Player API za pretragu i reprodukciju javno dostupnog YouTube sadržaja. YouTube je izvor glazbenog sadržaja. TuneWiseALL ne pohranjuje niti distribuira glazbene datoteke.</div>
+    <div class="field-hint">TuneWiseALL koristi YouTube Data API v3 i YouTube IFrame Player API za pretragu i reprodukciju javno dostupnog YouTube sadržaja u vidljivom, ugrađenom playeru. YouTube je izvor glazbenog sadržaja. TuneWiseALL ne pohranjuje niti distribuira audio/video datoteke.</div>
     <button class="ghost-btn" id="openPrivacyBtn">Pravila privatnosti</button>
     <button class="ghost-btn" id="openTermsBtn">Uvjeti korištenja</button>
+    <button class="ghost-btn" id="openLegalBtn">Pravne informacije</button>
     <button class="ghost-btn" id="clearDataBtn">Obriši sve lokalne podatke</button>
   </div>
 </div>
@@ -451,20 +489,28 @@
 <div class="modal-overlay" id="privacyModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-head"><h3>Pravila privatnosti</h3><button class="icon-btn small" id="closePrivacy"></button></div>
+    <div class="modal-head"><h3>Pravila privatnosti</h3><button class="icon-btn small" id="closePrivacy" aria-label="Zatvori"></button></div>
     <div class="legal-text">
       <p><strong>Zadnje ažurirano:</strong> 2026.</p>
-      <p>TuneWiseALL je aplikacija koja korisnicima omogućuje pretragu i reprodukciju javno dostupnog glazbenog sadržaja s YouTubea unutar jedinstvenog sučelja.</p>
-      <p><strong>Podaci koje obrađujemo</strong></p>
-      <p>Upiti koje utipkate ili izgovorite šalju se našem sigurnom backend servisu (Cloud Run), koji ih prosljeđuje YouTube Data API v3 servisu (Google) isključivo radi dohvaćanja rezultata pretrage. YouTube API ključ nikad ne napušta naš poslužitelj i nije dio ove aplikacije. TuneWiseALL ne vodi korisničke račune i ne prikuplja osobne podatke na vlastitim poslužiteljima.</p>
-      <p><strong>Mikrofon</strong></p>
-      <p>Mikrofon se koristi samo kada aktivno pokreneš glasovnu pretragu, uključiš Always Listening način ili pritisneš „Prepoznaj pjesmu". Zvučni isječak za prepoznavanje pjesme šalje se vanjskom servisu za prepoznavanje glazbe samo u trenutku snimanja i ne pohranjuje se unutar aplikacije.</p>
+      <p>TuneWiseALL omogućuje pretragu i reprodukciju javno dostupnog glazbenog sadržaja s YouTubea unutar jedinstvenog sučelja.</p>
+
+      <p><strong>Pretraga</strong></p>
+      <p>Tekst koji upišeš ili izgovoriš šalje se konfiguriranom backend servisu ove aplikacije. Backend zatim koristi YouTube Data API v3 (Google) za dohvaćanje rezultata pretrage i vraća ih aplikaciji. YouTube API ključ nalazi se isključivo na backend servisu i nije dio ove web aplikacije. Način na koji backend servis obrađuje, bilježi ili zadržava upite ovisi o konfiguraciji tog servisa i nije nešto što ova aplikacija sama jamči ili kontrolira.</p>
+
+      <p><strong>Glasovna pretraga i mikrofon</strong></p>
+      <p>Mikrofon se aktivira isključivo tvojim klikom — na gumb za glasovnu pretragu, na „Always Listening" ili na „Prepoznaj pjesmu". Glasovna pretraga koristi Speech Recognition API (Web Speech API) preglednika. Obrada govora ovisi o pregledniku koji koristiš; neki preglednici tu obradu izvode putem vanjskih/cloud servisa proizvođača preglednika, pa obrada nije nužno isključivo lokalna. Kada koristiš „Prepoznaj pjesmu", aplikacija snima kratak zvučni uzorak (približno 6 sekundi) i šalje ga konfiguriranom backend servisu ove aplikacije radi prepoznavanja pjesme. Backend zatim komunicira s vanjskim servisom za prepoznavanje glazbe i vraća aplikaciji samo izvođača i naziv pjesme. Uzorak se ne pohranjuje unutar aplikacije; kako ga backend i vanjski servis za prepoznavanje obrađuju ili zadržavaju ovisi o njihovoj konfiguraciji i pravilima.</p>
+
+      <p><strong>Reprodukcija</strong></p>
+      <p>Reprodukcija se odvija putem YouTube IFrame Player API-ja u vidljivom, ugrađenom YouTube playeru. Google/YouTube pritom mogu prikupljati podatke u skladu s vlastitim pravilima. Aplikacija ne pohranjuje niti distribuira audio ili video datoteke.</p>
+
       <p><strong>Lokalna pohrana</strong></p>
-      <p>Favoriti, playliste i postavke spremaju se isključivo lokalno u tvom pregledniku (LocalStorage) i ne šalju se na vanjske poslužitelje. Brisanjem podataka preglednika ili gumbom „Obriši sve lokalne podatke" ti podaci se trajno uklanjaju.</p>
+      <p>Favoriti, playliste i postavke spremaju se lokalno u tvom pregledniku (LocalStorage). Spremljeni favoriti i playliste automatski se uklanjaju 30 dana nakon spremanja. Gumbom „Obriši sve lokalne podatke" ili brisanjem podataka preglednika uklanjaju se odmah.</p>
+
       <p><strong>Treće strane</strong></p>
-      <p>Pretraga i reprodukcija oslanjaju se na YouTube/Google usluge koje imaju vlastita pravila privatnosti. Korištenjem TuneWiseALL prihvaćaš i pravila privatnosti tih usluga.</p>
+      <p>Korištenjem TuneWiseALL prihvaćaš <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a> i <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>.</p>
+
       <p><strong>Kontakt</strong></p>
-      <p>Za pitanja o privatnosti obrati se administratoru aplikacije putem kontaktnih podataka navedenih na stranici s koje si pristupio/la aplikaciji.</p>
+      <p>Pitanja o privatnosti: <a href="mailto:microweblabinfo@gmail.com">microweblabinfo@gmail.com</a></p>
     </div>
   </div>
 </div>
@@ -473,32 +519,75 @@
 <div class="modal-overlay" id="termsModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-head"><h3>Uvjeti korištenja</h3><button class="icon-btn small" id="closeTerms"></button></div>
+    <div class="modal-head"><h3>Uvjeti korištenja</h3><button class="icon-btn small" id="closeTerms" aria-label="Zatvori"></button></div>
     <div class="legal-text">
       <p><strong>Zadnje ažurirano:</strong> 2026.</p>
       <p>Korištenjem TuneWiseALL prihvaćaš sljedeće uvjete.</p>
+
       <p><strong>Priroda usluge</strong></p>
-      <p>TuneWiseALL koristi YouTube Data API v3 i YouTube IFrame Player API za pretragu i reprodukciju javno dostupnog YouTube sadržaja. YouTube je izvor glazbenog sadržaja. TuneWiseALL ne pohranjuje niti distribuira glazbene datoteke.</p>
+      <p>TuneWiseALL koristi YouTube API Services — YouTube Data API v3 za pretragu i YouTube IFrame Player API za reprodukciju javno dostupnog YouTube sadržaja. YouTube je izvor glazbenog sadržaja. TuneWiseALL ne pohranjuje niti distribuira glazbene datoteke.</p>
+
+      <p><strong>Zabranjena upotreba</strong></p>
+      <ul>
+        <li>preuzimanje (download) YouTube audio ili video sadržaja</li>
+        <li>ripping i ekstrakcija zvuka</li>
+        <li>trajno spremanje YouTube audio/video sadržaja</li>
+        <li>zaobilaženje ili zamjena YouTube playera</li>
+        <li>blokiranje, skrivanje ili modificiranje YouTube oglasa</li>
+        <li>skrivanje ili prekrivanje ugrađenog playera</li>
+        <li>neovlaštena distribucija sadržaja dohvaćenog putem YouTube API Services</li>
+      </ul>
+
       <p><strong>Intelektualno vlasništvo</strong></p>
-      <p>Sav reproducirani sadržaj vlasništvo je odgovarajućih nositelja prava i dostupan je putem YouTubea. TuneWiseALL ne tvrdi vlasništvo nad tim sadržajem i ne omogućuje preuzimanje ili distribuciju glazbenih datoteka.</p>
+      <p>Sav reproducirani sadržaj vlasništvo je odgovarajućih nositelja prava i dostupan je putem YouTubea. TuneWiseALL ne tvrdi vlasništvo nad tim sadržajem.</p>
+
       <p><strong>Dopuštena upotreba</strong></p>
-      <p>Aplikacija je namijenjena osobnoj, nekomercijalnoj upotrebi. Korištenjem aplikacije obvezuješ se poštovati YouTube-ove Uvjete korištenja te sve primjenjive zakone.</p>
+      <p>Aplikacija je namijenjena osobnoj, nekomercijalnoj upotrebi. Obvezuješ se poštovati <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener">YouTube Terms of Service</a> te sve primjenjive zakone.</p>
+
       <p><strong>Dostupnost usluge</strong></p>
-      <p>TuneWiseALL ne jamči neprekidnu dostupnost pretrage ili reprodukcije, budući da ovisi o dostupnosti vanjskih servisa (YouTube i drugi). Sadržaj pojedinih videa može biti nedostupan za ugrađenu reprodukciju ovisno o postavkama nositelja prava.</p>
+      <p>TuneWiseALL ne jamči neprekidnu dostupnost pretrage ili reprodukcije jer ovisi o dostupnosti vanjskih servisa. Pojedini videozapisi mogu biti nedostupni za ugrađenu reprodukciju ovisno o postavkama nositelja prava.</p>
+
       <p><strong>Ograničenje odgovornosti</strong></p>
-      <p>Aplikacija se pruža „takva kakva jest", bez jamstava bilo koje vrste. TuneWiseALL ne odgovara za prekide usluge, netočnost rezultata pretrage ili nedostupnost pojedinog sadržaja.</p>
+      <p>Aplikacija se pruža „takva kakva jest", bez jamstava bilo koje vrste.</p>
+
       <p><strong>Izmjene</strong></p>
-      <p>Ovi uvjeti mogu se povremeno ažurirati. Nastavak korištenja aplikacije nakon izmjena smatra se prihvaćanjem novih uvjeta.</p>
+      <p>Uvjeti se mogu povremeno ažurirati. Nastavak korištenja smatra se prihvaćanjem novih uvjeta.</p>
+
+      <p><strong>Kontakt</strong></p>
+      <p><a href="mailto:microweblabinfo@gmail.com">microweblabinfo@gmail.com</a></p>
     </div>
   </div>
 </div>
 
+<!-- Legal Notice Modal -->
+<div class="modal-overlay" id="legalModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><h3>Pravne informacije</h3><button class="icon-btn small" id="closeLegal" aria-label="Zatvori"></button></div>
+    <div class="legal-text">
+      <p><strong>Pružatelj usluge</strong></p>
+      <p class="placeholder-line">Naziv vlasnika / pružatelja usluge: — nije još objavljeno —</p>
+      <p class="placeholder-line">Adresa sjedišta: — nije još objavljeno —</p>
+      <p class="placeholder-line">OIB: — nije još objavljeno —</p>
+      <p class="placeholder-line">VAT ID: — nije još objavljeno —</p>
+      <p class="placeholder-line">Registarski broj / sud registracije: — nije još objavljeno —</p>
 
+      <p><strong>Kontakt</strong></p>
+      <p>Službena kontakt adresa: <a href="mailto:microweblabinfo@gmail.com">microweblabinfo@gmail.com</a></p>
+
+      <p><strong>Napomena</strong></p>
+      <p>Gore navedeni pravni podaci bit će objavljeni po dovršetku registracije. Do tada je za sva pitanja mjerodavna gornja kontakt e-mail adresa.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Favorites Modal -->
 <div class="modal-overlay" id="favModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-head"><h3>Favoriti</h3><button class="icon-btn small" id="closeFav"></button></div>
-    <div id="favList"></div>
+    <div class="modal-head"><h3>Favoriti</h3><button class="icon-btn small" id="closeFav" aria-label="Zatvori"></button></div>
+    <div class="field-hint">Favoriti se čuvaju lokalno u pregledniku i automatski uklanjaju nakon 30 dana.</div>
+    <div id="favList" style="margin-top:10px;"></div>
   </div>
 </div>
 
@@ -506,10 +595,10 @@
 <div class="modal-overlay" id="plModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-head"><h3>Playliste</h3><button class="icon-btn small" id="closePl"></button></div>
+    <div class="modal-head"><h3>Playliste</h3><button class="icon-btn small" id="closePl" aria-label="Zatvori"></button></div>
     <div class="new-pl-row">
       <input type="text" id="newPlName" placeholder="Naziv nove playliste…">
-      <button id="createPlBtn">+</button>
+      <button id="createPlBtn" aria-label="Stvori playlistu">+</button>
     </div>
     <button class="ghost-btn" id="aiPlaylistBtn">✦ Generiraj AI playlistu iz favorita</button>
     <div id="plList" style="margin-top:14px;"></div>
@@ -520,7 +609,7 @@
 <div class="modal-overlay" id="queueModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-head"><h3>Red čekanja</h3><button class="icon-btn small" id="closeQueue"></button></div>
+    <div class="modal-head"><h3>Red čekanja</h3><button class="icon-btn small" id="closeQueue" aria-label="Zatvori"></button></div>
     <div id="queueList"></div>
   </div>
 </div>
@@ -529,7 +618,7 @@
 <div class="modal-overlay" id="plDetailModal">
   <div class="modal-box">
     <div class="modal-handle"></div>
-    <div class="modal-head"><h3 id="plDetailName">Playlista</h3><button class="icon-btn small" id="closePlDetail"></button></div>
+    <div class="modal-head"><h3 id="plDetailName">Playlista</h3><button class="icon-btn small" id="closePlDetail" aria-label="Zatvori"></button></div>
     <button class="ghost-btn" id="playPlBtn">▶ Pusti cijelu playlistu</button>
     <button class="ghost-btn" id="deletePlBtn" style="color:var(--danger);border-color:var(--danger);">Obriši playlistu</button>
     <div id="plDetailList" style="margin-top:10px;"></div>
@@ -541,7 +630,7 @@
 "use strict";
 
 /* ============================= ICONS ============================= */
-const ICONS = {
+var ICONS = {
   search:'<path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="m21 21-4.35-4.35"/>',
   mic:'<path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/><path d="M8 22h8"/>',
   heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>',
@@ -559,410 +648,514 @@ const ICONS = {
   volMute:'<path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m22 9-6 6"/><path d="m16 9 6 6"/>',
   expand:'<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>',
   trash:'<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>'
 };
-function svg(name,strokeW){
+function svg(name, strokeW){
   strokeW = strokeW || 2;
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+strokeW+'" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||'')+'</svg>';
 }
-function setIcon(el,name){ if(el) el.innerHTML = svg(name); }
+function setIcon(el, name){ if(el) el.innerHTML = svg(name); }
 
-/* ============================= APP CONFIG (embedded, not user-facing) =============================
-   TuneWiseALL više NE sadrži YouTube API ključ na klijentu ni u ovoj datoteci.
-   Pretraga ide preko vlastitog Cloud Run backenda (vidi /backend u repozitoriju) koji čuva
-   YouTube API ključ kao environment variable / Secret Manager i poziva YouTube Data API v3
-   u ime aplikacije. Korisnik nikad ne vidi niti unosi API ključ.
+/* ============================= APP CONFIG =============================
+   TuneWiseALL nema YouTube API ključ na klijentu. Pretraga ide preko vlastitog
+   backend servisa (Cloud Run) koji drži YouTube API ključ server-side i poziva
+   YouTube Data API v3 u ime aplikacije.
 
-   Postavi BACKEND_BASE_URL na URL svog objavljenog Cloud Run servisa
-   (npr. "https://tunewiseall-backend-xxxxx-ew.a.run.app"), bez završne kose crte.
-
-   AUDD_API_TOKEN je opcionalan i koristi se samo za "Prepoznaj pjesmu" — ako je prazan,
-   ta je funkcija isključena, dok tekstualna i glasovna pretraga rade normalno.
+   Postavi BACKEND_URL na stvarni Cloud Run URL kad bude poznat (bez završne kose crte).
+   Dok je ispod placeholder, pretraga NE vraća nikakve simulirane/mock rezultate —
+   korisniku se prikazuje jasna poruka da glazbeni servis nije konfiguriran.
+   Sam placeholder nikad se ne prikazuje korisniku kao stvarni podatak.
 */
-const APP_CONFIG = {
-  BACKEND_BASE_URL: "https://REPLACE-WITH-YOUR-CLOUD-RUN-URL.a.run.app",
-  AUDD_API_TOKEN: ""
-};
+var BACKEND_URL = "https://REPLACE-WITH-YOUR-CLOUD-RUN-URL.a.run.app";
+var BACKEND_SEARCH_PATH = "/api/search";
+var BACKEND_RECOGNIZE_PATH = "/api/recognize";
+/* Napomena: u klijentskom kodu nema nikakvog tokena servisa za prepoznavanje glazbe.
+   Snimljeni audio uzorak šalje se backend servisu, koji dalje komunicira s vanjskim
+   servisom za prepoznavanje koristeći token pohranjen server-side. */
 
-/* ============================= STATE ============================= */
-const LS = {
-  fav:'tw_favorites_v1', pl:'tw_playlists_v1', settings:'tw_settings_v1', history:'tw_history_v1'
-};
+/* ============================= STORAGE ============================= */
+var LS = { fav:'tw_favorites_v1', pl:'tw_playlists_v1', settings:'tw_settings_v1', history:'tw_history_v1' };
+var LIFECYCLE_DAYS = 30;
+var LIFECYCLE_MS = LIFECYCLE_DAYS*24*60*60*1000;
+
 function loadJSON(key, fallback){
-  try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; }
+  try{ var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; }
 }
 function saveJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
 
-const State = {
-  apiKeys: { audd: APP_CONFIG.AUDD_API_TOKEN },
-  favorites: loadJSON(LS.fav, []),
-  playlists: loadJSON(LS.pl, []),
+/* Favorite zapis: { id, title, channel, thumbnail, duration, savedAt }
+   Playlist zapis: { id, name, ai, savedAt, tracks:[{id,title,channel,thumbnail,duration}] }
+   Lifecycle timestamp (savedAt) živi na favoritu i na samoj playlisti — NE na pojedinim
+   zapisima unutar playlist.tracks, koji su samo prikazni metapodaci. */
+function pruneByLifecycle(list){
+  var cutoff = Date.now() - LIFECYCLE_MS;
+  return (list||[]).filter(function(x){
+    if(!x || !x.id) return false;
+    if(typeof x.savedAt !== 'number') return false; // stari/neispravni zapisi bez lifecyclea se odbacuju
+    return x.savedAt >= cutoff;
+  });
+}
+function normalizeTrack(t){
+  return {
+    id: t.id,
+    title: t.title || '',
+    channel: t.channel || t.artist || '',
+    thumbnail: t.thumbnail || '',
+    duration: Number(t.duration) || 0
+  };
+}
+
+var State = {
+  favorites: [],
+  playlists: [],
   settings: loadJSON(LS.settings, {alwaysListening:false, allMode:true, volume:80}),
   history: loadJSON(LS.history, []),
   queue: [],
   queueIndex: -1,
   current: null,
   shuffle: false,
-  repeat: 'off', // off | one | all
+  repeat: 'off',
   ytPlayer: null,
   ytReady: false,
-  pendingPlay: null,
-  isRecording: false,
+  pendingLoad: null,
   progressTimer: null,
-  activePlaylistId: null,
+  activePlaylistId: null
 };
+
+(function initStorage(){
+  State.favorites = pruneByLifecycle(loadJSON(LS.fav, []));
+  saveJSON(LS.fav, State.favorites);
+  var pls = pruneByLifecycle(loadJSON(LS.pl, []));
+  pls.forEach(function(pl){ if(!Array.isArray(pl.tracks)) pl.tracks = []; });
+  State.playlists = pls;
+  saveJSON(LS.pl, State.playlists);
+  if(typeof State.settings.volume !== 'number') State.settings.volume = 80;
+})();
 
 /* ============================= TOASTS ============================= */
 function toast(msg, type){
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
+  var c = document.getElementById('toastContainer');
+  var t = document.createElement('div');
   t.className = 'toast' + (type ? ' '+type : '');
-  t.textContent = msg;
+  t.textContent = msg; // sigurno: tekst, nikad HTML
   c.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 3600);
+  setTimeout(function(){
+    t.style.transition='opacity .3s'; t.style.opacity='0';
+    setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); }, 300);
+  }, 3600);
 }
 
 /* ============================= UTIL ============================= */
 function fmtTime(sec){
   sec = Math.max(0, Math.floor(sec||0));
-  const m = Math.floor(sec/60), s = sec%60;
+  var m = Math.floor(sec/60), s = sec%60;
   return m+':'+String(s).padStart(2,'0');
 }
 function isoDurationToSeconds(iso){
   if(!iso) return 0;
-  const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  var m = String(iso).match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if(!m) return 0;
-  const h = parseInt(m[1]||0), mi = parseInt(m[2]||0), s = parseInt(m[3]||0);
-  return h*3600 + mi*60 + s;
-}
-function debounce(fn, ms){ let t; return function(...a){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), ms); }; }
-
-/* ============================= BACKEND SEARCH (Cloud Run) =============================
-   TuneWiseALL no longer calls the YouTube Data API directly from the browser.
-   All searches go through our own Cloud Run backend, which holds the YouTube API key
-   server-side (environment variable / Secret Manager) and returns already-normalized,
-   ready-to-play results. See handleApiError() for the "backend unavailable" UX.
-*/
-async function fetchWithTimeout(url, ms){
-  ms = ms || 10000;
-  const controller = new AbortController();
-  const t = setTimeout(()=>controller.abort(), ms);
-  try{
-    return await fetch(url, { signal: controller.signal });
-  } finally {
-    clearTimeout(t);
-  }
+  return (parseInt(m[1]||0,10))*3600 + (parseInt(m[2]||0,10))*60 + (parseInt(m[3]||0,10));
 }
 
-async function ytSearch(query, maxResults){
+/* ============================= BACKEND SEARCH =============================
+   Pretraga uvijek ide na konfigurirani backend (/api/search?q=...).
+   Nema hardkodiranih ni simuliranih rezultata ni u jednom slučaju greške. */
+function isBackendConfigured(){
+  var base = (BACKEND_URL||'').replace(/\/+$/,'');
+  return !!base && base.indexOf('REPLACE-WITH-YOUR-CLOUD-RUN-URL') === -1;
+}
+function fetchWithTimeout(url, ms){
+  ms = ms || 12000;
+  var controller = new AbortController();
+  var t = setTimeout(function(){ controller.abort(); }, ms);
+  return fetch(url, {signal: controller.signal}).then(function(res){
+    clearTimeout(t); return res;
+  }, function(err){
+    clearTimeout(t); throw err;
+  });
+}
+function searchBackend(query, maxResults){
   maxResults = maxResults || 12;
-  const base = (APP_CONFIG.BACKEND_BASE_URL || '').replace(/\/+$/,'');
-  if(!base || base.indexOf('REPLACE-WITH-YOUR-CLOUD-RUN-URL') !== -1){
-    // App is misconfigured (developer hasn't set the backend URL) — never surface this as a key prompt to end users.
-    console.warn('TuneWiseALL: APP_CONFIG.BACKEND_BASE_URL is not configured.');
-    throw {code:'UNAVAILABLE', message:'Glazbena usluga trenutno nije dostupna. Pokušaj ponovno malo kasnije.'};
+  if(!isBackendConfigured()){
+    return Promise.reject({code:'NOT_CONFIGURED', message:'Glazbeni servis još nije konfiguriran za ovu instalaciju. Pretraga trenutno nije dostupna.'});
   }
+  var base = (BACKEND_URL||'').replace(/\/+$/,'');
+  var url = base + BACKEND_SEARCH_PATH + '?q=' + encodeURIComponent(query) + '&maxResults=' + encodeURIComponent(maxResults);
 
-  const url = base + '/search?q=' + encodeURIComponent(query) + '&maxResults=' + encodeURIComponent(maxResults);
-  let res;
-  try{
-    res = await fetchWithTimeout(url, 10000);
-  }catch(err){
-    // Network failure, timeout, or Cloud Run cold-start/unreachable.
-    console.warn('TuneWiseALL backend unreachable:', err);
+  return fetchWithTimeout(url, 12000).then(function(res){
+    if(!res.ok){ throw {code:'UNAVAILABLE', message:'Glazbeni servis trenutno nije dostupan. Pokušaj ponovno za trenutak.'}; }
+    return res.json().catch(function(){
+      throw {code:'UNAVAILABLE', message:'Neočekivan odgovor glazbenog servisa. Pokušaj ponovno.'};
+    });
+  }, function(){
     throw {code:'UNAVAILABLE', message:'Ne mogu se povezati s glazbenim servisom. Provjeri internetsku vezu i pokušaj ponovno.'};
-  }
-
-  if(!res.ok){
-    console.warn('TuneWiseALL backend returned HTTP', res.status);
-    throw {code:'UNAVAILABLE', message:'Glazbeni servis trenutno nije dostupan. Pokušaj ponovno za trenutak.'};
-  }
-
-  let data;
-  try{
-    data = await res.json();
-  }catch(err){
-    console.warn('TuneWiseALL backend returned invalid JSON:', err);
-    throw {code:'UNAVAILABLE', message:'Neočekivan odgovor glazbenog servisa. Pokušaj ponovno.'};
-  }
-
-  if(data && data.error){
-    console.warn('TuneWiseALL backend error:', data.error);
-    throw {code:'UNAVAILABLE', message:'Trenutno ne mogu dovršiti pretragu. Pokušaj ponovno za trenutak.'};
-  }
-
-  const results = Array.isArray(data) ? data : (Array.isArray(data.results) ? data.results : []);
-  // Defensive normalization in case the backend response shape drifts slightly.
-  return results
-    .filter(it => it && it.id)
-    .map(it => ({
-      id: it.id,
-      title: it.title || '',
-      artist: it.artist || it.channelTitle || '',
-      thumbnail: it.thumbnail || '',
-      duration: Number(it.duration) || 0,
-      source: it.source || 'YouTube'
-    }));
+  }).then(function(data){
+    if(data && data.error){ throw {code:'UNAVAILABLE', message:'Trenutno ne mogu dovršiti pretragu. Pokušaj ponovno za trenutak.'}; }
+    var arr = Array.isArray(data) ? data : (data && Array.isArray(data.results) ? data.results : (data && Array.isArray(data.items) ? data.items : []));
+    return arr.filter(function(it){ return it && it.id; }).map(function(it){
+      return {
+        id: String(it.id),
+        title: it.title || '',
+        channel: it.channel || it.channelTitle || it.artist || '',
+        thumbnail: it.thumbnail || '',
+        duration: (typeof it.duration === 'string' && it.duration.indexOf('PT')===0) ? isoDurationToSeconds(it.duration) : (Number(it.duration)||0),
+        source: it.source || 'YouTube'
+      };
+    });
+  });
+}
+function handleApiError(err){
+  toast((err && err.message) || 'Trenutno ne mogu dovršiti pretragu. Pokušaj ponovno za trenutak.', 'err');
 }
 
-/* ============================= RESULTS RENDER ============================= */
-const resultsGrid = document.getElementById('resultsGrid');
-const heroEmpty = document.getElementById('heroEmpty');
-const sectionHead = document.getElementById('sectionHead');
-const sectionTitle = document.getElementById('sectionTitle');
+/* ============================= RESULTS RENDER =============================
+   Sve kartice grade se DOM API-jem (createElement + textContent) i povezuju s
+   addEventListener. Nijedna vrijednost iz API odgovora nikad se ne umeće u inline
+   onclick/on* atribut ni u JavaScript string — handler dobiva originalni objekt. */
+var resultsGrid = document.getElementById('resultsGrid');
+var heroEmpty = document.getElementById('heroEmpty');
+var sectionHead = document.getElementById('sectionHead');
+var sectionTitle = document.getElementById('sectionTitle');
+var currentResults = [];
 
 function showLoading(){
   heroEmpty.style.display='none';
   sectionHead.style.display='flex';
   sectionTitle.textContent = 'Tražim…';
-  resultsGrid.innerHTML = '<div class="loading-row"><div class="spinner"></div>ALL pretražuje YouTube…</div>';
+  resultsGrid.innerHTML = '';
+  var row = document.createElement('div');
+  row.className='loading-row';
+  var sp = document.createElement('div'); sp.className='spinner';
+  var tx = document.createElement('span'); tx.textContent='ALL pretražuje…';
+  row.appendChild(sp); row.appendChild(tx);
+  resultsGrid.appendChild(row);
 }
 function showEmptyState(){
   resultsGrid.innerHTML='';
   sectionHead.style.display='none';
   heroEmpty.style.display='block';
 }
-function isFav(id){ return State.favorites.some(f=>f.id===id); }
+function showMessage(msg){
+  heroEmpty.style.display='none';
+  sectionHead.style.display='flex';
+  resultsGrid.innerHTML='';
+  var row = document.createElement('div');
+  row.className='loading-row';
+  row.textContent = msg;
+  resultsGrid.appendChild(row);
+}
+function isFav(id){ return State.favorites.some(function(f){ return f.id===id; }); }
 
 function renderResults(list, title){
+  currentResults = list;
   heroEmpty.style.display='none';
   sectionHead.style.display='flex';
   sectionTitle.textContent = title || 'Rezultati';
   resultsGrid.innerHTML='';
   if(!list.length){
-    resultsGrid.innerHTML = '<div class="loading-row">Nema rezultata. Pokušaj drugi upit.</div>';
+    showMessage('Nema rezultata. Pokušaj drugi upit.');
     return;
   }
-  list.forEach(item=>{
-    const card = document.createElement('div');
+  list.forEach(function(item, index){
+    var card = document.createElement('div');
     card.className='result-card';
     card.dataset.id = item.id;
-    card.innerHTML = `
-      <img class="result-thumb" src="${item.thumbnail}" alt="" loading="lazy">
-      <div class="result-info">
-        <div class="rtitle">${escapeHtml(item.title)}</div>
-        <div class="rartist">${escapeHtml(item.artist)}</div>
-        <div class="rmeta"><span class="badge">${item.source}</span><span>${item.duration? fmtTime(item.duration):'--:--'}</span></div>
-      </div>
-      <div class="result-actions">
-        <button class="heart-btn ${isFav(item.id)?'faved':''}" data-fav="${item.id}">${svg('heart')}</button>
-      </div>`;
-    card.querySelector('.result-info').addEventListener('click', ()=> playTrack(item, list));
-    card.querySelector('[data-fav]').addEventListener('click', (e)=>{ e.stopPropagation(); toggleFavorite(item); refreshFavButtons(); });
+
+    var img = document.createElement('img');
+    img.className='result-thumb'; img.loading='lazy'; img.alt='';
+    if(item.thumbnail) img.src = item.thumbnail;
+
+    var info = document.createElement('div');
+    info.className='result-info';
+    info.setAttribute('role','button');
+    info.tabIndex = 0;
+    var t1 = document.createElement('div'); t1.className='rtitle'; t1.textContent = item.title;
+    var t2 = document.createElement('div'); t2.className='rartist'; t2.textContent = item.channel;
+    var meta = document.createElement('div'); meta.className='rmeta';
+    var badge = document.createElement('span'); badge.className='badge'; badge.textContent = item.source || 'YouTube';
+    var dur = document.createElement('span'); dur.textContent = item.duration ? fmtTime(item.duration) : '--:--';
+    meta.appendChild(badge); meta.appendChild(dur);
+    info.appendChild(t1); info.appendChild(t2); info.appendChild(meta);
+
+    var actions = document.createElement('div');
+    actions.className='result-actions';
+    var favBtn = document.createElement('button');
+    favBtn.type='button';
+    favBtn.className='heart-btn' + (isFav(item.id) ? ' faved' : '');
+    favBtn.setAttribute('data-fav-id', item.id);
+    favBtn.setAttribute('aria-label','Favorit');
+    favBtn.innerHTML = svg('heart');
+    var addPlBtn = document.createElement('button');
+    addPlBtn.type='button';
+    addPlBtn.className='icon-btn small';
+    addPlBtn.setAttribute('aria-label','Dodaj u playlistu');
+    addPlBtn.innerHTML = svg('plus');
+    actions.appendChild(favBtn); actions.appendChild(addPlBtn);
+
+    card.appendChild(img); card.appendChild(info); card.appendChild(actions);
+
+    // korisnička akcija -> reprodukcija
+    info.addEventListener('click', function(){ playSongAtIndex(index); });
+    info.addEventListener('keydown', function(e){
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); playSongAtIndex(index); }
+    });
+    favBtn.addEventListener('click', function(e){ e.stopPropagation(); toggleFavorite(item); });
+    addPlBtn.addEventListener('click', function(e){ e.stopPropagation(); addToPlaylist(item); });
+
     resultsGrid.appendChild(card);
   });
+  refreshFavButtons();
+  markPlayingCard();
 }
 function refreshFavButtons(){
-  document.querySelectorAll('[data-fav]').forEach(btn=>{
-    const id = btn.getAttribute('data-fav');
-    btn.classList.toggle('faved', isFav(id));
+  var btns = document.querySelectorAll('[data-fav-id]');
+  Array.prototype.forEach.call(btns, function(btn){
+    btn.classList.toggle('faved', isFav(btn.getAttribute('data-fav-id')));
   });
-  document.getElementById('npFavBtn').classList.toggle('faved', State.current && isFav(State.current.id));
-}
-function escapeHtml(s){
-  return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  var npFav = document.getElementById('npFavBtn');
+  npFav.classList.toggle('faved', !!(State.current && isFav(State.current.id)));
 }
 function markPlayingCard(){
-  document.querySelectorAll('.result-card').forEach(c=>{
-    c.classList.toggle('playing', State.current && c.dataset.id === State.current.id);
+  var cards = document.querySelectorAll('.result-card');
+  Array.prototype.forEach.call(cards, function(c){
+    var isCur = !!(State.current && c.dataset.id === State.current.id);
+    c.classList.toggle('playing', isCur);
+    var queued = !isCur && State.queueIndex>-1 && State.queue[State.queueIndex] && c.dataset.id === State.queue[State.queueIndex].id;
+    c.classList.toggle('queued', !!queued);
   });
 }
 
-/* ============================= FAVORITES ============================= */
-function toggleFavorite(item){
-  const idx = State.favorites.findIndex(f=>f.id===item.id);
-  if(idx>-1){ State.favorites.splice(idx,1); toast('Uklonjeno iz favorita'); }
-  else { State.favorites.unshift(item); toast('Dodano u favorite', 'ok'); }
+/* ============================= FAVORITES =============================
+   Dodavanje koristi puni track objekt; uklanjanje koristi samo ID. */
+function addFavorite(track){
+  var t = normalizeTrack(track);
+  t.savedAt = Date.now();
+  State.favorites.unshift(t);
   saveJSON(LS.fav, State.favorites);
+}
+function removeFavorite(id){
+  State.favorites = State.favorites.filter(function(f){ return f.id !== id; });
+  saveJSON(LS.fav, State.favorites);
+}
+function toggleFavorite(track){
+  if(isFav(track.id)){ removeFavorite(track.id); toast('Uklonjeno iz favorita'); }
+  else { addFavorite(track); toast('Dodano u favorite', 'ok'); }
   renderFavorites();
+  refreshFavButtons();
 }
 function renderFavorites(){
-  const el = document.getElementById('favList');
-  if(!State.favorites.length){ el.innerHTML='<div class="empty-mini">Još nema favorita. Dodaj pjesme klikom na srce.</div>'; return; }
+  var el = document.getElementById('favList');
   el.innerHTML='';
-  State.favorites.forEach(item=>{
-    const row = document.createElement('div');
+  if(!State.favorites.length){
+    var empty = document.createElement('div');
+    empty.className='empty-mini';
+    empty.textContent='Još nema favorita. Dodaj pjesme klikom na srce.';
+    el.appendChild(empty);
+    return;
+  }
+  State.favorites.forEach(function(item){
+    var row = document.createElement('div');
     row.className='fav-item';
-    row.innerHTML = `<img src="${item.thumbnail}" alt=""><div class="fv-info"><div>${escapeHtml(item.title)}</div><div>${escapeHtml(item.artist)}</div></div>
-      <button class="icon-btn small" data-play>${svg('play')}</button>
-      <button class="icon-btn small" data-rm>${svg('trash')}</button>`;
-    row.querySelector('[data-play]').addEventListener('click', ()=>{ playTrack(item, State.favorites); closeModal('favModal'); });
-    row.querySelector('[data-rm]').addEventListener('click', ()=>{ toggleFavorite(item); });
+    var img = document.createElement('img'); img.alt=''; if(item.thumbnail) img.src=item.thumbnail;
+    var info = document.createElement('div'); info.className='fv-info';
+    var a = document.createElement('div'); a.textContent=item.title;
+    var b = document.createElement('div'); b.textContent=item.channel;
+    info.appendChild(a); info.appendChild(b);
+    var playBtn = document.createElement('button'); playBtn.type='button'; playBtn.className='icon-btn small'; playBtn.setAttribute('aria-label','Pusti'); playBtn.innerHTML=svg('play');
+    var rmBtn = document.createElement('button'); rmBtn.type='button'; rmBtn.className='icon-btn small'; rmBtn.setAttribute('aria-label','Ukloni'); rmBtn.innerHTML=svg('trash');
+    row.appendChild(img); row.appendChild(info); row.appendChild(playBtn); row.appendChild(rmBtn);
+
+    playBtn.addEventListener('click', function(){
+      setQueue(State.favorites, State.favorites.indexOf(item));
+      loadAndPlay(item);
+      closeModal('favModal');
+    });
+    rmBtn.addEventListener('click', function(){
+      removeFavorite(item.id);
+      renderFavorites();
+      refreshFavButtons();
+      toast('Uklonjeno iz favorita');
+    });
     el.appendChild(row);
   });
 }
 
 /* ============================= PLAYLISTS ============================= */
-function renderPlaylists(){
-  const el = document.getElementById('plList');
-  if(!State.playlists.length){ el.innerHTML = '<div class="empty-mini">Nema playlista. Stvori svoju ili generiraj AI playlistu.</div>'; return; }
-  el.innerHTML='';
-  State.playlists.forEach(pl=>{
-    const row = document.createElement('div');
-    row.className='playlist-item';
-    const thumb = pl.tracks[0] ? pl.tracks[0].thumbnail : '';
-    row.innerHTML = `<img src="${thumb}" alt="" style="background:var(--surface-3)"><div class="pl-info"><div>${escapeHtml(pl.name)}</div><div>${pl.tracks.length} pjesama${pl.ai?' · AI':''}</div></div>
-      <button class="icon-btn small" data-open>${svg('list')}</button>`;
-    row.querySelector('[data-open]').addEventListener('click', ()=> openPlaylistDetail(pl.id));
-    el.appendChild(row);
-  });
-}
+function persistPlaylists(){ saveJSON(LS.pl, State.playlists); }
 function createPlaylist(name){
-  const pl = {id:'pl_'+Date.now(), name: name||'Nova playlista', tracks:[], ai:false};
+  var pl = { id:'pl_'+Date.now(), name: name || 'Nova playlista', ai:false, savedAt: Date.now(), tracks: [] };
   State.playlists.unshift(pl);
-  saveJSON(LS.pl, State.playlists);
+  persistPlaylists();
   renderPlaylists();
   return pl;
 }
+function renderPlaylists(){
+  var el = document.getElementById('plList');
+  el.innerHTML='';
+  if(!State.playlists.length){
+    var empty = document.createElement('div');
+    empty.className='empty-mini';
+    empty.textContent='Nema playlista. Stvori svoju ili generiraj AI playlistu.';
+    el.appendChild(empty);
+    return;
+  }
+  State.playlists.forEach(function(pl){
+    var row = document.createElement('div');
+    row.className='playlist-item';
+    var img = document.createElement('img'); img.alt='';
+    if(pl.tracks[0] && pl.tracks[0].thumbnail) img.src = pl.tracks[0].thumbnail;
+    var info = document.createElement('div'); info.className='pl-info';
+    var a = document.createElement('div'); a.textContent = pl.name;
+    var b = document.createElement('div'); b.textContent = pl.tracks.length + ' pjesama' + (pl.ai ? ' · AI' : '');
+    info.appendChild(a); info.appendChild(b);
+    var openBtn = document.createElement('button'); openBtn.type='button'; openBtn.className='icon-btn small'; openBtn.setAttribute('aria-label','Otvori playlistu'); openBtn.innerHTML=svg('list');
+    row.appendChild(img); row.appendChild(info); row.appendChild(openBtn);
+    openBtn.addEventListener('click', function(){ openPlaylistDetail(pl.id); });
+    el.appendChild(row);
+  });
+}
 function openPlaylistDetail(id){
-  const pl = State.playlists.find(p=>p.id===id);
+  var pl = State.playlists.filter(function(p){ return p.id===id; })[0];
   if(!pl) return;
   State.activePlaylistId = id;
   document.getElementById('plDetailName').textContent = pl.name;
-  const list = document.getElementById('plDetailList');
-  if(!pl.tracks.length){ list.innerHTML = '<div class="empty-mini">Playlista je prazna.</div>'; }
-  else{
-    list.innerHTML='';
-    pl.tracks.forEach((t,i)=>{
-      const row = document.createElement('div');
+  var list = document.getElementById('plDetailList');
+  list.innerHTML='';
+  if(!pl.tracks.length){
+    var empty = document.createElement('div');
+    empty.className='empty-mini';
+    empty.textContent='Playlista je prazna.';
+    list.appendChild(empty);
+  } else {
+    pl.tracks.forEach(function(t, i){
+      var row = document.createElement('div');
       row.className='playlist-item';
-      row.innerHTML = `<img src="${t.thumbnail}" alt=""><div class="pl-info"><div>${escapeHtml(t.title)}</div><div>${escapeHtml(t.artist)}</div></div>
-        <button class="icon-btn small" data-play>${svg('play')}</button>
-        <button class="icon-btn small" data-rm>${svg('trash')}</button>`;
-      row.querySelector('[data-play]').addEventListener('click', ()=>{ playTrack(t, pl.tracks); closeModal('plDetailModal'); closeModal('plModal'); });
-      row.querySelector('[data-rm]').addEventListener('click', ()=>{ pl.tracks.splice(i,1); saveJSON(LS.pl,State.playlists); openPlaylistDetail(id); renderPlaylists(); });
+      var img = document.createElement('img'); img.alt=''; if(t.thumbnail) img.src=t.thumbnail;
+      var info = document.createElement('div'); info.className='pl-info';
+      var a = document.createElement('div'); a.textContent=t.title;
+      var b = document.createElement('div'); b.textContent=t.channel;
+      info.appendChild(a); info.appendChild(b);
+      var playBtn = document.createElement('button'); playBtn.type='button'; playBtn.className='icon-btn small'; playBtn.setAttribute('aria-label','Pusti'); playBtn.innerHTML=svg('play');
+      var rmBtn = document.createElement('button'); rmBtn.type='button'; rmBtn.className='icon-btn small'; rmBtn.setAttribute('aria-label','Ukloni'); rmBtn.innerHTML=svg('trash');
+      row.appendChild(img); row.appendChild(info); row.appendChild(playBtn); row.appendChild(rmBtn);
+      playBtn.addEventListener('click', function(){
+        setQueue(pl.tracks, i);
+        loadAndPlay(pl.tracks[i]);
+        closeModal('plDetailModal'); closeModal('plModal');
+      });
+      rmBtn.addEventListener('click', function(){
+        pl.tracks.splice(i,1);
+        persistPlaylists();
+        openPlaylistDetail(id);
+        renderPlaylists();
+      });
       list.appendChild(row);
     });
   }
   openModal('plDetailModal');
 }
-function addToPlaylistPrompt(track){
-  if(!State.playlists.length){
-    const pl = createPlaylist('Moja playlista');
-    pl.tracks.push(track);
-    saveJSON(LS.pl, State.playlists);
-    toast('Dodano u "'+pl.name+'"', 'ok');
+function addToPlaylist(track){
+  var pl = State.playlists[0];
+  if(!pl){ pl = createPlaylist('Moja playlista'); }
+  if(pl.tracks.some(function(t){ return t.id===track.id; })){
+    toast('Pjesma je već u "'+pl.name+'"');
     return;
   }
-  State.playlists[0].tracks.push(track);
-  saveJSON(LS.pl, State.playlists);
-  toast('Dodano u "'+State.playlists[0].name+'"', 'ok');
+  pl.tracks.push(normalizeTrack(track));
+  persistPlaylists();
   renderPlaylists();
+  toast('Dodano u "'+pl.name+'"', 'ok');
 }
-async function generateAIPlaylist(){
+function generateAIPlaylist(){
   if(!State.favorites.length){ toast('Dodaj favorite kako bi ALL mogao generirati playlistu.', 'err'); return; }
-  const seedArtists = [...new Set(State.favorites.map(f=>f.artist))].slice(0,3);
-  const query = seedArtists.join(' ') + ' hitovi';
+  var seeds = [];
+  State.favorites.forEach(function(f){ if(f.channel && seeds.indexOf(f.channel)===-1) seeds.push(f.channel); });
+  var query = seeds.slice(0,3).join(' ') + ' hitovi';
   toast('ALL generira playlistu…');
-  try{
-    const results = await ytSearch(query, 14);
+  searchBackend(query, 14).then(function(results){
     if(!results.length){ toast('Nije pronađeno dovoljno pjesama.', 'err'); return; }
-    const pl = createPlaylist('AI Mix — ' + new Date().toLocaleDateString('hr-HR'));
+    var pl = createPlaylist('AI Mix — ' + new Date().toLocaleDateString('hr-HR'));
     pl.ai = true;
-    pl.tracks = results;
-    saveJSON(LS.pl, State.playlists);
+    pl.tracks = results.map(normalizeTrack);
+    persistPlaylists();
     renderPlaylists();
     toast('AI playlista stvorena!', 'ok');
-  }catch(err){
-    handleApiError(err);
-  }
+  }).catch(handleApiError);
 }
 
-/* ============================= YOUTUBE IFRAME PLAYER ============================= */
+/* ============================= YOUTUBE IFRAME PLAYER =============================
+   - autoplay: 0
+   - player je uvijek vidljiv, najmanje 200x200 CSS px, bez elementa preko playera
+   - reprodukcija kreće isključivo iz korisničke akcije (klik na rezultat/favorit/
+     queue/playlistu ili Play/Next/Previous)
+   - onPlayerStateChange NIKAD ne pokreće drugu pjesmu
+   - IFrame API skripta učitava se točno jednom (guard ispod) */
 window.onYouTubeIframeAPIReady = function(){
   State.ytPlayer = new YT.Player('ytPlayer', {
     height:'100%', width:'100%',
-    playerVars:{ playsinline:1, controls:1, rel:0, modestbranding:1 },
+    playerVars:{ autoplay:0, playsinline:1, controls:1, rel:0, modestbranding:1 },
     events:{
-      onReady: ()=>{
+      onReady: function(){
         State.ytReady = true;
-        State.ytPlayer.setVolume(State.settings.volume);
-        if(State.pendingPlay){ const p = State.pendingPlay; State.pendingPlay=null; actuallyPlay(p); }
+        try{ State.ytPlayer.setVolume(State.settings.volume); }catch(e){}
+        if(State.pendingLoad){
+          var p = State.pendingLoad; State.pendingLoad = null;
+          loadAndPlay(p);
+        }
       },
       onStateChange: onPlayerStateChange,
       onError: onPlayerError
     }
   });
 };
-(function loadYTApi(){
-  const tag = document.createElement('script');
+(function loadYTApiOnce(){
+  if(document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) return;
+  var tag = document.createElement('script');
   tag.src = 'https://www.youtube.com/iframe_api';
   document.head.appendChild(tag);
 })();
 
 function onPlayerStateChange(e){
-  const playBtn = document.getElementById('playPauseBtn');
+  var playBtn = document.getElementById('playPauseBtn');
   if(e.data === YT.PlayerState.PLAYING){
     setIcon(playBtn,'pause');
+    hideNotice('readyNotice');
+    hideNotice('endedNotice');
     startProgressTimer();
-    hideAutoplayNotice();
-    clearAutoplayWatch();
   } else if(e.data === YT.PlayerState.PAUSED){
     setIcon(playBtn,'play');
     stopProgressTimer();
   } else if(e.data === YT.PlayerState.ENDED){
+    // Kraj pjesme NE pokreće nikakvu novu reprodukciju.
     stopProgressTimer();
-    autoplayNext();
-  } else if(e.data === YT.PlayerState.BUFFERING){
-    hideAutoplayNotice();
-    clearAutoplayWatch();
+    setIcon(playBtn,'play');
+    showNotice('endedNotice');
+  } else if(e.data === YT.PlayerState.CUED){
+    setIcon(playBtn,'play');
   }
 }
-/* YT error codes: 2 invalid param, 5 HTML5 error, 100 not found/removed, 101 & 150 embedding disabled */
 function onPlayerError(e){
-  console.warn('YT player error', e.data);
-  handlePlayerError(e.data);
+  var bad = State.current;
+  var code = e && e.data;
+  var reason = (code===101 || code===150) ? 'ugrađena reprodukcija nije dopuštena'
+             : (code===100) ? 'video je uklonjen ili nije pronađen'
+             : 'video se ne može reproducirati';
+  toast((bad ? '„'+bad.title+'" — ' : '') + reason + '. Odaberi drugu pjesmu.', 'err');
+  stopProgressTimer();
+  setIcon(document.getElementById('playPauseBtn'),'play');
+  // Bez automatskog prelaska na drugi video — sljedeću pjesmu bira korisnik.
 }
-function handlePlayerError(code){
-  const bad = State.current;
-  if(!bad) return;
-  const reason = (code===101 || code===150) ? 'nije dopušteno ugrađeno reproduciranje'
-               : (code===100) ? 'video je uklonjen ili nije pronađen'
-               : 'video se ne može reproducirati';
-  toast('"'+bad.title+'" — '+reason+'. ALL traži sljedeći rezultat…', 'err');
-  const p = State.queue.findIndex(t=>t.id===bad.id);
-  if(p>-1){
-    State.queue.splice(p,1);
-    if(p <= State.queueIndex && State.queueIndex>0) State.queueIndex--;
-  }
-  if(!State.queue.length){
-    toast('Nijedan rezultat trenutno nije dostupan za reprodukciju unutar TuneWiseAll.', 'err');
-    document.getElementById('npTitle').textContent = 'Nema aktivne pjesme';
-    document.getElementById('npArtist').textContent = 'Pokušaj drugu pretragu';
-    State.current = null;
-    markPlayingCard();
-    return;
-  }
-  if(State.queueIndex >= State.queue.length) State.queueIndex = State.queue.length-1;
-  actuallyPlay(State.queue[State.queueIndex]);
-}
-let autoplayWatchTimer = null;
-function watchForAutoplayBlock(){
-  clearAutoplayWatch();
-  autoplayWatchTimer = setTimeout(()=>{
-    if(!State.ytPlayer || !State.ytPlayer.getPlayerState) return;
-    const st = State.ytPlayer.getPlayerState();
-    // -1 unstarted, 2 paused, 5 cued => autoplay was likely blocked by the browser
-    if(st===-1 || st===2 || st===5){
-      showAutoplayNotice();
-    }
-  }, 1200);
-}
-function clearAutoplayWatch(){ if(autoplayWatchTimer){ clearTimeout(autoplayWatchTimer); autoplayWatchTimer=null; } }
-function showAutoplayNotice(){
-  const el = document.getElementById('autoplayNotice');
-  if(el) el.style.display='flex';
-}
-function hideAutoplayNotice(){
-  const el = document.getElementById('autoplayNotice');
-  if(el) el.style.display='none';
-}
+function showNotice(id){ var el=document.getElementById(id); if(el) el.style.display='flex'; }
+function hideNotice(id){ var el=document.getElementById(id); if(el) el.style.display='none'; }
+
 function startProgressTimer(){
   stopProgressTimer();
-  State.progressTimer = setInterval(()=>{
+  State.progressTimer = setInterval(function(){
     if(!State.ytPlayer || !State.ytPlayer.getCurrentTime) return;
-    const cur = State.ytPlayer.getCurrentTime()||0;
-    const dur = State.ytPlayer.getDuration()||0;
-    const bar = document.getElementById('progressBar');
+    var cur = State.ytPlayer.getCurrentTime() || 0;
+    var dur = State.ytPlayer.getDuration() || 0;
+    var bar = document.getElementById('progressBar');
     if(dur>0){
       bar.max = 1000;
       bar.value = Math.floor((cur/dur)*1000);
@@ -972,248 +1165,232 @@ function startProgressTimer(){
     document.getElementById('durTime').textContent = fmtTime(dur);
   }, 500);
 }
-function stopProgressTimer(){ if(State.progressTimer) clearInterval(State.progressTimer); }
+function stopProgressTimer(){ if(State.progressTimer){ clearInterval(State.progressTimer); State.progressTimer=null; } }
 
-/* ============================= PLAYBACK ============================= */
-function playTrack(item, contextList){
-  if(contextList && contextList.length){
-    State.queue = contextList.slice();
-    State.queueIndex = State.queue.findIndex(t=>t.id===item.id);
-    if(State.queueIndex===-1){ State.queue.unshift(item); State.queueIndex=0; }
-  } else {
-    State.queue = [item];
-    State.queueIndex = 0;
-  }
-  actuallyPlay(item);
+/* ============================= QUEUE & PLAYBACK ============================= */
+function setQueue(list, index){
+  State.queue = (list||[]).map(normalizeTrack);
+  State.queueIndex = (typeof index === 'number' && index>-1) ? index : -1;
+  renderQueue();
+  markPlayingCard();
 }
-function actuallyPlay(item){
-  if(!item || !item.id){ return; }
-  hideAutoplayNotice();
-  clearAutoplayWatch();
-  State.current = item;
-  State.history.unshift(item);
-  State.history = State.history.slice(0,50);
-  saveJSON(LS.history, State.history);
-  document.getElementById('npTitle').textContent = item.title;
-  document.getElementById('npArtist').textContent = item.artist;
-  // reset progress UI immediately, use known duration from search metadata as a placeholder
+function updateNowPlayingMeta(item){
+  document.getElementById('npTitle').textContent = item ? item.title : 'Nema aktivne pjesme';
+  document.getElementById('npArtist').textContent = item ? item.channel : 'Pretraži, pa odaberi pjesmu za reprodukciju';
   document.getElementById('curTime').textContent = '0:00';
-  document.getElementById('durTime').textContent = item.duration ? fmtTime(item.duration) : '--:--';
-  const bar = document.getElementById('progressBar');
+  document.getElementById('durTime').textContent = (item && item.duration) ? fmtTime(item.duration) : '--:--';
+  var bar = document.getElementById('progressBar');
   bar.value = 0;
   bar.style.setProperty('--pct','0%');
+}
+
+/* cueTrack(): samo priprema pjesmu u playeru (bez pokretanja). Koristi se nakon pretrage. */
+function cueTrack(item){
+  if(!item || !item.id) return;
+  State.current = null;
+  updateNowPlayingMeta(item);
+  refreshFavButtons();
+  markPlayingCard();
+  hideNotice('endedNotice');
+  if(State.ytReady && State.ytPlayer && State.ytPlayer.cueVideoById){
+    try{ State.ytPlayer.cueVideoById({videoId:item.id}); }catch(e){}
+  }
+  showNotice('readyNotice');
+}
+
+/* loadAndPlay(): poziva se ISKLJUČIVO iz korisničke akcije. */
+function loadAndPlay(item){
+  if(!item || !item.id) return;
+  hideNotice('readyNotice');
+  hideNotice('endedNotice');
+  State.current = normalizeTrack(item);
+  State.history.unshift(State.current);
+  State.history = State.history.slice(0,50);
+  saveJSON(LS.history, State.history);
+  updateNowPlayingMeta(State.current);
   refreshFavButtons();
   markPlayingCard();
   renderQueue();
   if(!State.ytReady || !State.ytPlayer || !State.ytPlayer.loadVideoById){
-    State.pendingPlay = item;
-    toast('Player se učitava, pjesma će krenuti automatski…');
+    State.pendingLoad = item;
+    toast('Player se učitava…');
     return;
   }
   try{
-    // per YT IFrame API: loadVideoById() loads AND begins playing the video immediately.
     State.ytPlayer.loadVideoById({videoId:item.id});
-    // explicit playVideo() call as a safety net for browsers/states where load alone doesn't start playback
     State.ytPlayer.playVideo();
+    setIcon(document.getElementById('playPauseBtn'),'pause');
   }catch(err){
-    console.warn('loadVideoById failed', err);
     toast('Video se nije uspio učitati u player.', 'err');
+  }
+}
+
+/* playSongAtIndex(): korisnički klik na rezultat — smije pokrenuti reprodukciju. */
+function playSongAtIndex(index){
+  if(index<0 || index>=currentResults.length) return;
+  setQueue(currentResults, index);
+  loadAndPlay(currentResults[index]);
+}
+
+function togglePlayPause(){
+  if(!State.ytPlayer){ toast('Player se još učitava.'); return; }
+  hideNotice('readyNotice');
+  if(!State.current){
+    // pjesma je pripremljena (cued) nakon pretrage — Play je korisnička akcija
+    var queued = State.queueIndex>-1 ? State.queue[State.queueIndex] : null;
+    if(queued){ loadAndPlay(queued); return; }
+    toast('Nema odabrane pjesme. Pretraži i odaberi pjesmu.');
     return;
   }
-  setIcon(document.getElementById('playPauseBtn'),'pause');
-  watchForAutoplayBlock();
+  var st = State.ytPlayer.getPlayerState();
+  if(st === YT.PlayerState.PLAYING){ State.ytPlayer.pauseVideo(); }
+  else { State.ytPlayer.playVideo(); }
 }
-function togglePlayPause(){
-  if(!State.ytPlayer || !State.current){ toast('Nema aktivne pjesme. Pretraži ili reci naziv pjesme.'); return; }
-  hideAutoplayNotice();
-  clearAutoplayWatch();
-  const st = State.ytPlayer.getPlayerState();
-  if(st===1){ State.ytPlayer.pauseVideo(); }
-  else{ State.ytPlayer.playVideo(); }
-}
-function playNext(manual){
-  if(!State.queue.length) return;
+function playNext(){
+  if(!State.queue.length){ toast('Red čekanja je prazan.'); return; }
+  hideNotice('endedNotice');
+  var idx;
   if(State.shuffle){
-    let idx = Math.floor(Math.random()*State.queue.length);
+    idx = Math.floor(Math.random()*State.queue.length);
     if(State.queue.length>1 && idx===State.queueIndex) idx = (idx+1)%State.queue.length;
-    State.queueIndex = idx;
   } else {
-    State.queueIndex++;
+    idx = State.queueIndex + 1;
+    if(idx >= State.queue.length){
+      if(State.repeat==='all'){ idx = 0; }
+      else { toast('Kraj reda čekanja.'); return; }
+    }
   }
-  if(State.queueIndex >= State.queue.length){
-    if(State.repeat==='all'){ State.queueIndex = 0; }
-    else { if(manual) toast('Kraj reda čekanja.'); else autoFetchRelatedAndPlay(); return; }
-  }
-  actuallyPlay(State.queue[State.queueIndex]);
+  State.queueIndex = idx;
+  loadAndPlay(State.queue[idx]);
 }
 function playPrev(){
-  if(!State.queue.length) return;
-  State.queueIndex = Math.max(0, State.queueIndex-1);
-  actuallyPlay(State.queue[State.queueIndex]);
-}
-async function autoplayNext(){
-  if(State.repeat==='one'){ actuallyPlay(State.current); return; }
-  if(State.queueIndex < State.queue.length-1 || State.shuffle){ playNext(false); return; }
-  if(State.repeat==='all' && State.queue.length){ State.queueIndex=0; actuallyPlay(State.queue[0]); return; }
-  await autoFetchRelatedAndPlay();
-}
-async function autoFetchRelatedAndPlay(){
-  if(!State.current) return;
-  try{
-    const seed = State.current.artist + ' ' + State.current.title.split('-').pop();
-    const results = await ytSearch(seed + ' slična pjesma', 8);
-    const filtered = results.filter(r=> !State.history.some(h=>h.id===r.id));
-    const pool = filtered.length ? filtered : results;
-    if(pool.length){
-      State.queue = State.queue.concat(pool);
-      State.queueIndex++;
-      actuallyPlay(State.queue[State.queueIndex]);
-      toast('ALL nastavlja sa sličnim pjesmama');
-    }
-  }catch(err){
-    // silent fail — don't interrupt playback flow with a blocking error
-    console.warn('Autoplay related fetch failed', err);
+  if(!State.queue.length){ toast('Red čekanja je prazan.'); return; }
+  hideNotice('endedNotice');
+  if(State.repeat==='one' && State.current){ loadAndPlay(State.current); return; }
+  var idx = State.queueIndex - 1;
+  if(idx < 0){
+    if(State.repeat==='all'){ idx = State.queue.length-1; }
+    else { idx = 0; }
   }
+  State.queueIndex = idx;
+  loadAndPlay(State.queue[idx]);
 }
 function renderQueue(){
-  const el = document.getElementById('queueList');
-  if(!State.queue.length){ el.innerHTML = '<div class="empty-mini">Red čekanja je prazan.</div>'; return; }
+  var el = document.getElementById('queueList');
   el.innerHTML='';
-  State.queue.forEach((t,i)=>{
-    const row = document.createElement('div');
+  if(!State.queue.length){
+    var empty = document.createElement('div');
+    empty.className='empty-mini';
+    empty.textContent='Red čekanja je prazan.';
+    el.appendChild(empty);
+    return;
+  }
+  State.queue.forEach(function(t, i){
+    var row = document.createElement('div');
     row.className='playlist-item';
     if(i===State.queueIndex) row.style.background='var(--accent-dim)';
-    row.innerHTML = `<img src="${t.thumbnail}" alt=""><div class="pl-info"><div>${escapeHtml(t.title)}</div><div>${escapeHtml(t.artist)}</div></div>`;
-    row.addEventListener('click', ()=>{ State.queueIndex=i; actuallyPlay(t); });
+    var img = document.createElement('img'); img.alt=''; if(t.thumbnail) img.src=t.thumbnail;
+    var info = document.createElement('div'); info.className='pl-info';
+    var a = document.createElement('div'); a.textContent=t.title;
+    var b = document.createElement('div'); b.textContent=t.channel;
+    info.appendChild(a); info.appendChild(b);
+    row.appendChild(img); row.appendChild(info);
+    row.addEventListener('click', function(){
+      State.queueIndex = i;
+      loadAndPlay(t);
+    });
     el.appendChild(row);
   });
 }
 
-/* ============================= SEARCH FLOW ============================= */
-async function runSearch(query, opts){
-  opts = opts || {};
+/* ============================= SEARCH FLOW =============================
+   Pretraga NIKAD ne pokreće reprodukciju. Prikazuje rezultate i postavlja queue.
+   U ALL načinu dodatno priprema (cue) najbolji rezultat u playeru — korisnik
+   pokreće reprodukciju gumbom Play ili klikom na rezultat. */
+function runSearch(query){
   query = (query||'').trim();
-  if(!query) return;
+  if(!query){ toast('Upiši ili izgovori naziv pjesme.'); return; }
   document.getElementById('searchInput').value = query;
   showLoading();
-  try{
-    const results = await ytSearch(query, 12);
-    renderResults(results, 'Rezultati za "'+query+'"');
-    refreshFavButtons();
-    if(results.length && (opts.autoplay ?? State.settings.allMode)){
-      playTrack(results[0], results);
-    } else if(!results.length){
-      // nothing to play
-    }
-  }catch(err){
-    handleApiError(err);
-    showEmptyState();
-  }
-}
-
-/*
- * playSong(query) — the core ALL entry point requested for text/voice search:
- * 1) pretražuje YouTube Data API v3 za dani upit,
- * 2) uzima videoId prvog (najboljeg) rezultata,
- * 3) učitava ga u ugrađeni YouTube IFrame Player (player.loadVideoById),
- * 4) odmah pokreće reprodukciju (player.playVideo), s automatskim fallbackom
- *    na sljedeći rezultat ako prvi ne uspije (npr. ugrađivanje onemogućeno).
- */
-async function playSong(query){
-  query = (query||'').trim();
-  if(!query){ return; }
-  document.getElementById('searchInput').value = query;
-  showLoading();
-  try{
-    const results = await ytSearch(query, 10);
+  searchBackend(query, 12).then(function(results){
     if(!results.length){
-      toast('ALL nije pronašao pjesmu za "'+query+'".', 'err');
-      showEmptyState();
+      renderResults([], 'Rezultati za „'+query+'"');
+      toast('Nema rezultata za „'+query+'".', 'err');
       return;
     }
-    renderResults(results, 'Rezultati za "'+query+'"');
-    refreshFavButtons();
-    // set the whole result list as the play queue, then load+play the first (best) match
-    State.queue = results.slice();
-    State.queueIndex = 0;
-    const videoId = results[0].id; // videoId dohvaćen iz YouTube Data API v3
-    actuallyPlay(results[0]); // loadVideoById(videoId) + playVideo() se pozivaju unutar actuallyPlay
-    return videoId;
-  }catch(err){
+    renderResults(results, 'Rezultati za „'+query+'"');
+    setQueue(results, 0);
+    if(State.settings.allMode){
+      cueTrack(results[0]);
+      toast('ALL je pripremio najbolji rezultat — dodirni Play.');
+    } else {
+      toast('Pronađeno '+results.length+' rezultata.');
+    }
+  }).catch(function(err){
     handleApiError(err);
-    showEmptyState();
-  }
-}
-function handleApiError(err){
-  // Generic, non-technical messaging only — never surface raw API/key errors to end users.
-  toast((err && err.message) || 'Trenutno ne mogu dovršiti pretragu. Pokušaj ponovno za trenutak.', 'err');
+    if(err && err.code === 'NOT_CONFIGURED'){
+      showMessage('Glazbeni servis još nije konfiguriran. Pretraga trenutno nije dostupna.');
+    } else {
+      showEmptyState();
+    }
+  });
 }
 
 /* ============================= VOICE COMMANDS ============================= */
-const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-let oneShotRec = null;
-let alwaysRec = null;
-let alwaysRestarting = false;
+var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+var oneShotRec = null, alwaysRec = null, alwaysRestarting = false;
 
 function normalizeText(t){ return (t||'').toLowerCase().trim(); }
 
 function parseAndRunCommand(rawText){
-  const text = normalizeText(rawText);
+  var text = normalizeText(rawText);
   if(!text) return false;
-
-  // strip wake word if present
-  let cmd = text.replace(/^\s*tune\s*wise[,:\s]*/i,'').trim();
+  var cmd = text.replace(/^\s*tune\s*wise[,:\s]*/i,'').trim();
   if(cmd==='') cmd = text;
 
-  let m;
-  if((m = cmd.match(/^(?:pusti|sviraj|reproduciraj)\s+(.+)/))){
-    playSong(m[1]);
-    return true;
-  }
-  if(/^(sljedeć|slijedeć|next)/.test(cmd)){ playNext(true); toast('Sljedeća pjesma'); return true; }
-  if(/^(prethodn|prijašnj|previous)/.test(cmd)){ playPrev(); toast('Prethodna pjesma'); return true; }
-  if(/^(pauziraj|zaustavi|pauza|stani)/.test(cmd)){ if(State.ytPlayer) State.ytPlayer.pauseVideo(); return true; }
-  if(/^(nastavi|nastavi svirati|play)/.test(cmd)){ if(State.ytPlayer) State.ytPlayer.playVideo(); return true; }
+  var m = cmd.match(/^(?:pusti|sviraj|reproduciraj|traži|pretraži)\s+(.+)/);
+  if(m){ runSearch(m[1]); return true; }
+  if(/^(sljedeć|slijedeć|next)/.test(cmd)){ playNext(); return true; }
+  if(/^(prethodn|prijašnj|previous)/.test(cmd)){ playPrev(); return true; }
+  if(/^(pauziraj|zaustavi|pauza|stani)/.test(cmd)){ if(State.ytPlayer && State.ytPlayer.pauseVideo) State.ytPlayer.pauseVideo(); return true; }
+  if(/^(nastavi|play)/.test(cmd)){ togglePlayPause(); return true; }
   if(/^(pojačaj|glasnije)/.test(cmd)){ changeVolume(15); toast('Glasnoća pojačana'); return true; }
   if(/^(smanji|tiše)/.test(cmd)){ changeVolume(-15); toast('Glasnoća smanjena'); return true; }
-  if(/^dodaj u favorite/.test(cmd)){ if(State.current){ toggleFavorite(State.current); refreshFavButtons(); } return true; }
-  if(/^dodaj u playlist/.test(cmd)){ if(State.current){ addToPlaylistPrompt(State.current); } return true; }
-  // fallback: treat whole utterance as a search query (e.g. "Oliver Dragojević Cesarica")
-  playSong(cmd);
+  if(/^dodaj u favorite/.test(cmd)){ if(State.current) toggleFavorite(State.current); return true; }
+  if(/^dodaj u playlist/.test(cmd)){ if(State.current) addToPlaylist(State.current); return true; }
+  runSearch(cmd);
   return true;
 }
 function changeVolume(delta){
-  const bar = document.getElementById('volumeBar');
-  let v = Math.min(100, Math.max(0, parseInt(bar.value)+delta));
+  var bar = document.getElementById('volumeBar');
+  var v = Math.min(100, Math.max(0, parseInt(bar.value,10)+delta));
   bar.value = v;
   applyVolume(v);
 }
 function applyVolume(v){
   State.settings.volume = v;
   saveJSON(LS.settings, State.settings);
-  if(State.ytPlayer && State.ytPlayer.setVolume) State.ytPlayer.setVolume(v);
-  setIcon(document.getElementById('volIcon'), v===0 ? 'volMute':'volHigh');
+  if(State.ytPlayer && State.ytPlayer.setVolume){ try{ State.ytPlayer.setVolume(v); }catch(e){} }
+  setIcon(document.getElementById('volIcon'), v===0 ? 'volMute' : 'volHigh');
 }
-
 function startOneShotListen(){
-  if(!SpeechRec){ toast('Web Speech API nije podržan u ovom pregledniku.', 'err'); return; }
-  if(oneShotRec) try{ oneShotRec.stop(); }catch(e){}
+  if(!SpeechRec){ toast('Speech Recognition API nije podržan u ovom pregledniku.', 'err'); return; }
+  if(oneShotRec){ try{ oneShotRec.stop(); }catch(e){} }
   oneShotRec = new SpeechRec();
-  oneShotRec.lang = 'hr-HR';
-  oneShotRec.interimResults = false;
-  oneShotRec.maxAlternatives = 1;
-  const micBtn = document.getElementById('micBtn');
+  oneShotRec.lang='hr-HR';
+  oneShotRec.interimResults=false;
+  oneShotRec.maxAlternatives=1;
+  var micBtn = document.getElementById('micBtn');
   micBtn.classList.add('listening');
-  oneShotRec.onresult = (e)=>{
-    const text = e.results[0][0].transcript;
+  oneShotRec.onresult = function(e){
+    var text = e.results[0][0].transcript;
     document.getElementById('searchInput').value = text;
     parseAndRunCommand(text);
   };
-  oneShotRec.onerror = (e)=>{ if(e.error!=='no-speech') toast('Glasovno prepoznavanje nije uspjelo.', 'err'); };
-  oneShotRec.onend = ()=>{ micBtn.classList.remove('listening'); };
+  oneShotRec.onerror = function(e){ if(e.error!=='no-speech') toast('Glasovno prepoznavanje nije uspjelo.', 'err'); };
+  oneShotRec.onend = function(){ micBtn.classList.remove('listening'); };
   try{ oneShotRec.start(); }catch(e){}
 }
-
 function setAlwaysListening(on){
   State.settings.alwaysListening = on;
   saveJSON(LS.settings, State.settings);
@@ -1222,30 +1399,34 @@ function setAlwaysListening(on){
   if(on){ startAlwaysListening(); } else { stopAlwaysListening(); }
 }
 function startAlwaysListening(){
-  if(!SpeechRec){ toast('Web Speech API nije podržan u ovom pregledniku.', 'err'); return; }
+  if(!SpeechRec){ toast('Speech Recognition API nije podržan u ovom pregledniku.', 'err'); return; }
   if(alwaysRec) return;
   alwaysRec = new SpeechRec();
-  alwaysRec.lang = 'hr-HR';
-  alwaysRec.continuous = true;
-  alwaysRec.interimResults = true;
-  alwaysRec.onresult = (e)=>{
-    for(let i=e.resultIndex; i<e.results.length; i++){
-      const res = e.results[i];
+  alwaysRec.lang='hr-HR';
+  alwaysRec.continuous=true;
+  alwaysRec.interimResults=true;
+  alwaysRec.onresult = function(e){
+    for(var i=e.resultIndex; i<e.results.length; i++){
+      var res = e.results[i];
       if(res.isFinal){
-        const text = normalizeText(res[0].transcript);
-        if(text.includes('tunewise') || text.includes('tune wise') || text.includes('tjun vajz')){
-          document.getElementById('micBtn').classList.add('listening');
+        var text = normalizeText(res[0].transcript);
+        if(text.indexOf('tunewise')>-1 || text.indexOf('tune wise')>-1 || text.indexOf('tjun vajz')>-1){
+          var micBtn = document.getElementById('micBtn');
+          micBtn.classList.add('listening');
           parseAndRunCommand(text);
-          setTimeout(()=>document.getElementById('micBtn').classList.remove('listening'), 800);
+          setTimeout(function(){ micBtn.classList.remove('listening'); }, 800);
         }
       }
     }
   };
-  alwaysRec.onerror = (e)=>{ /* swallow — will auto-restart on end */ };
-  alwaysRec.onend = ()=>{
+  alwaysRec.onerror = function(){};
+  alwaysRec.onend = function(){
     if(State.settings.alwaysListening && !alwaysRestarting){
       alwaysRestarting = true;
-      setTimeout(()=>{ alwaysRestarting=false; alwaysRec=null; if(State.settings.alwaysListening) startAlwaysListening(); }, 400);
+      setTimeout(function(){
+        alwaysRestarting=false; alwaysRec=null;
+        if(State.settings.alwaysListening) startAlwaysListening();
+      }, 400);
     }
   };
   try{ alwaysRec.start(); }catch(e){}
@@ -1254,64 +1435,109 @@ function stopAlwaysListening(){
   if(alwaysRec){ try{ alwaysRec.stop(); }catch(e){} alwaysRec=null; }
 }
 
-/* ============================= SONG RECOGNITION (Shazam-mode) ============================= */
-async function recognizeSong(){
-  const key = State.apiKeys.audd;
-  const btn = document.getElementById('recognizeBtn');
-  if(!key){
-    toast('Prepoznavanje pjesme trenutno nije dostupno u ovoj instalaciji.', 'err');
+/* ============================= PREPOZNAJ PJESMU ============================= */
+function postRecognizeToBackend(blob, ms){
+  ms = ms || 20000;
+  var base = (BACKEND_URL||'').replace(/\/+$/,'');
+  var url = base + BACKEND_RECOGNIZE_PATH;
+  var form = new FormData();
+  form.append('file', blob, 'sample.webm'); // bez ikakvog tokena iz frontenda
+  var controller = new AbortController();
+  var timer = setTimeout(function(){ controller.abort(); }, ms);
+  return fetch(url, {method:'POST', body:form, signal:controller.signal}).then(function(res){
+    clearTimeout(timer);
+    if(!res.ok){ throw {code:'UNAVAILABLE', message:'Servis za prepoznavanje trenutno nije dostupan. Pokušaj ponovno za trenutak.'}; }
+    return res.json().catch(function(){
+      throw {code:'BAD_RESPONSE', message:'Neočekivan odgovor servisa za prepoznavanje.'};
+    });
+  }, function(err){
+    clearTimeout(timer);
+    if(err && err.code) throw err;
+    throw {code:'UNAVAILABLE', message:'Ne mogu se povezati sa servisom za prepoznavanje. Provjeri internetsku vezu i pokušaj ponovno.'};
+  });
+}
+function extractRecognition(data){
+  /* Podržava više oblika odgovora backenda:
+     {status:'success', result:{artist,title}} | {result:null} | {error:'...'}
+     te ravni oblik {artist,title}. Vraća {artist,title} ili null. */
+  if(!data || typeof data !== 'object') return null;
+  if(data.error) throw {code:'BACKEND_ERROR', message:'Prepoznavanje nije uspjelo. Pokušaj ponovno.'};
+  if(data.status && data.status !== 'success' && !data.result) return null;
+  var r = data.result || data;
+  if(!r || typeof r !== 'object') return null;
+  var artist = typeof r.artist === 'string' ? r.artist.trim() : '';
+  var title = typeof r.title === 'string' ? r.title.trim() : '';
+  if(!artist && !title) return null;
+  return {artist:artist, title:title};
+}
+function recognizeSong(){
+  var btn = document.getElementById('recognizeBtn');
+  var label = btn.querySelector('span:last-child');
+  function reset(){
+    btn.classList.remove('recognizing');
+    label.textContent = 'Prepoznaj pjesmu';
+  }
+  if(!isBackendConfigured()){
+    toast('Prepoznavanje pjesme još nije konfigurirano za ovu instalaciju.', 'err');
     return;
   }
   if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     toast('Mikrofon nije dostupan u ovom pregledniku.', 'err');
     return;
   }
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    const recorder = new MediaRecorder(stream);
-    const chunks = [];
-    recorder.ondataavailable = e=> chunks.push(e.data);
-    btn.classList.add('recognizing');
-    btn.querySelector('span:last-child').textContent = 'Slušam okolinu…';
-    recorder.start();
-    setTimeout(()=>{
-      recorder.stop();
-    }, 6000);
-    recorder.onstop = async ()=>{
-      stream.getTracks().forEach(t=>t.stop());
-      btn.querySelector('span:last-child').textContent = 'Prepoznajem…';
-      const blob = new Blob(chunks, {type:'audio/webm'});
-      try{
-        const form = new FormData();
-        form.append('api_token', key);
-        form.append('file', blob, 'sample.webm');
-        form.append('return', 'apple_music,spotify');
-        const res = await fetch('https://api.audd.io/', {method:'POST', body:form});
-        const data = await res.json();
-        if(data.status==='success' && data.result){
-          const song = data.result.title + ' ' + data.result.artist;
-          toast('ALL je prepoznao: '+data.result.artist+' — '+data.result.title, 'ok');
-          playSong(song);
-        } else {
-          toast('Pjesma nije prepoznata. Pokušaj ponovno bliže izvoru zvuka.', 'err');
-        }
-      }catch(err){
-        toast('Greška pri prepoznavanju pjesme.', 'err');
-      } finally {
-        btn.classList.remove('recognizing');
-        btn.querySelector('span:last-child').textContent = 'Prepoznaj pjesmu';
-      }
-    };
-  }catch(err){
-    toast('Pristup mikrofonu je odbijen.', 'err');
-    btn.classList.remove('recognizing');
-    btn.querySelector('span:last-child').textContent = 'Prepoznaj pjesmu';
+  if(typeof MediaRecorder === 'undefined'){
+    toast('Ovaj preglednik ne podržava snimanje zvuka (MediaRecorder).', 'err');
+    return;
   }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    var recorder;
+    try{
+      recorder = new MediaRecorder(stream);
+    }catch(e){
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      toast('Ovaj preglednik ne podržava snimanje zvuka (MediaRecorder).', 'err');
+      return;
+    }
+    var chunks = [];
+    recorder.ondataavailable = function(e){ if(e.data && e.data.size) chunks.push(e.data); };
+    btn.classList.add('recognizing');
+    label.textContent = 'Slušam okolinu…';
+    recorder.onstop = function(){
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      label.textContent = 'Prepoznajem…';
+      var blob = new Blob(chunks, {type:'audio/webm'});
+      if(!blob.size){
+        toast('Snimka je prazna. Pokušaj ponovno.', 'err');
+        reset();
+        return;
+      }
+      postRecognizeToBackend(blob, 20000).then(function(data){
+        var hit = extractRecognition(data);
+        if(!hit){
+          toast('Pjesma nije prepoznata. Pokušaj bliže izvoru zvuka.', 'err');
+          return;
+        }
+        var label2 = hit.artist && hit.title ? (hit.artist + ' — ' + hit.title) : (hit.artist || hit.title);
+        toast('Prepoznato: ' + label2, 'ok');
+        // Samo pokreće postojeću pretragu — reprodukcija se NE pokreće automatski.
+        runSearch((hit.artist + ' ' + hit.title).trim());
+      }).catch(function(err){
+        toast((err && err.message) || 'Greška pri prepoznavanju pjesme.', 'err');
+      }).then(reset, reset);
+    };
+    recorder.start();
+    setTimeout(function(){
+      if(recorder.state !== 'inactive'){ try{ recorder.stop(); }catch(e){} }
+    }, 6000);
+  }).catch(function(){
+    toast('Pristup mikrofonu je odbijen.', 'err');
+    reset();
+  });
 }
 
 /* ============================= MODALS ============================= */
-function openModal(id){ document.getElementById(id).classList.add('show'); }
-function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+function openModal(id){ var el=document.getElementById(id); if(el) el.classList.add('show'); }
+function closeModal(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); }
 
 /* ============================= INIT ICONS ============================= */
 function initIcons(){
@@ -1319,7 +1545,7 @@ function initIcons(){
   setIcon(document.getElementById('plBtn'),'list');
   setIcon(document.getElementById('settingsBtn'),'gear');
   setIcon(document.getElementById('micBtn'),'mic');
-  document.getElementById('searchForm').querySelector('.go-btn').innerHTML = svg('search');
+  document.querySelector('#searchForm .go-btn').innerHTML = svg('search');
   setIcon(document.getElementById('recognizeIcon'),'waveform');
   setIcon(document.getElementById('alwaysIcon'),'mic');
   setIcon(document.getElementById('npFavBtn'),'heart');
@@ -1330,119 +1556,133 @@ function initIcons(){
   setIcon(document.getElementById('nextBtn'),'next');
   setIcon(document.getElementById('repeatBtn'),'repeat');
   setIcon(document.getElementById('volIcon'),'volHigh');
-  setIcon(document.getElementById('expandHint'),'expand');
+  setIcon(document.getElementById('expandToggleBtn'),'expand');
   setIcon(document.getElementById('collapseBtn'),'x');
-  setIcon(document.getElementById('closeSettings'),'x');
-  setIcon(document.getElementById('closeFav'),'x');
-  setIcon(document.getElementById('closePl'),'x');
-  setIcon(document.getElementById('closeQueue'),'x');
-  setIcon(document.getElementById('closePlDetail'),'x');
-  setIcon(document.getElementById('closePrivacy'),'x');
-  setIcon(document.getElementById('closeTerms'),'x');
+  ['closeSettings','closeFav','closePl','closeQueue','closePlDetail','closePrivacy','closeTerms','closeLegal'].forEach(function(id){
+    setIcon(document.getElementById(id),'x');
+  });
 }
 
 /* ============================= EVENT WIRING ============================= */
 function wireEvents(){
-  document.getElementById('searchForm').addEventListener('submit', (e)=>{
+  document.getElementById('searchForm').addEventListener('submit', function(e){
     e.preventDefault();
-    const q = document.getElementById('searchInput').value;
-    if(State.settings.allMode){ playSong(q); } else { runSearch(q, {autoplay:false}); }
+    runSearch(document.getElementById('searchInput').value);
   });
   document.getElementById('micBtn').addEventListener('click', startOneShotListen);
 
-  const allToggle = document.getElementById('allToggle');
-  allToggle.classList.toggle('on', State.settings.allMode);
-  allToggle.addEventListener('click', ()=>{
+  var allToggle = document.getElementById('allToggle');
+  allToggle.addEventListener('click', function(){
     State.settings.allMode = !State.settings.allMode;
     saveJSON(LS.settings, State.settings);
     allToggle.classList.toggle('on', State.settings.allMode);
     document.getElementById('settingsAllSwitch').classList.toggle('on', State.settings.allMode);
-    toast(State.settings.allMode ? 'ALL način uključen — automatska reprodukcija' : 'ALL način isključen');
+    toast(State.settings.allMode ? 'ALL način uključen — najbolji rezultat se priprema u playeru' : 'ALL način isključen');
   });
 
   document.getElementById('recognizeBtn').addEventListener('click', recognizeSong);
-
-  const alwaysChip = document.getElementById('alwaysListenChip');
-  alwaysChip.addEventListener('click', ()=> setAlwaysListening(!State.settings.alwaysListening));
-
-  document.querySelectorAll('[data-ex]').forEach(btn=>{
-    btn.addEventListener('click', ()=> playSong(btn.getAttribute('data-ex')));
+  document.getElementById('alwaysListenChip').addEventListener('click', function(){
+    setAlwaysListening(!State.settings.alwaysListening);
   });
-  document.getElementById('clearResultsBtn').addEventListener('click', showEmptyState);
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ex]'), function(btn){
+    btn.addEventListener('click', function(){ runSearch(btn.getAttribute('data-ex')); });
+  });
+  document.getElementById('clearResultsBtn').addEventListener('click', function(){
+    currentResults = [];
+    showEmptyState();
+  });
 
   // player controls
   document.getElementById('playPauseBtn').addEventListener('click', togglePlayPause);
-  document.getElementById('autoplayNotice').addEventListener('click', ()=>{
-    if(State.ytPlayer && State.ytPlayer.playVideo){ State.ytPlayer.playVideo(); }
-    hideAutoplayNotice();
-  });
-  document.getElementById('nextBtn').addEventListener('click', ()=>playNext(true));
+  document.getElementById('readyNotice').addEventListener('click', togglePlayPause);
+  document.getElementById('endedNotice').addEventListener('click', function(){ hideNotice('endedNotice'); playNext(); });
+  document.getElementById('nextBtn').addEventListener('click', playNext);
   document.getElementById('prevBtn').addEventListener('click', playPrev);
-  const shuffleBtn = document.getElementById('shuffleBtn');
-  shuffleBtn.addEventListener('click', ()=>{ State.shuffle=!State.shuffle; shuffleBtn.classList.toggle('on', State.shuffle); toast(State.shuffle?'Shuffle uključen':'Shuffle isključen'); });
-  const repeatBtn = document.getElementById('repeatBtn');
-  repeatBtn.addEventListener('click', ()=>{
+
+  var shuffleBtn = document.getElementById('shuffleBtn');
+  shuffleBtn.addEventListener('click', function(){
+    State.shuffle = !State.shuffle;
+    shuffleBtn.classList.toggle('on', State.shuffle);
+    toast(State.shuffle ? 'Shuffle uključen' : 'Shuffle isključen');
+  });
+  var repeatBtn = document.getElementById('repeatBtn');
+  repeatBtn.addEventListener('click', function(){
     State.repeat = State.repeat==='off' ? 'all' : (State.repeat==='all' ? 'one' : 'off');
     repeatBtn.classList.toggle('on', State.repeat!=='off');
     repeatBtn.title = 'Repeat: '+State.repeat;
-    toast('Repeat: '+(State.repeat==='off'?'isključeno':State.repeat==='all'?'sve':'jedna pjesma'));
+    toast('Repeat: ' + (State.repeat==='off' ? 'isključeno' : (State.repeat==='all' ? 'cijeli red čekanja' : 'jedna pjesma')) + ' (primjenjuje se na Sljedeća/Prethodna)');
   });
-  document.getElementById('npFavBtn').addEventListener('click', ()=>{ if(State.current){ toggleFavorite(State.current); refreshFavButtons(); } });
-  document.getElementById('queueBtn').addEventListener('click', ()=>{ renderQueue(); openModal('queueModal'); });
-  document.getElementById('volumeBar').addEventListener('input', (e)=> applyVolume(parseInt(e.target.value)));
+  document.getElementById('npFavBtn').addEventListener('click', function(){
+    if(State.current){ toggleFavorite(State.current); }
+    else { toast('Nema aktivne pjesme.'); }
+  });
+  document.getElementById('queueBtn').addEventListener('click', function(){ renderQueue(); openModal('queueModal'); });
+  document.getElementById('volumeBar').addEventListener('input', function(e){ applyVolume(parseInt(e.target.value,10)); });
 
-  const progressBar = document.getElementById('progressBar');
-  progressBar.addEventListener('change', ()=>{
-    if(!State.ytPlayer || !State.ytPlayer.getDuration) return;
-    const dur = State.ytPlayer.getDuration()||0;
-    const t = (progressBar.value/1000)*dur;
-    State.ytPlayer.seekTo(t, true);
+  var progressBar = document.getElementById('progressBar');
+  progressBar.addEventListener('change', function(){
+    if(!State.ytPlayer || !State.ytPlayer.getDuration || !State.current) return;
+    var dur = State.ytPlayer.getDuration() || 0;
+    if(dur>0){ State.ytPlayer.seekTo((progressBar.value/1000)*dur, true); }
   });
 
-  const frameWrap = document.getElementById('ytFrameWrap');
-  const collapseBtn = document.getElementById('collapseBtn');
-  frameWrap.addEventListener('click', ()=>{
+  // player expand / collapse (player se nikad ne skriva niti prekriva)
+  var frameWrap = document.getElementById('ytFrameWrap');
+  var collapseBtn = document.getElementById('collapseBtn');
+  document.getElementById('expandToggleBtn').addEventListener('click', function(e){
+    e.stopPropagation();
     frameWrap.classList.add('expanded');
     collapseBtn.classList.add('show');
   });
-  collapseBtn.addEventListener('click', (e)=>{
+  collapseBtn.addEventListener('click', function(e){
     e.stopPropagation();
     frameWrap.classList.remove('expanded');
     collapseBtn.classList.remove('show');
   });
 
   // modals
-  document.getElementById('favBtn').addEventListener('click', ()=>{ renderFavorites(); openModal('favModal'); });
-  document.getElementById('closeFav').addEventListener('click', ()=> closeModal('favModal'));
-  document.getElementById('plBtn').addEventListener('click', ()=>{ renderPlaylists(); openModal('plModal'); });
-  document.getElementById('closePl').addEventListener('click', ()=> closeModal('plModal'));
-  document.getElementById('closeQueue').addEventListener('click', ()=> closeModal('queueModal'));
-  document.getElementById('closePlDetail').addEventListener('click', ()=> closeModal('plDetailModal'));
+  document.getElementById('favBtn').addEventListener('click', function(){ renderFavorites(); openModal('favModal'); });
+  document.getElementById('closeFav').addEventListener('click', function(){ closeModal('favModal'); });
+  document.getElementById('plBtn').addEventListener('click', function(){ renderPlaylists(); openModal('plModal'); });
+  document.getElementById('closePl').addEventListener('click', function(){ closeModal('plModal'); });
+  document.getElementById('closeQueue').addEventListener('click', function(){ closeModal('queueModal'); });
+  document.getElementById('closePlDetail').addEventListener('click', function(){ closeModal('plDetailModal'); });
 
-  document.getElementById('createPlBtn').addEventListener('click', ()=>{
-    const input = document.getElementById('newPlName');
-    if(input.value.trim()){ createPlaylist(input.value.trim()); input.value=''; }
+  document.getElementById('createPlBtn').addEventListener('click', function(){
+    var input = document.getElementById('newPlName');
+    var name = input.value.trim();
+    if(!name){ toast('Upiši naziv playliste.', 'err'); return; }
+    createPlaylist(name);
+    input.value='';
+    toast('Playlista stvorena', 'ok');
   });
   document.getElementById('aiPlaylistBtn').addEventListener('click', generateAIPlaylist);
-  document.getElementById('playPlBtn').addEventListener('click', ()=>{
-    const pl = State.playlists.find(p=>p.id===State.activePlaylistId);
-    if(pl && pl.tracks.length){ playTrack(pl.tracks[0], pl.tracks); closeModal('plDetailModal'); closeModal('plModal'); }
+  document.getElementById('playPlBtn').addEventListener('click', function(){
+    var pl = State.playlists.filter(function(p){ return p.id===State.activePlaylistId; })[0];
+    if(pl && pl.tracks.length){
+      setQueue(pl.tracks, 0);
+      loadAndPlay(pl.tracks[0]);
+      closeModal('plDetailModal'); closeModal('plModal');
+    } else {
+      toast('Playlista je prazna.', 'err');
+    }
   });
-  document.getElementById('deletePlBtn').addEventListener('click', ()=>{
-    State.playlists = State.playlists.filter(p=>p.id!==State.activePlaylistId);
-    saveJSON(LS.pl, State.playlists);
+  document.getElementById('deletePlBtn').addEventListener('click', function(){
+    State.playlists = State.playlists.filter(function(p){ return p.id!==State.activePlaylistId; });
+    persistPlaylists();
     renderPlaylists();
     closeModal('plDetailModal');
+    toast('Playlista obrisana');
   });
 
   // settings
-  const settingsBtn = document.getElementById('settingsBtn');
-  settingsBtn.addEventListener('click', ()=>{
+  document.getElementById('settingsBtn').addEventListener('click', function(){
     document.getElementById('settingsAlwaysSwitch').classList.toggle('on', State.settings.alwaysListening);
     document.getElementById('settingsAllSwitch').classList.toggle('on', State.settings.allMode);
     openModal('settingsModal');
   });
-  document.getElementById('closeSettings').addEventListener('click', ()=> closeModal('settingsModal'));
+  document.getElementById('closeSettings').addEventListener('click', function(){ closeModal('settingsModal'); });
   document.getElementById('settingsAlwaysSwitch').addEventListener('click', function(){
     setAlwaysListening(!State.settings.alwaysListening);
   });
@@ -1452,28 +1692,32 @@ function wireEvents(){
     this.classList.toggle('on', State.settings.allMode);
     document.getElementById('allToggle').classList.toggle('on', State.settings.allMode);
   });
-  document.getElementById('clearDataBtn').addEventListener('click', ()=>{
+  document.getElementById('clearDataBtn').addEventListener('click', function(){
     if(confirm('Obrisati sve lokalne podatke (favorite, playliste i postavke)?')){
-      localStorage.removeItem(LS.fav);
-      localStorage.removeItem(LS.pl);
-      localStorage.removeItem(LS.settings);
-      localStorage.removeItem(LS.history);
+      try{
+        localStorage.removeItem(LS.fav);
+        localStorage.removeItem(LS.pl);
+        localStorage.removeItem(LS.settings);
+        localStorage.removeItem(LS.history);
+      }catch(e){}
       location.reload();
     }
   });
 
-  // legal modals (accessible from the settings/menu, do not alter main page layout)
-  document.getElementById('openPrivacyBtn').addEventListener('click', ()=>{ closeModal('settingsModal'); openModal('privacyModal'); });
-  document.getElementById('openTermsBtn').addEventListener('click', ()=>{ closeModal('settingsModal'); openModal('termsModal'); });
-  document.getElementById('closePrivacy').addEventListener('click', ()=> closeModal('privacyModal'));
-  document.getElementById('closeTerms').addEventListener('click', ()=> closeModal('termsModal'));
+  // legal modals
+  document.getElementById('openPrivacyBtn').addEventListener('click', function(){ closeModal('settingsModal'); openModal('privacyModal'); });
+  document.getElementById('openTermsBtn').addEventListener('click', function(){ closeModal('settingsModal'); openModal('termsModal'); });
+  document.getElementById('openLegalBtn').addEventListener('click', function(){ closeModal('settingsModal'); openModal('legalModal'); });
+  document.getElementById('footerPrivacyBtn').addEventListener('click', function(){ openModal('privacyModal'); });
+  document.getElementById('footerTermsBtn').addEventListener('click', function(){ openModal('termsModal'); });
+  document.getElementById('footerLegalBtn').addEventListener('click', function(){ openModal('legalModal'); });
+  document.getElementById('closePrivacy').addEventListener('click', function(){ closeModal('privacyModal'); });
+  document.getElementById('closeTerms').addEventListener('click', function(){ closeModal('termsModal'); });
+  document.getElementById('closeLegal').addEventListener('click', function(){ closeModal('legalModal'); });
 
-  // close modals on backdrop click
-  document.querySelectorAll('.modal-overlay').forEach(ov=>{
-    ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('show'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.modal-overlay'), function(ov){
+    ov.addEventListener('click', function(e){ if(e.target===ov) ov.classList.remove('show'); });
   });
-
-  // debounced live search-as-you-type suggestion (only triggers explicit search on submit/enter to control quota use)
 }
 
 /* ============================= BOOT ============================= */
@@ -1481,12 +1725,19 @@ function boot(){
   initIcons();
   wireEvents();
   applyVolume(State.settings.volume);
+  document.getElementById('volumeBar').value = State.settings.volume;
   document.getElementById('allToggle').classList.toggle('on', State.settings.allMode);
+  document.getElementById('settingsAllSwitch').classList.toggle('on', State.settings.allMode);
   if(State.settings.alwaysListening) setAlwaysListening(true);
   renderFavorites();
   renderPlaylists();
+  renderQueue();
 }
-document.addEventListener('DOMContentLoaded', boot);
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
 
 })();
 </script>
