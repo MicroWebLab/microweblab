@@ -13,7 +13,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EVChargeWiseALL - Universal EV & Parts Marketplace Engine</title>
-  <meta name="description" content="EVChargeWiseALL - Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja i analitiku.">
+  <meta name="description" content="EVChargeWiseALL - Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja, analitiku i EV Knowledge Center.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://microweblab.github.io/microweblab/evchargewiseall.html">
   <!-- SEO / Open Graph / Twitter Card.
@@ -22,12 +22,12 @@
        og:image nije dodan jer ne postoji stvarna slika za pregled — dodaj kad bude dostupna. -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="EVChargeWiseALL - Universal EV & Parts Marketplace Engine">
-  <meta property="og:description" content="Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja i analitiku.">
+  <meta property="og:description" content="Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja, analitiku i EV Knowledge Center.">
   <meta property="og:url" content="https://microweblab.github.io/microweblab/evchargewiseall.html">
   <meta property="og:locale" content="hr_HR">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="EVChargeWiseALL - Universal EV & Parts Marketplace Engine">
-  <meta name="twitter:description" content="Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja i analitiku.">
+  <meta name="twitter:description" content="Cjelovita aplikacija u jednoj datoteci za pretragu električnih vozila, EV dijelova, punjača i opreme s 14 platformi, uz kalkulator punjenja, analitiku i EV Knowledge Center.">
 
   <style>
     :root {
@@ -993,6 +993,170 @@
       margin-top: 8px;
       line-height: 1.55;
     }
+
+    /* ================= EV Knowledge Center (added) =================
+       Reuses the existing glass-card visual language (same background, border, radius,
+       blur and accent colours) so the visual identity stays unchanged. Content is
+       organised in collapsible <details> cards to keep the page clean. */
+    .kc-intro {
+      margin-bottom: 1.5rem;
+    }
+
+    .kc-toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 1.2rem;
+    }
+
+    .kc-toc a {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .kc-toc a:hover, .kc-toc a:focus {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--primary-green);
+      color: var(--primary-green);
+      outline: none;
+    }
+
+    .kc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.2rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      scroll-margin-top: 110px;
+    }
+
+    .kc-card > summary {
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .kc-card > summary::-webkit-details-marker { display: none; }
+
+    .kc-card > summary::after {
+      content: '+';
+      color: var(--primary-green);
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .kc-card[open] > summary::after { content: '−'; }
+
+    .kc-card > summary:focus-visible {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+
+    .kc-body {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .kc-body h4 {
+      font-size: 0.95rem;
+      color: var(--primary-green);
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+
+    .kc-body h4:first-child { margin-top: 0; }
+
+    .kc-body p, .kc-body li {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 0.7rem;
+    }
+
+    .kc-body ul, .kc-body ol {
+      padding-left: 1.3rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .kc-body strong { color: var(--text-main); }
+
+    .kc-checklist {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .kc-checklist li {
+      position: relative;
+      padding-left: 1.6rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .kc-checklist li::before {
+      content: '☐';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent-cyan);
+      font-size: 0.95rem;
+    }
+
+    .kc-glossary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .kc-term {
+      background: rgba(6, 13, 18, 0.6);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .kc-term-name {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+    }
+
+    .kc-term p {
+      margin-bottom: 0;
+      font-size: 0.85rem;
+    }
+
+    .kc-callout {
+      background: rgba(6, 13, 18, 0.7);
+      border: 1px solid var(--border-glass);
+      border-left: 3px solid var(--warning);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 1rem 0;
+    }
+
+    .kc-callout p { margin-bottom: 0; font-size: 0.85rem; }
+
+    .kc-table-wrap { overflow-x: auto; }
   </style>
 </head>
 <body>
@@ -1006,12 +1170,13 @@
       <span class="badge-edition">evchargewiseall.html</span>
     </a>
     <nav>
-      <button class="nav-btn active" onclick="switchTab('marketplace')">EV & Parts</button>
+      <button class="nav-btn active" onclick="switchTab('marketplace')">EV &amp; Parts</button>
       <button class="nav-btn" onclick="switchTab('calc')">Charging Calculator</button>
       <button class="nav-btn" onclick="switchTab('inventory')">Inventory (<span id="invCount">0</span>)</button>
       <button class="nav-btn" onclick="switchTab('ai')">AI Analysis</button>
       <button class="nav-btn" onclick="switchTab('analytics')">Analytics</button>
       <button class="nav-btn" onclick="switchTab('saved')">Saved (<span id="saved-count">0</span>)</button>
+      <button class="nav-btn" onclick="switchTab('knowledge')">EV Knowledge Center</button>
     </nav>
   </header>
 
@@ -1030,12 +1195,12 @@
           <input type="text" id="searchQuery" class="search-input" placeholder="Search EV models or parts (e.g. Tesla Model 3, Wallbox 22kW, Type 2 Cable, Battery...)" value="Tesla Model 3">
         </div>
         <select id="categoryFilter" class="filter-select">
-          <option value="all">All Vehicles & Parts</option>
+          <option value="all">All Vehicles &amp; Parts</option>
           <option value="vehicles">Electric Vehicles (EV)</option>
-          <option value="wallbox">Wallbox & Home Chargers</option>
-          <option value="cables">Cables & Adapters</option>
-          <option value="batteries">Battery Modules & Cells</option>
-          <option value="parts">Parts & Equipment (Tires, Brakes)</option>
+          <option value="wallbox">Wallbox &amp; Home Chargers</option>
+          <option value="cables">Cables &amp; Adapters</option>
+          <option value="batteries">Battery Modules &amp; Cells</option>
+          <option value="parts">Parts &amp; Equipment (Tires, Brakes)</option>
         </select>
         <button class="btn-search" id="searchBtn" onclick="runSearch()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -1048,7 +1213,7 @@
 
       <div class="loading-status" id="loadingStatus">
         <div class="spinner"></div>
-        <span>EVChargeWiseALL is preparing an indicative estimate and links to 14 EV & Parts platforms...</span>
+        <span>EVChargeWiseALL is preparing an indicative estimate and links to 14 EV &amp; Parts platforms...</span>
       </div>
 
       <div class="preset-pills">
@@ -1066,6 +1231,9 @@
 
       <p class="search-disclaimer">
         <strong style="color: var(--text-main);">Note:</strong> Prices shown are an internal indicative estimate calculated locally in the app based on reference values — they are not live-fetched data, actual availability, or a confirmed offer from the listed platforms. Before buying, always check the actual price, availability, and terms directly on the source service by clicking the link on the card.
+        <br>New to electric vehicles? Read the independent explanations in the
+        <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">EV Knowledge Center</button>
+        — buying, charging, range, running costs, compatibility, glossary and checklists.
       </p>
     </section>
 
@@ -1074,7 +1242,7 @@
       <div class="metric-card">
         <div class="metric-label">Estimates Shown</div>
         <div class="metric-value" id="statTotalItems">--</div>
-        <div class="metric-sub">▲ Links to 14 EV & Parts services</div>
+        <div class="metric-sub">▲ Links to 14 EV &amp; Parts services</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Average Indicative Price</div>
@@ -1098,10 +1266,52 @@
       <div class="marketplace-grid" id="cardsGrid"></div>
     </div>
 
+    <!-- EV Knowledge Center — visible summary (added). This section is a normal, always-visible
+         part of the page (NOT inside .tab-content, so it is never affected by the tab display:none
+         rule) placed directly below the marketplace/results area. It is a condensed introduction in
+         its own original wording; the full, detailed EV Knowledge Center tab below remains unchanged
+         and is not duplicated here. -->
+    <section class="search-section kc-visible-intro" id="kc-visible-summary">
+      <h2 class="search-title" style="font-size: 1.5rem;">EV Knowledge Center — Essential EV Guides</h2>
+      <p class="search-subtitle" style="margin-bottom: 1.2rem;">A short, self-contained introduction to buying, charging and running an electric vehicle. No calculator, search or click is needed to read it.</p>
+
+      <div class="kc-body">
+        <h4>Getting started with an EV purchase</h4>
+        <p>Choosing an electric car involves a different checklist than choosing a combustion car. Engine wear and timing components stop being relevant; battery condition, charging hardware and your access to electricity take their place. Before comparing specific models, work out where you will actually charge most of the time — home, workplace or public — because that single fact does more to determine which car suits you than any spec sheet. A car that is cheap to run for someone with a driveway and a wall box can be expensive to run for someone who depends entirely on public charging, and the reverse is also true depending on local tariffs.</p>
+
+        <h4>Battery health and State of Health (SoH)</h4>
+        <p>The traction battery is the single most valuable part of an EV, and its usable capacity fades gradually with age and use. This is usually expressed as State of Health (SoH): the remaining usable capacity as a percentage of when the car was new. A battery with reduced SoH still works normally — it simply carries the car a shorter distance per charge. When buying, especially used, ask for a battery health report if one is available, find out how the car was typically charged (frequent DC fast charging and long periods at very high or very low charge levels are generally considered harder on a battery than routine moderate AC charging), and check whether any battery-related warranty work or module replacement has occurred. A single range number on a dashboard is weak evidence of battery condition on its own.</p>
+
+        <h4>WLTP versus real-world range</h4>
+        <p>WLTP is a standardised European test procedure that produces a comparable range figure for every car, which is useful for lining models up against each other but was never meant to predict your specific commute. Real driving adds cold air, motorway speeds, hills, headwinds, passengers and climate control, all of which increase consumption above the laboratory figure. Winter range noticeably below the official number is normal, not a fault — cold batteries and cabin heating both draw real energy. A practical habit is to plan around the range you get on your worst regular trip in poor weather, rather than the optimistic headline figure.</p>
+
+        <h4>AC charging versus DC charging</h4>
+        <p>Grid electricity is alternating current (AC); batteries store direct current (DC). With AC charging, the conversion happens inside the car via its on-board charger, so the car itself — not the wall box — usually sets the real charging speed limit. AC charging is the normal way to charge at home or work, typically overnight or during the day, and it is gentle on the battery over long sessions. DC fast charging does the AC-to-DC conversion outside the vehicle at the charging station and feeds the battery directly, which is why it can be far more powerful. It is designed for topping up during a journey rather than as an everyday default, and it is usually the most expensive way to buy energy per kWh.</p>
+
+        <h4>kW versus kWh — the distinction that clears up most confusion</h4>
+        <p>A kilowatt (kW) is a unit of power: the rate at which energy is delivered. A kilowatt-hour (kWh) is a unit of energy: an amount. A charger's rating (for example 11 kW or 150 kW) tells you how fast it can deliver energy; a battery's capacity (for example 60 kWh) tells you how much energy it can hold. Charging at 11 kW for one hour delivers roughly 11 kWh. Plugging a car that can only accept 7 kW into a 22 kW charger will not make it charge any faster — the car's own limit applies, not the charger's maximum rating.</p>
+
+        <h4>Running costs and total cost of ownership</h4>
+        <p>Energy is usually the cheapest ongoing cost of running an EV, particularly when charging at home on an off-peak rate, but it is not the only cost. A realistic running-cost picture also includes insurance, tyre wear (EVs are heavy and can wear tyres faster), any home charger installation, occasional public charging at a higher rate per kWh, servicing, road taxes or local incentives, and — usually the largest and least predictable factor — depreciation. Any calculator, including the one on this page, can only compute what you tell it: your own electricity rate, your own consumption, and your own mileage. Treat the result as an estimate that helps you compare scenarios, not a guaranteed future bill.</p>
+
+        <h4>Inspecting a used EV</h4>
+        <p>On top of the usual used-car checks — service history, accident damage, outstanding finance — a used EV deserves a few extra ones. Test both an AC charge and, if possible, a DC fast charge. Check the charge port latch and indicator lights. Confirm which charging cables are included and their current rating. Review the software version and any pending updates. Check the 12V auxiliary battery, which still exists on EVs and can immobilise the car if it fails, even though the traction battery is fine. Finally, take a test drive that includes a motorway stretch, since that tells you far more about real consumption than a slow lap around a car park.</p>
+
+        <h4>Type 2 and CCS — connector compatibility in short</h4>
+        <p>Type 2 is the standard AC connector across Europe, used for home wall boxes and public AC charging points, and most European-market EVs use it for AC charging. CCS (Combined Charging System) adds two extra DC pins beneath a Type 2 inlet, so a single socket on the car can handle both AC and DC charging — CCS is the common DC fast-charging standard in Europe. Some vehicles, particularly certain older or non-European models, use different standards, so always confirm the exact connector type, current rating and phase configuration of a specific vehicle, cable or charger before assuming compatibility — a category-level description is not a substitute for checking the exact specification.</p>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin-top: 1.4rem;">
+        <button type="button" class="btn-search" onclick="switchTab('knowledge')">
+          📖 Read the full EV Knowledge Center
+        </button>
+      </div>
+    </section>
+
     <!-- TAB 2: Charging & TCO Calculator -->
     <div id="tab-calc" class="tab-content">
       <div class="search-section">
-        <h2 style="margin-bottom: 0.5rem;">Charging & Cost Calculator (TCO)</h2>
+        <h2 style="margin-bottom: 0.5rem;">Charging &amp; Cost Calculator (TCO)</h2>
         <p class="search-subtitle">Calculate precise charging costs per battery charge and compare your savings versus fossil fuels.</p>
 
         <div class="form-grid-3">
@@ -1157,13 +1367,19 @@
             <div class="ai-item-val" style="color: var(--primary-green);" id="resAnnualSavings">1,322.64 € / yr</div>
           </div>
         </div>
+
+        <p class="search-disclaimer" style="margin-top: 1.5rem;">
+          These results are an estimate based on the values you entered, not a guaranteed future cost. Electricity tariffs, fuel prices, driving style, weather and charging habits all change over time. See
+          <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">EV Cost &amp; TCO Guide</button>
+          for how each input affects the outcome.
+        </p>
       </div>
     </div>
 
     <!-- TAB 3: Inventory Tracker -->
     <div id="tab-inventory" class="tab-content">
       <div class="search-section">
-        <h2 style="margin-bottom: 0.5rem;">EV & Parts Inventory Management</h2>
+        <h2 style="margin-bottom: 0.5rem;">EV &amp; Parts Inventory Management</h2>
         <p class="search-subtitle">Save and track purchased vehicles, Wallboxes, or spare parts directly in local storage.</p>
 
         <div class="form-grid-3">
@@ -1259,7 +1475,7 @@
     <div id="tab-ai" class="tab-content">
       <div class="ai-dashboard-grid">
         <div class="ai-score-card">
-          <h3>AI Value & Battery Score</h3>
+          <h3>AI Value &amp; Battery Score</h3>
           <div class="gauge-circle" id="aiGauge">
             <div class="gauge-inner">
               <span class="gauge-num" id="aiScoreVal">--</span>
@@ -1274,7 +1490,7 @@
           <p style="color: var(--text-muted); margin-top: 6px;" id="aiSummaryText">
             The algorithm analyzes battery specifications, charger and parts compatibility, and predicts value retention and ROI.
           </p>
-          <p class="ai-note">Note: SoH, annual degradation, projected value, market risk, and resale ROI below are an <strong style="color: var(--text-main);">internal, model-generated reference estimate</strong> — not measured data for a specific listing, nor confirmed data from an external platform.</p>
+          <p class="ai-note">Note: SoH, annual degradation, projected value, market risk, and resale ROI below are an <strong style="color: var(--text-main);">internal, model-generated reference estimate</strong> — not measured data for a specific listing, nor confirmed data from an external platform. The exact calculation is described in <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">Price Estimate Methodology</button>.</p>
 
           <div class="ai-list">
             <div class="ai-item">
@@ -1315,7 +1531,7 @@
           <canvas id="chartPlatforms"></canvas>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Price Trend & Value Retention</div>
+          <div class="chart-title">Price Trend &amp; Value Retention</div>
           <div class="chart-note">Illustrative demo trend — not actual historical data for the selected model.</div>
           <canvas id="chartTrend"></canvas>
         </div>
@@ -1324,8 +1540,388 @@
 
     <!-- TAB 6: Saved Items -->
     <div id="tab-saved" class="tab-content">
-      <h3 style="margin-bottom: 1rem;">Saved Listings & Parts</h3>
+      <h3 style="margin-bottom: 1rem;">Saved Listings &amp; Parts</h3>
       <div class="marketplace-grid" id="savedGrid"></div>
+    </div>
+
+    <!-- TAB 7: EV Knowledge Center (added) — original editorial content -->
+    <div id="tab-knowledge" class="tab-content">
+      <section class="search-section kc-intro">
+        <h2 class="search-title">EV Knowledge Center</h2>
+        <p class="search-subtitle" style="margin-bottom: 0;">
+          Plain-language explanations of how electric vehicles, charging hardware and running costs actually work. This material is written to be useful on its own: you can read it end to end without clicking a single external link, searching a listing or using a calculator. Where a number depends on your own situation, we say so rather than pretending there is one universal answer.
+        </p>
+        <div class="kc-toc">
+          <a href="#kc-buying">Buying Guide</a>
+          <a href="#kc-charging">Charging Guide</a>
+          <a href="#kc-range">Range Guide</a>
+          <a href="#kc-cost">Cost &amp; TCO</a>
+          <a href="#kc-parts">Parts &amp; Compatibility</a>
+          <a href="#kc-how">How This App Works</a>
+          <a href="#kc-method">Price Estimate Methodology</a>
+          <a href="#kc-glossary">Glossary</a>
+          <a href="#kc-checklists">Checklists</a>
+        </div>
+      </section>
+
+      <!-- 1. EV BUYING GUIDE -->
+      <details class="kc-card" id="kc-buying" open>
+        <summary>1. EV Buying Guide</summary>
+        <div class="kc-body">
+          <p>Buying an electric car involves a different set of questions than buying a combustion car. Engine hours, timing belts and clutch wear stop mattering; battery condition, charging hardware and electricity access take their place. The points below are the ones that most often decide whether an EV suits a particular driver.</p>
+
+          <h4>Start with your charging situation, not the car</h4>
+          <p>The single biggest factor in EV satisfaction is usually where the car sleeps. If you can charge at home overnight, a modest battery is often enough and running costs are at their lowest. If you rely entirely on public charging, the cost per kWh is typically much higher and you should weigh fast-charging capability and charger availability along your usual routes more heavily than headline range. Work this out before you shortlist models — it can change which cars make sense.</p>
+
+          <h4>Battery condition and battery health</h4>
+          <p>The traction battery is the most valuable component in the vehicle. Its usable capacity declines gradually over time and use, which is normally described as State of Health (SoH) — the remaining usable capacity as a percentage of the original. A car with reduced SoH still drives normally; it simply covers less distance per charge.</p>
+          <ul>
+            <li><strong>Ask for a battery health report.</strong> Many manufacturers and independent specialists can produce one from the vehicle's own data. A seller who refuses any form of battery check is worth being cautious about.</li>
+            <li><strong>Look at how the car was charged.</strong> Frequent DC fast charging and routinely sitting at very high or very low states of charge are generally harder on a battery than regular moderate AC charging. History matters more than a single reading.</li>
+            <li><strong>Check for battery-related warranty or service actions.</strong> Ask whether modules have been replaced, whether software updates changed usable capacity, and what documentation exists.</li>
+            <li><strong>Treat a single dashboard range figure as weak evidence.</strong> The estimate shown on the dash reflects recent driving conditions, not measured capacity.</li>
+          </ul>
+
+          <h4>Real-world range versus the official figure</h4>
+          <p>Official range figures come from a standardised laboratory-style procedure (in Europe, WLTP). They exist so that different cars can be compared on equal terms, not to predict your commute. Real journeys involve cold air, motorway speeds, hills, headwinds, passengers and climate control, all of which increase consumption. Plan around the range you can expect on your worst regular trip, not the best-case number. There is more detail in the Range Guide below.</p>
+
+          <h4>Charging capability — often overlooked</h4>
+          <p>Two cars with the same battery size can behave very differently on a long trip. What matters is:</p>
+          <ul>
+            <li><strong>Maximum AC charging power</strong> (commonly around 7 kW single-phase or 11–22 kW three-phase). This determines overnight and workplace charging speed.</li>
+            <li><strong>Maximum DC charging power</strong> and, more importantly, how long the car can sustain it. A car that briefly touches a high peak but drops away quickly can be slower in practice than one with a lower but flatter charging curve.</li>
+            <li><strong>Battery preconditioning</strong> — the ability to warm the battery before a fast-charging stop. Without it, cold-weather fast charging can be considerably slower.</li>
+          </ul>
+
+          <h4>Ownership and running costs</h4>
+          <p>Energy is usually the cheapest part of EV ownership if you charge at home, but it is not the only cost. Consider insurance, tyres (EVs are heavy and torquey, so tyre wear can be higher), any home charger installation, public charging subscriptions, road taxes and local incentives, and depreciation. Depreciation is frequently the largest single cost of owning any car, EV or not, and it is the hardest to predict. Our calculator deliberately covers only energy costs, because those are the ones we can compute from inputs you actually know.</p>
+
+          <h4>Warranty considerations</h4>
+          <p>Battery and drive components usually carry a separate, longer warranty than the rest of the vehicle, often defined by both a time limit and a mileage limit, and frequently with a minimum retained capacity threshold. Before buying used, establish: when the battery warranty started, whether it transfers to a new owner, what capacity threshold triggers a claim, and what servicing is required to keep it valid. Get the answer in writing from the seller or manufacturer rather than relying on a general assumption about the brand.</p>
+
+          <h4>Checking a used EV</h4>
+          <p>Alongside the usual used-car checks (history, accident damage, service records, outstanding finance), add these EV-specific ones: confirm which charging cables are included and their rating; test both an AC charge and, if possible, a DC charge; check that the charge port latch and lights work; verify the 12 V battery, which still fails on EVs and can immobilise the car; review software version and any pending updates; and inspect tyre wear across all four corners. A short test drive that includes a motorway stretch tells you far more about consumption than a lap around a car park.</p>
+        </div>
+      </details>
+
+      <!-- 2. EV CHARGING GUIDE -->
+      <details class="kc-card" id="kc-charging">
+        <summary>2. EV Charging Guide</summary>
+        <div class="kc-body">
+          <h4>kW and kWh are not the same thing</h4>
+          <p>This is the single most useful distinction to learn. A <strong>kilowatt (kW)</strong> is power — the rate at which energy moves. A <strong>kilowatt-hour (kWh)</strong> is energy — an amount. Charging at 11 kW for one hour delivers roughly 11 kWh. A battery is measured in kWh (how much it holds); a charger is rated in kW (how fast it can fill it). Roughly: time in hours ≈ energy needed in kWh ÷ charging power in kW, plus losses.</p>
+
+          <h4>AC charging</h4>
+          <p>Grid electricity is alternating current. Batteries store direct current. With AC charging, the conversion is done by the on-board charger built into the vehicle, so the car itself sets the ceiling. Typical on-board chargers accept around 7 kW on a single-phase supply or 11–22 kW on three-phase. Plugging a 7 kW car into a 22 kW wall box does not make it charge faster — the car's on-board charger is the limit. AC charging is gentle, efficient for long sessions, and the normal way to charge at home or at work.</p>
+
+          <h4>DC fast charging</h4>
+          <p>DC chargers do the AC-to-DC conversion outside the vehicle and feed the battery directly, bypassing the on-board charger. That is why they can deliver far more power. DC charging is designed for topping up during a journey, not as an everyday default, and it is normally the most expensive way to buy energy per kWh.</p>
+
+          <h4>Home charging</h4>
+          <p>Home charging covers most day-to-day needs for most drivers, because a car parked overnight has many hours available. Options range from a portable cable used with a suitable domestic outlet to a permanently installed wall box. A wall box is generally faster, more convenient and designed for repeated use. Any fixed installation should be specified and carried out by a qualified electrician who checks that your supply, fuse rating and earthing arrangement can handle the load — this is an electrical safety matter, not a DIY accessory fitting.</p>
+
+          <h4>Public charging</h4>
+          <p>Public charging spans slow AC posts in car parks through to high-power DC sites on major routes. Practical things that affect the experience more than the advertised power rating: whether the site has several working units or a single one, whether you need a specific app or card, how the operator prices (per kWh, per minute, session fees, idle fees), and how busy the location is at the time you need it. It is worth checking a route's charging options before a long trip rather than during one.</p>
+
+          <h4>What actually determines charging speed</h4>
+          <ul>
+            <li><strong>The lower of the two limits.</strong> Charging runs at the slower of what the charger can supply and what the car can accept.</li>
+            <li><strong>State of charge.</strong> Charging slows markedly as the battery fills. The last portion is always the slowest.</li>
+            <li><strong>Battery temperature.</strong> A cold battery accepts less power; a very hot one may also be limited to protect itself.</li>
+            <li><strong>Battery management decisions.</strong> The car may reduce power to protect long-term battery health.</li>
+            <li><strong>Site conditions.</strong> Shared cabinets, grid limits and older hardware can mean a station delivers less than its label suggests.</li>
+            <li><strong>Cable and connector rating</strong> for AC charging — a cable rated for a lower current caps the session.</li>
+          </ul>
+
+          <h4>Why 20–80% comes up so often</h4>
+          <p>Two reasons, and they are separate. First, speed: on most EVs the charging curve is at its fastest in the lower and middle part of the range and tapers off significantly above roughly 80%, so the final stretch takes disproportionately long. On a journey, driving on and stopping again is often quicker than waiting for 100%. Second, battery treatment: keeping a lithium-ion battery away from prolonged extremes of charge is generally regarded as gentler on it. Neither reason means you should never charge to 100% — do it when you actually need the range, and follow your own manufacturer's guidance, which varies by battery chemistry.</p>
+
+          <h4>Why your charging time will differ from any published estimate</h4>
+          <p>Published charging times, including any shown in this app, assume ideal conditions: a healthy battery at a good temperature, a charger delivering full rated power, and a specific start and end state of charge. Change any of those and the real time changes. Treat quoted figures as a rough comparison between vehicles, not as a schedule.</p>
+        </div>
+      </details>
+
+      <!-- 3. EV RANGE GUIDE -->
+      <details class="kc-card" id="kc-range">
+        <summary>3. EV Range Guide</summary>
+        <div class="kc-body">
+          <h4>What WLTP is and what it is not</h4>
+          <p>WLTP (Worldwide Harmonised Light Vehicles Test Procedure) is a standardised test procedure used in Europe to produce comparable figures for range and consumption. Its value is consistency: every car faces the same defined cycle, so the numbers can be lined up against each other. Its limitation is that a standardised cycle cannot represent your route, your climate or your driving. A WLTP figure is a benchmark, not a promise.</p>
+
+          <h4>What changes consumption in the real world</h4>
+          <ul>
+            <li><strong>Temperature.</strong> Cold weather is the largest common factor. Battery chemistry is less willing when cold, and cabin heating draws real energy. Winter range noticeably below the official figure is normal, not a fault. Heat pumps and preconditioning while still plugged in reduce the impact.</li>
+            <li><strong>Speed.</strong> Aerodynamic drag rises steeply with speed. Sustained motorway driving consumes far more per kilometre than town driving — which is the opposite of the pattern combustion drivers are used to.</li>
+            <li><strong>Weather beyond temperature.</strong> Headwinds, rain and snow all add resistance.</li>
+            <li><strong>Tyres.</strong> Under-inflation, aggressive tread patterns, larger wheels and winter tyres all increase rolling resistance. Correct pressure is the cheapest range improvement available.</li>
+            <li><strong>Terrain.</strong> Climbing costs energy; descending returns some of it through regenerative braking, but never all of it.</li>
+            <li><strong>Heating and air conditioning.</strong> Heating a cold cabin is energy-intensive; seat and steering-wheel heating are usually far cheaper than heating the whole interior.</li>
+            <li><strong>Load.</strong> Passengers, luggage, roof boxes and towing all increase consumption, roof boxes disproportionately so because of drag.</li>
+          </ul>
+
+          <h4>How to read a range estimate</h4>
+          <p>The range figure on a dashboard is generally a projection based on recent consumption, so it moves as conditions change — this is the system working correctly, not an error. Many experienced drivers ignore range in kilometres and work in percentage of battery plus their own consumption figure (kWh per 100 km), which is stable and easy to reason about.</p>
+          <p>The range and specification values shown in this application are <strong>reference values for orientation</strong>, drawn from general model-level information. They are not a measurement of any specific vehicle you are looking at, and they cannot account for that car's age, battery health, wheels, tyres or climate. Use them to compare models roughly; use the actual vehicle's own data and a test drive to make a decision.</p>
+
+          <h4>A simple planning habit</h4>
+          <p>Take your regular longest trip, add a margin for weather and a possible diversion, and check that the car covers it comfortably at motorway speed in winter. If it does, everyday range worries generally disappear. If it only just manages in ideal summer conditions, the car is probably too marginal for that route.</p>
+        </div>
+      </details>
+
+      <!-- 4. COST & TCO -->
+      <details class="kc-card" id="kc-cost">
+        <summary>4. EV Cost &amp; TCO Guide</summary>
+        <div class="kc-body">
+          <p>Total cost of ownership is where EVs are usually judged. The energy side is genuinely calculable if you know a few figures about yourself — and those figures, not the car's brochure, do most of the work.</p>
+
+          <h4>Electricity price per kWh</h4>
+          <p>This is the foundation of every other number. Use the rate actually on your bill, including standing charges where relevant, and use your off-peak rate if you charge overnight on a time-of-use tariff. The gap between a cheap overnight home rate and a premium public DC rate can be several times over, which is why the same car can look cheap or expensive to run depending only on where it is charged.</p>
+
+          <h4>Consumption per 100 km</h4>
+          <p>Expressed in kWh/100 km, this is the EV equivalent of litres per 100 km. It is the most honest efficiency measure because it does not depend on battery size. If you already drive the car, use your own long-term average from the trip computer rather than the official figure — it will be more accurate for you than any published number.</p>
+
+          <h4>Monthly mileage</h4>
+          <p>Energy cost scales almost linearly with distance, so this input sets the magnitude of everything else. Use a realistic annual figure divided by twelve rather than an optimistic estimate; holidays and occasional long trips add up.</p>
+
+          <h4>The home versus public split</h4>
+          <p>How you divide charging between home and public DC often matters more than which EV you choose. A driver charging almost entirely at home and one relying on public fast charging can face very different monthly bills in the same car. When you use the calculator in this app, adjust this assumption honestly — the default split is a common pattern, not your pattern.</p>
+
+          <h4>Comparing against petrol or diesel</h4>
+          <p>A fair comparison needs like-for-like inputs: the same monthly distance, a realistic consumption figure for the combustion car (its real-world litres per 100 km, not the brochure value), and current local fuel prices. Remember that both sides move: electricity and fuel prices change independently, so a comparison is a snapshot of today's prices, not a forecast.</p>
+
+          <h4>Costs a charging calculator cannot capture</h4>
+          <p>Energy is only part of the picture. Purchase price or finance, insurance, depreciation, tyres, maintenance, home charger installation, subscriptions, tolls and taxes all belong in a complete TCO, and several of them depend on your location and personal circumstances. Depreciation in particular is usually larger than fuel or electricity, and nobody can predict it reliably.</p>
+
+          <div class="kc-callout">
+            <p><strong>Why our calculator is an estimate.</strong> It computes what the numbers you entered imply, using a fixed, published method: a straightforward multiplication of distance, consumption and tariffs, with the home/public split applied as stated. It does not know your future electricity price, your future driving, charging losses at your particular charger, or how cold next winter will be. Use it to compare scenarios against each other, not as a guaranteed forecast of what you will pay.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 5. PARTS & COMPATIBILITY -->
+      <details class="kc-card" id="kc-parts">
+        <summary>5. EV Parts &amp; Compatibility Guide</summary>
+        <div class="kc-body">
+          <h4>Type 2</h4>
+          <p>Type 2 is the standard AC connector used across Europe. It handles single-phase and three-phase AC charging and is what you will normally use at home and at public AC posts. Most European market EVs have a Type 2 inlet for AC.</p>
+
+          <h4>CCS</h4>
+          <p>CCS (Combined Charging System) extends the Type 2 inlet with two additional DC pins underneath, so one socket on the car serves both AC and DC charging. CCS is the common DC fast-charging standard in Europe. Some vehicles, particularly certain older or non-European models, use different DC standards, so confirm what a specific car actually has rather than assuming.</p>
+
+          <h4>Charging cable ratings</h4>
+          <p>A charging cable is not a generic accessory. The relevant specifications are:</p>
+          <ul>
+            <li><strong>Current rating</strong> (for example 16 A or 32 A) — a 16 A cable will limit a car and wall box that could otherwise do more.</li>
+            <li><strong>Phases</strong> — single-phase or three-phase. A single-phase cable caps three-phase charging.</li>
+            <li><strong>Length</strong> — enough to reach comfortably, but longer cables are heavier and more awkward to store.</li>
+            <li><strong>Type</strong> — a "mode 3" cable connects a car to an AC charge point; a portable charging unit with a domestic or industrial plug is a different product with its own rating and safety requirements.</li>
+          </ul>
+          <p>Matching the cable to both the car and the charge point is what determines the usable current — the weakest link sets the ceiling.</p>
+
+          <h4>Wall box power</h4>
+          <p>A wall box's rated power only helps if the rest of the chain supports it. A 22 kW unit needs a suitable three-phase supply and adequate fuse capacity, and it still cannot exceed what the car's on-board charger accepts. Before buying, check: what supply you have (single-phase or three-phase), what the property's fuse rating allows, whether load management is needed to avoid tripping the main fuse, what the car accepts on AC, and what the installation will actually cost. A qualified electrician should confirm all of this for your specific property.</p>
+
+          <h4>How to check compatibility properly</h4>
+          <ol>
+            <li>Identify the exact vehicle — model, model year, trim and battery variant. Specifications change between years and versions of the same nameplate.</li>
+            <li>Note its AC and DC connector types and its maximum accepted power for each.</li>
+            <li>Check your electrical supply and any installation constraints.</li>
+            <li>Confirm the part's own specification from the manufacturer's documentation.</li>
+            <li>Confirm fitment or compatibility with the seller or manufacturer before purchase, in writing where the item is expensive.</li>
+          </ol>
+
+          <div class="kc-callout">
+            <p><strong>Always verify compatibility at the source.</strong> The specification values shown on cards in this application are general reference information for the search term, not verified data for a specific listing. Never buy a charger, cable, battery component or fitted part on the basis of a category-level description alone — confirm the exact part number and vehicle applicability with the seller or manufacturer first. Work involving high-voltage components or fixed wiring should be left to qualified professionals.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 6. HOW THE APP WORKS -->
+      <details class="kc-card" id="kc-how">
+        <summary>6. How EVChargeWiseALL Works</summary>
+        <div class="kc-body">
+          <h4>What this application is for</h4>
+          <p>EVChargeWiseALL is an informational and organisational tool. It helps you frame a search across several well-known vehicle and parts services, gives you calculators for charging and investment arithmetic, lets you keep private notes on items you are tracking, and explains the underlying concepts in the guides on this page. It does not sell anything and is not party to any transaction.</p>
+
+          <h4>Marketplace links</h4>
+          <p>Each result card carries a link that opens a search or category page on an external service in a new tab. The link is constructed from the search term you typed. The external site's own results, prices, availability and terms are entirely its own — this application has no control over them and does not modify them.</p>
+
+          <div class="kc-callout">
+            <p><strong>Prices shown here are not live marketplace data.</strong> Unless a value is explicitly labelled otherwise, every price in this application is an internal indicative estimate computed locally in your browser. EVChargeWiseALL does not currently retrieve live listings, prices, stock or offers through the official APIs or feeds of the services it links to. Always verify the actual price, availability and specification at the original source before making any decision.</p>
+          </div>
+
+          <h4>Calculators</h4>
+          <p>The charging calculator turns your own inputs (battery size, consumption, mileage, tariffs, fuel price) into energy cost estimates using fixed, disclosed arithmetic. The ROI calculator does the same for purchase price, sale price, costs and monthly profit. Both run entirely in your browser, send nothing to a server, and produce results that depend only on what you enter.</p>
+
+          <h4>Saved items and inventory</h4>
+          <p>Saved listings and inventory entries are stored in your browser's local storage on your own device. They are not uploaded, not shared, and not visible to anyone else. Clearing your browser data for this page, or removing entries in the app, deletes them permanently. Because the storage is per-browser and per-device, the same list will not appear on another device.</p>
+
+          <h4>Analytics charts</h4>
+          <p>The charts visualise the app's own internally generated values so you can see the spread at a glance. The price-comparison chart plots the indicative estimates produced for the current search. The trend chart is an illustrative demonstration of how value retention is generally shaped over time — it is <strong>not</strong> historical market data for the model you searched, and should not be read as one.</p>
+
+          <h4>The "AI analysis"</h4>
+          <p>The AI Analysis view presents a rule-based scoring and projection built from the app's own reference values. It does not query an external AI service, does not inspect a specific listing, and does not measure any real vehicle's battery. Figures such as State of Health, degradation rate, projected value and market risk are illustrative reference outputs of that internal model. Do not treat them as a battery test result or a valuation.</p>
+
+          <h4>Verify before you act</h4>
+          <p>Everything this application produces is intended to help you think, compare and organise. Actual prices, availability, specifications, compatibility and terms are determined solely by the original source. Check there before spending money.</p>
+        </div>
+      </details>
+
+      <!-- 7. PRICE ESTIMATE METHODOLOGY -->
+      <details class="kc-card" id="kc-method">
+        <summary>7. Price Estimate Methodology</summary>
+        <div class="kc-body">
+          <p>We think you are entitled to know exactly where a number on screen comes from. This section describes the current method in full.</p>
+
+          <h4>Step 1 — Interpreting your search term</h4>
+          <p>Your search text is matched against a small internal reference table of common vehicles and parts categories. If a known entry matches, its reference values are used. If nothing matches exactly, keywords in the text (such as wall box, cable, battery, tyre) are used to classify the item into a broad category with generic category-level reference values. If neither applies, a generic vehicle profile is used. No external lookup takes place at any point.</p>
+
+          <h4>Step 2 — The reference base value</h4>
+          <p>Each reference entry carries a base value used purely as a starting point for comparison. It is an internal orientation figure, not an observed transaction price, not an average of real listings, and not sourced from any marketplace.</p>
+
+          <h4>Step 3 — Spreading values across the listed services</h4>
+          <p>To illustrate that different outlets price differently, the base value is multiplied by a fixed, deterministic factor that varies by the position of each service in the list. The result is a spread of indicative figures around the base value. The spread demonstrates the concept of price variation; it does <strong>not</strong> reflect how any named service actually prices anything, and a service appearing cheapest in this app carries no implication about its real pricing.</p>
+
+          <h4>Step 4 — Derived figures</h4>
+          <p>The average, lowest value, score, three-year projection and resale percentage shown elsewhere in the app are all computed from the indicative figures produced in step 3, using fixed formulas. Since their input is an internal estimate, so is their output.</p>
+
+          <h4>What this method deliberately does not do</h4>
+          <ul>
+            <li>It does not query any marketplace, API or price feed.</li>
+            <li>It does not use historical transaction data.</li>
+            <li>It does not know current stock, condition, mileage, location or seller.</li>
+            <li>It does not produce a valuation, an appraisal or a purchase recommendation.</li>
+            <li>It does not represent any manufacturer's or retailer's pricing.</li>
+          </ul>
+
+          <h4>How to use these figures responsibly</h4>
+          <p>Treat them as a consistent yardstick for orienting yourself — for getting a rough sense of the order of magnitude of a category, and for exercising the calculators with plausible numbers. For anything involving money, open the source link and read the real listing. If this method changes in future, this section will be updated to describe the new one.</p>
+        </div>
+      </details>
+
+      <!-- 8. GLOSSARY -->
+      <details class="kc-card" id="kc-glossary">
+        <summary>8. EV Glossary</summary>
+        <div class="kc-body">
+          <p>Short, practical definitions of the terms used throughout this application.</p>
+          <div class="kc-glossary">
+            <div class="kc-term">
+              <div class="kc-term-name">kW (kilowatt)</div>
+              <p>A unit of power — the rate at which energy flows. Charger and motor outputs are quoted in kW. Higher kW means faster charging, up to whatever limit the car or the supply imposes.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">kWh (kilowatt-hour)</div>
+              <p>A unit of energy — an amount rather than a rate. Battery capacity, electricity bills and consumption figures are all in kWh. Drawing 1 kW for one hour uses 1 kWh.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">WLTP</div>
+              <p>A standardised European test procedure that produces comparable range and consumption figures for different vehicles. Useful for comparison; not a prediction of your real-world range.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">AC (alternating current)</div>
+              <p>The form of electricity supplied by the grid. AC charging relies on the car's on-board charger to convert it for the battery, so the car sets the maximum speed.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">DC (direct current)</div>
+              <p>The form of electricity a battery stores. DC charging converts outside the vehicle and feeds the battery directly, which is why it can be much faster than AC.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">CCS</div>
+              <p>Combined Charging System — a Type 2 connector with two extra DC pins, letting one inlet handle both AC and DC. The common DC fast-charging standard in Europe.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Type 2</div>
+              <p>The standard European AC charging connector, used for home wall boxes and public AC posts. Supports single-phase and three-phase charging.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">SoC (State of Charge)</div>
+              <p>How full the battery is right now, as a percentage. The EV equivalent of a fuel gauge. Charging speed depends heavily on SoC — it slows as the battery fills.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">SoH (State of Health)</div>
+              <p>Remaining usable battery capacity compared with when new, as a percentage. It declines slowly with age and use, and is a central question when buying used.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Battery capacity</div>
+              <p>The energy a battery can hold, in kWh. Often quoted as gross (total) and usable (available to the driver); usable is the figure that affects range.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Consumption</div>
+              <p>Energy used per distance, normally kWh per 100 km. The EV efficiency measure that lets you compare cars regardless of battery size, and the key input for cost calculations.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Regenerative braking</div>
+              <p>Slowing the car by using the motor as a generator, returning some energy to the battery instead of losing it all as heat. Most effective in stop-start and downhill driving.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- 9. CHECKLISTS -->
+      <details class="kc-card" id="kc-checklists">
+        <summary>9. Practical EV Checklists</summary>
+        <div class="kc-body">
+          <p>Print these, or work through them on screen. They are deliberately short enough to actually use.</p>
+
+          <h4>Used EV purchase checklist</h4>
+          <ul class="kc-checklist">
+            <li>Battery health report obtained or independent check arranged</li>
+            <li>Charging history discussed (frequency of DC fast charging, typical charge levels)</li>
+            <li>Battery and drivetrain warranty terms confirmed: start date, mileage limit, transferability, capacity threshold</li>
+            <li>Service history and any battery or module work documented</li>
+            <li>AC charge tested; DC charge tested where possible</li>
+            <li>Charge port, latch and indicator lights working</li>
+            <li>Included cables identified and their current rating checked</li>
+            <li>12 V battery condition checked</li>
+            <li>Software version noted and pending updates discussed</li>
+            <li>Tyre wear inspected on all four corners, including inner edges</li>
+            <li>Test drive includes a motorway section; consumption observed</li>
+            <li>Standard used-car checks completed: history, damage, outstanding finance, documentation</li>
+          </ul>
+
+          <h4>Home charging checklist</h4>
+          <ul class="kc-checklist">
+            <li>Supply type established: single-phase or three-phase</li>
+            <li>Main fuse rating and spare capacity confirmed</li>
+            <li>Qualified electrician engaged for assessment and installation</li>
+            <li>Load management considered if the supply is tight</li>
+            <li>Wall box power matched to both the supply and the car's on-board charger</li>
+            <li>Cable reach checked against where the car actually parks</li>
+            <li>Weather protection and mounting position considered for outdoor installation</li>
+            <li>Electricity tariff reviewed; off-peak or time-of-use options compared</li>
+            <li>Scheduled or delayed charging set up if a cheaper overnight rate applies</li>
+            <li>Installation documentation and any required certification retained</li>
+          </ul>
+
+          <h4>Charging cable checklist</h4>
+          <ul class="kc-checklist">
+            <li>Connector type matches the vehicle inlet</li>
+            <li>Current rating (for example 16 A or 32 A) meets your needs</li>
+            <li>Phase configuration matches the supply and the car</li>
+            <li>Length sufficient for real parking positions, without excess bulk</li>
+            <li>Correct cable type for the use: charge-point cable versus portable charging unit</li>
+            <li>Plug type appropriate and rated for the socket, if a portable unit</li>
+            <li>Relevant safety markings and manufacturer documentation present</li>
+            <li>Storage bag or holder available so the cable is not left on the ground</li>
+            <li>Compatibility confirmed with the seller before purchase</li>
+          </ul>
+
+          <h4>EV running-cost checklist</h4>
+          <ul class="kc-checklist">
+            <li>Actual home electricity rate per kWh identified, including any off-peak rate</li>
+            <li>Typical public charging rate per kWh noted for the networks you use</li>
+            <li>Realistic split between home and public charging estimated</li>
+            <li>Own consumption figure in kWh/100 km recorded over time, not assumed</li>
+            <li>Realistic annual mileage used, including holidays and long trips</li>
+            <li>Insurance quotes obtained for the specific model</li>
+            <li>Tyre replacement interval and cost budgeted</li>
+            <li>Scheduled servicing requirements and costs checked</li>
+            <li>Any subscriptions, road taxes, tolls or local charges included</li>
+            <li>Home charger installation cost accounted for in year one</li>
+            <li>Depreciation acknowledged as a real, usually dominant, cost</li>
+          </ul>
+        </div>
+      </details>
     </div>
   </main>
 
@@ -1333,8 +1929,10 @@
   <div class="ad-slot ad-slot-bottom" data-ad-slot-key="bottomBanner" aria-hidden="true"></div>
 
   <footer>
-    EVChargeWiseALL &copy; 2026 — Electric Vehicle, Parts & Charging Engine in a single file (<code>evchargewiseall.html</code>).
+    EVChargeWiseALL &copy; 2026 — Electric Vehicle, Parts &amp; Charging Engine in a single file (<code>evchargewiseall.html</code>).
     <div class="legal-links">
+      <button class="legal-link-btn" onclick="switchTab('knowledge')">EV Knowledge Center</button>
+      <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('privacy')">Privacy Policy</button>
       <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('terms')">Terms of Use</button>
@@ -1364,7 +1962,7 @@
       <p>EVChargeWiseALL prikazuje osnovne referentne informacije o vozilima, Wallbox punjačima, kabelima, baterijama i dijelovima.</p>
 
       <h3>Indikativne cijene — kako nastaju</h3>
-      <p>Cijene prikazane na karticama su <strong>interna indikativna procjena</strong> koju aplikacija izračunava lokalno, u tvom pregledniku, na temelju referentnih vrijednosti — to NISU stvarne, uživo dohvaćene cijene niti potvrđene ponude preuzete s Mobile.de, AutoScout24, eBay Motors ili drugih navedenih platformi. EVChargeWiseALL trenutno ne dohvaća podatke uživo putem službenih API-ja tih platformi. Za stvarnu, trenutnu cijenu i dostupnost uvijek provjeri izravno na izvornoj platformi klikom na poveznicu unutar kartice.</p>
+      <p>Cijene prikazane na karticama su <strong>interna indikativna procjena</strong> koju aplikacija izračunava lokalno, u tvom pregledniku, na temelju referentnih vrijednosti — to NISU stvarne, uživo dohvaćene cijene niti potvrđene ponude preuzete s Mobile.de, AutoScout24, eBay Motors ili drugih navedenih platformi. EVChargeWiseALL trenutno ne dohvaća podatke uživo putem službenih API-ja tih platformi. Za stvarnu, trenutnu cijenu i dostupnost uvijek provjeri izravno na izvornoj platformi klikom na poveznicu unutar kartice. Detaljan opis metodologije dostupan je u sekciji „EV Knowledge Center → Price Estimate Methodology".</p>
 
       <h3>Google Analytics</h3>
       <p>EVChargeWiseALL koristi Google Analytics (mjerni ID: G-Q5J05KH0J6) radi razumijevanja korištenja aplikacije i poboljšanja usluge. Google Analytics može prikupljati tehničke i statističke podatke poput broja posjeta, interakcija sa stranicama i funkcijama te općih informacija o pregledniku i uređaju. Ne tvrdimo da su svi ovi podaci u potpunosti anonimni, budući da to ne možemo tehnički jamčiti — obrada se odvija u skladu s Googleovim uvjetima korištenja i pravilima privatnosti.</p>
@@ -1418,6 +2016,9 @@
 
       <h3>Priroda usluge</h3>
       <p>EVChargeWiseALL je informativna aplikacija za pretragu i usporedbu električnih vozila, EV punionica, dijelova i opreme. Aplikacija ne prodaje vozila ni dijelove i nije strana u bilo kojoj transakciji između korisnika i trećih platformi.</p>
+
+      <h3>Informativni sadržaj (EV Knowledge Center)</h3>
+      <p>Vodiči, pojmovnik i kontrolne liste u sekciji „EV Knowledge Center" su izvorni informativni sadržaj opće naravi, napisan radi razumijevanja tehnologije električnih vozila. Ne predstavljaju tehnički, električarski, pravni ni financijski savjet za konkretan slučaj. Radove na visokonaponskim komponentama i fiksnim električnim instalacijama smiju izvoditi isključivo kvalificirane osobe, a kompatibilnost konkretnog vozila i dijela uvijek provjeri kod proizvođača ili prodavatelja.</p>
 
       <h3>Indikativne cijene — nisu stvarne, uživo dohvaćene ponude</h3>
       <p>Cijene i "AI ocjene" prikazane na karticama unutar EVChargeWiseALL su <strong>interna indikativna procjena</strong>, izračunata lokalno u aplikaciji na temelju referentnih vrijednosti. One NE predstavljaju stvarnu, trenutnu, uživo dohvaćenu cijenu, potvrđenu ponudu ili stvarnu dostupnost s Mobile.de, AutoScout24, eBay Motors, Tesla Shop, Wallbox ili bilo koje druge navedene platforme. EVChargeWiseALL trenutno ne povlači podatke uživo putem službenih API-ja ili feedova tih platformi. Isto vrijedi za specifikacije baterije (SoH, degradacija), predviđenu vrijednost i tržišni rizik u AI Analizi te za grafove u Analitici — riječ je o referentnim/ilustrativnim procjenama, a ne o mjerenim ili potvrđenim podacima za konkretan oglas.</p>
@@ -1620,12 +2221,13 @@
       const target = document.getElementById('tab-' + tabId);
       if (target) target.classList.add('active');
 
-      const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => (b.getAttribute('onclick') || '').includes("'" + tabId + "'"));
       if (btn) btn.classList.add('active');
 
       if (tabId === 'saved') renderSaved();
       if (tabId === 'inventory') renderInventory();
       if (tabId === 'analytics') renderCharts();
+      if (tabId === 'knowledge') window.scrollTo({ top: 0, behavior: 'smooth' });
       trackGAEvent("switch_tab", { tab: tabId });
     }
 
@@ -2201,6 +2803,21 @@
     }
 
     window.addEventListener('resize', renderCharts);
+
+    /* ================= EV Knowledge Center (added) =================
+       Otvara odgovarajuću collapsible karticu kada korisnik klikne stavku sadržaja (TOC),
+       tako da sekcija nikad ne ostane zatvorena nakon skoka na sidro. */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.kc-toc a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const targetId = link.getAttribute('href').slice(1);
+          const card = document.getElementById(targetId);
+          if (card && card.tagName.toLowerCase() === 'details') {
+            card.open = true;
+          }
+        });
+      });
+    });
 
     // Initial Execution
     document.addEventListener('DOMContentLoaded', () => {
