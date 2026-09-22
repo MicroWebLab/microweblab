@@ -22,8 +22,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ResellWiseALL - Universal Marketplace & Profit Engine</title>
-  <meta name="description" content="ResellWiseALL - Cjelovita jednostranična aplikacija (resellwiseall.html) za analizu tržišnih cijena, izračun profita i vođenje inventara.">
-  <link rel="canonical" href="resellwiseall.html">
+  <meta name="description" content="ResellWiseALL - Cjelovita jednostranična aplikacija (resellwiseall.html) za analizu tržišnih cijena, izračun profita i vođenje inventara, uz ResellWise Knowledge Center s vodičima o preprodaji.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://microweblab.github.io/microweblab/resellwiseall.html">
 
   <style>
     :root {
@@ -970,6 +971,190 @@
     @media (max-width: 768px) {
       .ad-slot-bottom { width: calc(100% - 2rem); min-height: 100px; }
     }
+
+    /* ================= ResellWise Knowledge Center (added) =================
+       Reuses the existing glassmorphism tokens (--bg-card, --border-glass, --accent-cyan,
+       --success, --warning, --purple-accent, --radius) so the visual identity is unchanged.
+       .kc-visible-intro is the always-visible summary (plain .search-section + .kc-body,
+       never inside .tab-content). .kc-card/.kc-toc/.kc-checklist/.kc-glossary/.kc-callout
+       style the deeper "Full ResellWise Knowledge Center" tab, built from collapsible
+       <details> elements to keep the page clean. */
+    .kc-toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 1.2rem;
+    }
+
+    .kc-toc a {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .kc-toc a:hover, .kc-toc a:focus {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      outline: none;
+    }
+
+    .kc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.2rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      scroll-margin-top: 110px;
+    }
+
+    .kc-card > summary {
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .kc-card > summary::-webkit-details-marker { display: none; }
+
+    .kc-card > summary::after {
+      content: '+';
+      color: var(--accent-cyan);
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .kc-card[open] > summary::after { content: '−'; }
+
+    .kc-card > summary:focus-visible {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 4px;
+      border-radius: 6px;
+    }
+
+    .kc-body {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .kc-body h4 {
+      font-size: 0.92rem;
+      color: var(--accent-cyan);
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+
+    .kc-body h4:first-child { margin-top: 0; }
+
+    .kc-body p, .kc-body li {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin-bottom: 0.7rem;
+    }
+
+    .kc-body ul, .kc-body ol {
+      padding-left: 1.3rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .kc-body strong { color: var(--text-main); }
+
+    .kc-checklist {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .kc-checklist li {
+      position: relative;
+      padding-left: 1.6rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .kc-checklist li::before {
+      content: '☐';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent-cyan);
+      font-size: 0.95rem;
+    }
+
+    .kc-glossary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .kc-term {
+      background: rgba(7, 11, 20, 0.5);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .kc-term-name {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+    }
+
+    .kc-term p {
+      margin-bottom: 0;
+      font-size: 0.85rem;
+    }
+
+    .kc-callout {
+      background: rgba(7, 11, 20, 0.6);
+      border: 1px solid var(--border-glass);
+      border-left: 3px solid var(--warning);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 1rem 0;
+    }
+
+    .kc-callout p { margin-bottom: 0; font-size: 0.85rem; }
+
+    .kc-example-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.8rem 0;
+      font-size: 0.85rem;
+    }
+
+    .kc-example-table th, .kc-example-table td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-muted);
+    }
+
+    .kc-example-table th {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .kc-example-table td.kc-num { text-align: right; font-variant-numeric: tabular-nums; }
+    .kc-example-table tr.kc-total td { color: var(--text-main); font-weight: 700; }
+    .kc-example-table tr.kc-total td.kc-profit-pos { color: var(--success); }
   </style>
 </head>
 <body>
@@ -989,6 +1174,7 @@
       <button class="nav-btn" onclick="switchTab('ai')">AI Analiza</button>
       <button class="nav-btn" onclick="switchTab('analytics')">Analitika</button>
       <button class="nav-btn" onclick="switchTab('saved')">Spremljeno (<span id="saved-count">0</span>)</button>
+      <button class="nav-btn" onclick="switchTab('knowledge')">Knowledge Center</button>
     </nav>
   </header>
 
@@ -1028,29 +1214,37 @@
       </div>
 
       <div class="platform-pills" id="platformPills"></div>
+
+      <p class="legal-disclaimer" style="margin-left:0; margin-right:0; max-width:none;">
+        New to reselling? Read the practical introduction in the
+        <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">ResellWise Knowledge Center</button>
+        below — how profit is really calculated, how to evaluate a product before buying, and how to interpret marketplace prices.
+      </p>
     </section>
 
-    <!-- Stat Metrics -->
+    <!-- Stat Metrics — all four cards now reflect ONLY real, successfully-fetched eBay data.
+         If no real data was fetched, every value shows "--" / "Nedostupno" instead of any
+         generated or estimated figure. -->
     <div class="metrics-row">
       <div class="metric-card">
-        <div class="metric-label">Stvarno Analizirano Oglasa</div>
+        <div class="metric-label">Stvarno Dohvaćeno Oglasa (eBay)</div>
         <div class="metric-value" id="statTotalItems">--</div>
-        <div class="metric-sub">▲ Živi izvori u resellwiseall.html</div>
+        <div class="metric-sub" id="statTotalSub">Stvarni podaci trenutno nisu dostupni.</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Prosječna Tržišna Cijena</div>
+        <div class="metric-label">Prosječna Cijena (eBay, stvarno)</div>
         <div class="metric-value" id="statAvgPrice">-- €</div>
-        <div class="metric-sub">Izračunato iz živih oglasa</div>
+        <div class="metric-sub">Izračunato samo iz stvarno dohvaćenih oglasa</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Potencijal Zarade (Profit)</div>
+        <div class="metric-label">Raspon Cijena (eBay, stvarno)</div>
         <div class="metric-value" style="color: var(--success);" id="statProfit">-- €</div>
-        <div class="metric-sub" id="statRoiSub">▲ Na temelju najniže ulazne cijene</div>
+        <div class="metric-sub" id="statRoiSub">Stvarni podaci trenutno nisu dostupni.</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Najpovoljniji Izvor</div>
+        <div class="metric-label">Najniža Cijena (eBay, stvarno)</div>
         <div class="metric-value" style="color: var(--accent-cyan);" id="statBestPlatform">--</div>
-        <div class="metric-sub">Najniža ulazna ponuda</div>
+        <div class="metric-sub" id="statBestSub">Stvarni podaci trenutno nisu dostupni.</div>
       </div>
     </div>
 
@@ -1058,6 +1252,41 @@
     <div id="tab-marketplace" class="tab-content active">
       <div class="marketplace-grid" id="cardsGrid"></div>
     </div>
+
+    <!-- ResellWise Knowledge Center — visible summary (added). Always visible, NOT inside
+         .tab-content, so it is never affected by the tab display:none rule and needs no search
+         or click to be readable. This is a condensed introduction in its own original wording;
+         the full, detailed Knowledge Center tab further down is not duplicated here. -->
+    <section class="search-section" id="kc-visible-summary">
+      <h2 class="search-title" style="font-size: 1.5rem;">ResellWise Knowledge Center — Getting Started With Reselling</h2>
+      <p class="search-subtitle" style="margin-bottom: 1.2rem;">A practical introduction to product reselling and flipping. No search or calculator needed to read it.</p>
+
+      <div class="kc-body">
+        <h4>What reselling actually means</h4>
+        <p>Reselling, or flipping, means buying a product — new, used or clearance-priced — with the specific intention of selling it again for more than it cost you to acquire and deliver. It differs from casual selling of your own unwanted items because it's a repeatable activity: you're deliberately sourcing stock, evaluating it against a plan, and treating the difference between what you spend and what you collect as your business result.</p>
+
+        <h4>Why the purchase price alone tells you almost nothing</h4>
+        <p>A common beginner mistake is judging a deal purely by how low the purchase price looks. A €20 item that sits unsold for four months, needs €8 of packaging and shipping, loses 13% of the sale price to marketplace and payment fees, and has a meaningful chance of being returned is not automatically a better deal than a €60 item that sells in two days with a thin but reliable margin. Profitability depends on the whole picture — demand, total costs, and how long your money is tied up — not the sticker price you paid.</p>
+
+        <h4>Why demand, fees, shipping, returns and time all matter</h4>
+        <p><strong>Demand</strong> determines whether you can sell at all, and how quickly. <strong>Fees</strong> (marketplace commission and payment processing) quietly take a real cut out of every sale. <strong>Shipping</strong> and packaging are easy to underestimate, especially for bulky or fragile items. <strong>Returns</strong> can turn an apparently profitable sale into a loss once you account for return shipping, a refund, and an item that may come back damaged or unsellable. <strong>Time</strong> matters because capital sitting in inventory that hasn't sold isn't just "waiting" — it's money you can't use for the next opportunity, and storage or holding costs can accumulate.</p>
+
+        <h4>Gross profit versus net profit</h4>
+        <p><strong>Gross profit</strong> is simply selling price minus purchase price — the number that looks good in your head. <strong>Net profit</strong> is what's actually left after every real cost: shipping, marketplace fees, payment processing, packaging, and any losses from returns or discounts. Net profit is the only number that tells you whether an item was genuinely worth buying. Many "profitable-looking" flips turn out flat or negative once fees and shipping are properly subtracted — see the Fees & Hidden Costs and Real Profit Calculation sections of the full Knowledge Center below for the complete breakdown and a worked example.</p>
+
+        <h4>Evaluating a product before you buy it</h4>
+        <p>Before committing money to any item, it's worth checking a short set of factors rather than going on instinct. <strong>Demand</strong> — is this something people are actively searching for and buying, or a niche item that might sit for months? <strong>Competition</strong> — how many other sellers are already listing the same or a similar item, and at what price? <strong>Condition</strong> — does the item work fully, are there cosmetic issues, and is the condition accurately described by the source you're buying from? <strong>Brand, model and version</strong> — small differences (a specific model year, storage size, colorway or regional variant) can significantly change both demand and price, so confirm you have the exact item, not just a similar one. <strong>Included accessories</strong> — original box, cables, manuals or authentication documents often affect resale value more than buyers expect. <strong>Seasonality</strong> — some categories (holiday items, seasonal fashion, certain electronics around a new model launch) sell far better at specific times of year. <strong>Expected selling time</strong> — a faster-moving item ties up your money for less time, even at a smaller margin. <strong>Risk of returns or defects</strong> — items with a history of being fragile, easily misrepresented, or frequently DOA (dead on arrival) carry a higher chance of eating into your margin after the sale.</p>
+
+        <h4>Reading marketplace prices sensibly</h4>
+        <p>When you compare prices across sources, remember that an asking price is not the same as a completed sale — plenty of listings sit unsold at optimistic prices. Availability, condition, included accessories, location and shipping cost can all differ between two listings that look similar at a glance. Treat any price shown by ResellWiseALL, or by any marketplace, as a reference point to investigate further, not as a guaranteed offer — always confirm the real price, condition and availability on the original platform before you act.</p>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin-top: 1.4rem;">
+        <button type="button" class="btn-search" onclick="switchTab('knowledge')">
+          📖 Read the Full ResellWise Knowledge Center
+        </button>
+      </div>
+    </section>
 
     <!-- TAB 2: Profit Calculator -->
     <div id="tab-calc" class="tab-content">
@@ -1106,6 +1335,12 @@
             <div class="ai-item-val" style="color: var(--purple-accent);" id="resROI">94.8 %</div>
           </div>
         </div>
+
+        <p class="legal-disclaimer" style="margin-left:0; margin-right:0; max-width:none;">
+          These figures depend entirely on the values you enter. See
+          <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">Real Reselling Profit Calculation</button>
+          in the Knowledge Center for what each cost actually covers and a fully worked example.
+        </p>
       </div>
     </div>
 
@@ -1202,6 +1437,12 @@
             </div>
           </div>
         </div>
+
+        <p class="legal-disclaimer" style="margin-left:0; margin-right:0; max-width:none;">
+          For guidance on recording purchase price, target price, stock age and realized profit, see
+          <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">Inventory Management</button>
+          in the Knowledge Center.
+        </p>
       </div>
     </div>
 
@@ -1209,11 +1450,11 @@
     <div id="tab-ai" class="tab-content">
       <div class="ai-dashboard-grid">
         <div class="ai-score-card">
-          <h3>AI Ocjena Isplativosti</h3>
+          <h3>Pregled Stvarnih Cijena (eBay)</h3>
           <div class="gauge-circle" id="aiGauge">
             <div class="gauge-inner">
               <span class="gauge-num" id="aiScoreVal">--</span>
-              <span class="gauge-lbl">/ 100</span>
+              <span class="gauge-lbl">stvarnih oglasa</span>
             </div>
           </div>
           <p style="font-weight: 700; color: var(--success);" id="aiVerdict">Analiza U Tijeku...</p>
@@ -1222,35 +1463,38 @@
         <div class="ai-details-panel">
           <h3>ResellWiseALL AI Izvještaj Cijena</h3>
           <p style="color: var(--text-muted); margin-top: 6px;" id="aiSummaryText">
-            Izračun se vrši automatski u resellwiseall.html uzimajući u obzir minimalnu, medijan i maksimalnu cijenu s otvorenih e-commerce izvora.
+            Prikazuje minimalnu, prosječnu i maksimalnu cijenu isključivo iz stvarno dohvaćenih eBay oglasa za trenutnu pretragu. Ako dohvaćanje ne uspije, nikakva procijenjena ili izmišljena cijena se ne prikazuje.
           </p>
 
           <div class="ai-list">
             <div class="ai-item">
-              <div class="ai-item-lbl">Stvarna Min. Cijena</div>
+              <div class="ai-item-lbl">Stvarna Min. Cijena (eBay)</div>
               <div class="ai-item-val" id="aiMinPrice">-- €</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Prosječna Cijena</div>
+              <div class="ai-item-lbl">Prosječna Cijena (eBay)</div>
               <div class="ai-item-val" id="aiAvgPrice">-- €</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Stvarna Maks. Cijena</div>
+              <div class="ai-item-lbl">Stvarna Maks. Cijena (eBay)</div>
               <div class="ai-item-val" id="aiMaxPrice">-- €</div>
             </div>
             <div class="ai-item">
               <div class="ai-item-lbl">Razina Potražnje</div>
-              <div class="ai-item-val" style="color: var(--success);" id="aiDemand">Visoka</div>
+              <div class="ai-item-val" id="aiDemand">N/A</div>
             </div>
             <div class="ai-item">
               <div class="ai-item-lbl">Procjena Brzine Prodaje</div>
-              <div class="ai-item-val" id="aiSpeed">1 - 4 dana</div>
+              <div class="ai-item-val" id="aiSpeed">N/A</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Izračunati ROI</div>
-              <div class="ai-item-val" style="color: var(--accent-cyan);" id="aiRoi">--%</div>
+              <div class="ai-item-lbl">ROI</div>
+              <div class="ai-item-val" style="color: var(--accent-cyan);" id="aiRoi">Unesite u ROI Kalkulator</div>
             </div>
           </div>
+          <p class="legal-disclaimer" style="margin-left:0; margin-right:0; max-width:none;">
+            ResellWiseALL ne procjenjuje potražnju, brzinu prodaje niti ROI automatski — za ROI unesite stvarnu nabavnu i prodajnu cijenu u <button type="button" class="legal-link-btn" onclick="switchTab('inventory')">ROI Kalkulator</button>.
+          </p>
         </div>
       </div>
     </div>
@@ -1259,11 +1503,11 @@
     <div id="tab-analytics" class="tab-content">
       <div class="charts-grid">
         <div class="chart-card">
-          <div class="chart-title">Usporedba Cijena po Platformama (€)</div>
+          <div class="chart-title">Cijene Stvarno Dohvaćenih eBay Oglasa (€)</div>
           <canvas id="chartPlatforms"></canvas>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Raspodjela i Trend Cijene</div>
+          <div class="chart-title">Raspodjela Stvarnih Cijena (eBay, rastuće)</div>
           <canvas id="chartTrend"></canvas>
         </div>
       </div>
@@ -1272,9 +1516,9 @@
       <div class="insights-section">
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <h2 style="margin:0;">ResellWise Insights</h2>
-          <span class="insights-badge">Demo / Estimated Data</span>
+          <span class="insights-badge">Inventory: Your Own Data · eBay Prices: Real Only</span>
         </div>
-        <p class="search-subtitle" style="margin-top:6px;">An overview based on your local Inventory and estimated market data from search. This is NOT verified real market data.</p>
+        <p class="search-subtitle" style="margin-top:6px;">The Inventory figures below come from what you entered yourself. The eBay price figures come only from real, successfully fetched listings for your current search — if eBay data wasn't available, those fields show "--" instead of an invented price.</p>
 
         <div class="ai-list" id="insightsGrid">
           <div class="ai-item">
@@ -1294,11 +1538,11 @@
             <div class="ai-item-val" style="color: var(--success);" id="insTotalProfit">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">ROI Trend (Estimated from Search)</div>
+            <div class="ai-item-lbl">Avg. eBay Price (Current Search, Real)</div>
             <div class="ai-item-val" style="color: var(--accent-cyan);" id="insRoiTrend">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">Best Platform (Estimated)</div>
+            <div class="ai-item-lbl">Lowest eBay Price (Current Search, Real)</div>
             <div class="ai-item-val" style="color: var(--purple-accent);" id="insBestPlatform">--</div>
           </div>
         </div>
@@ -1310,6 +1554,349 @@
       <h3 style="margin-bottom: 1rem;">Spremljeni Omiljeni Proizvodi</h3>
       <div class="marketplace-grid" id="savedGrid"></div>
     </div>
+
+    <!-- TAB 7: Full ResellWise Knowledge Center (added) — original educational content -->
+    <div id="tab-knowledge" class="tab-content">
+      <section class="search-section" style="margin-bottom: 1.5rem;">
+        <h2 class="search-title">Full ResellWise Knowledge Center</h2>
+        <p class="search-subtitle" style="margin-bottom: 0;">
+          A complete, practical guide to product reselling: evaluating items, calculating real profit, buying safely, selling well, and using ResellWiseALL itself. Written to be useful on its own — no search, calculator or external link required to read it.
+        </p>
+        <div class="kc-toc">
+          <a href="#kc-getting-started">Getting Started</a>
+          <a href="#kc-evaluate">Evaluate Before Buying</a>
+          <a href="#kc-profit-calc">Profit Calculation</a>
+          <a href="#kc-price-compare">Price Comparison</a>
+          <a href="#kc-buying-safely">Buying Used Safely</a>
+          <a href="#kc-selling">Selling Strategy</a>
+          <a href="#kc-fees">Fees &amp; Hidden Costs</a>
+          <a href="#kc-inventory">Inventory Management</a>
+          <a href="#kc-how-it-works">How ResellWiseALL Works</a>
+          <a href="#kc-methodology">Price / Data Methodology</a>
+          <a href="#kc-checklist">Practical Checklist</a>
+          <a href="#kc-glossary">Glossary</a>
+        </div>
+      </section>
+
+      <!-- 1. GETTING STARTED -->
+      <details class="kc-card" id="kc-getting-started" open>
+        <summary>1. Getting Started With Reselling</summary>
+        <div class="kc-body">
+          <p>Reselling means buying a product with the intention of selling it again for more than your total cost to acquire, hold and deliver it. It can range from a casual side activity — flipping a handful of items a month — to a structured, repeatable process with sourcing, evaluation and record-keeping.</p>
+
+          <h4>Purchase price is only one input, not the answer</h4>
+          <p>A low purchase price feels like a good deal, but it says nothing about whether anyone wants the item, how fast it will sell, what it will cost you to ship and package, whether it might be returned, or how much of the sale price a marketplace and payment processor will keep. Two items with the same purchase price can have completely different real profitability once those factors are accounted for.</p>
+
+          <h4>Why demand, fees, shipping, returns and time all matter</h4>
+          <ul>
+            <li><strong>Demand</strong> determines whether the item sells at all, and roughly how quickly.</li>
+            <li><strong>Fees</strong> — marketplace commission and payment processing — reduce every sale by a real, predictable percentage.</li>
+            <li><strong>Shipping</strong> and packaging costs are easy to underestimate, particularly for heavy, bulky or fragile items.</li>
+            <li><strong>Returns</strong> can convert an apparently profitable sale into a loss once return shipping, a refund, and a possibly damaged item are factored in.</li>
+            <li><strong>Time</strong> is a real cost too: money tied up in unsold stock can't be used for your next purchase, and some items may need storage.</li>
+          </ul>
+
+          <h4>Gross profit vs. net profit</h4>
+          <p><strong>Gross profit</strong> is selling price minus purchase price — a simple but incomplete number. <strong>Net profit</strong> subtracts every other real cost as well: shipping, platform fees, payment processing, packaging, and any losses from returns. Net profit is the number that actually tells you whether buying the item was a good decision. The Real Reselling Profit Calculation section below walks through this with a full worked example.</p>
+        </div>
+      </details>
+
+      <!-- 2. EVALUATE BEFORE BUYING -->
+      <details class="kc-card" id="kc-evaluate">
+        <summary>2. How to Evaluate a Product Before Buying</summary>
+        <div class="kc-body">
+          <p>A quick, consistent evaluation before you buy prevents most avoidable losses. Run through these factors for anything you're considering:</p>
+          <ul>
+            <li><strong>Demand</strong> — is this something people actively search for and buy, or a niche item that could sit unsold for a long time?</li>
+            <li><strong>Competition</strong> — how many other sellers are listing the same or a very similar item, and at what price range?</li>
+            <li><strong>Condition</strong> — does it work fully, are there cosmetic flaws, and does the seller's description match what you can verify?</li>
+            <li><strong>Brand / model / version</strong> — a specific model year, storage size, color or regional variant can change both demand and achievable price significantly. Confirm the exact item, not just something similar.</li>
+            <li><strong>Included accessories</strong> — original box, charger, manuals, authentication cards or certificates of authenticity often matter more to buyers than sellers expect.</li>
+            <li><strong>Seasonality</strong> — holiday goods, seasonal fashion, and items tied to a launch cycle sell very differently depending on the time of year.</li>
+            <li><strong>Expected selling time</strong> — a faster-moving item ties up less of your capital, even at a thinner margin, than a slow mover with a bigger headline profit.</li>
+            <li><strong>Risk of returns or defects</strong> — some categories (fragile electronics, items frequently misdescribed, anything easily counterfeited) carry a structurally higher risk of a costly return.</li>
+          </ul>
+          <p>None of these factors alone determines whether to buy — but skipping all of them and buying purely on price is how avoidable losses happen.</p>
+        </div>
+      </details>
+
+      <!-- 3. REAL PROFIT CALCULATION -->
+      <details class="kc-card" id="kc-profit-calc">
+        <summary>3. Real Reselling Profit Calculation</summary>
+        <div class="kc-body">
+          <p>A complete profit calculation accounts for every cost between "I bought this" and "the money is actually in my account," not just the two headline prices.</p>
+          <h4>The inputs that matter</h4>
+          <ul>
+            <li><strong>Purchase price</strong> — what you actually paid for the item itself.</li>
+            <li><strong>Shipping / input costs</strong> — what it cost you to receive the item, if applicable.</li>
+            <li><strong>Platform fees</strong> — the marketplace's commission, usually a percentage of the sale price.</li>
+            <li><strong>Payment fees</strong> — a separate processing fee some payment providers charge, where applicable.</li>
+            <li><strong>Packaging</strong> — boxes, padding, labels, tape — often a few euros per item, but it adds up across volume.</li>
+            <li><strong>Returns / refunds</strong> — an amortized allowance for the fact that some percentage of sales will be returned or refunded.</li>
+            <li><strong>Other costs</strong> — anything else specific to the item or your process (storage, cleaning, minor repairs, listing tools).</li>
+            <li><strong>Selling price</strong> — what the buyer actually pays.</li>
+          </ul>
+          <h4>The outputs that matter</h4>
+          <ul>
+            <li><strong>Net profit</strong> = Selling price − (purchase price + shipping/input costs + platform fees + payment fees + packaging + returns/refunds allowance + other costs).</li>
+            <li><strong>Profit margin</strong> = Net profit ÷ Selling price × 100 — how much of each sale you actually keep.</li>
+            <li><strong>ROI (return on investment)</strong> = Net profit ÷ Total amount invested × 100 — how hard your money worked, independent of the sale price itself.</li>
+          </ul>
+
+          <h4>Illustrative example — not market data</h4>
+          <p>The numbers below are a made-up example to show how the pieces fit together. They are not a claim about any real product, platform or fee schedule — always use your own real costs.</p>
+          <table class="kc-example-table">
+            <thead><tr><th>Line item</th><th class="kc-num">Amount</th></tr></thead>
+            <tbody>
+              <tr><td>Selling price</td><td class="kc-num">100.00 €</td></tr>
+              <tr><td>− Purchase price</td><td class="kc-num">−40.00 €</td></tr>
+              <tr><td>− Shipping / input cost</td><td class="kc-num">−6.00 €</td></tr>
+              <tr><td>− Platform fee (13% of selling price)</td><td class="kc-num">−13.00 €</td></tr>
+              <tr><td>− Payment processing fee (example: 2%)</td><td class="kc-num">−2.00 €</td></tr>
+              <tr><td>− Packaging</td><td class="kc-num">−2.50 €</td></tr>
+              <tr><td>− Returns/refunds allowance (example)</td><td class="kc-num">−2.00 €</td></tr>
+              <tr><td>− Other costs</td><td class="kc-num">−1.50 €</td></tr>
+              <tr class="kc-total"><td>Net profit</td><td class="kc-num kc-profit-pos">33.00 €</td></tr>
+              <tr class="kc-total"><td>Profit margin (net profit ÷ selling price)</td><td class="kc-num">33.0 %</td></tr>
+              <tr class="kc-total"><td>ROI (net profit ÷ purchase + input costs of 46.00 €)</td><td class="kc-num">71.7 %</td></tr>
+            </tbody>
+          </table>
+          <p>Notice that gross profit (100.00 − 40.00 = 60.00 €) looked far larger than the real net profit of 33.00 € once fees, shipping, packaging and a returns allowance were subtracted. This gap is normal and is exactly why net profit — not gross profit — should drive buying decisions. You can run your own numbers using the existing Profit Calculator and ROI Calculator tabs.</p>
+        </div>
+      </details>
+
+      <!-- 4. PRICE COMPARISON -->
+      <details class="kc-card" id="kc-price-compare">
+        <summary>4. Marketplace Price Comparison</summary>
+        <div class="kc-body">
+          <p>Comparing prices across several marketplaces is genuinely useful, but only if you interpret what you're looking at correctly.</p>
+          <ul>
+            <li><strong>Advertised prices are not completed-sale prices.</strong> A listing's asking price only tells you what a seller hopes to get, not what buyers are actually paying. Some listings sit unsold for a long time at unrealistic prices.</li>
+            <li><strong>Availability changes constantly.</strong> An item shown as available can sell out, be relisted at a different price, or be removed entirely between when you see it and when you act.</li>
+            <li><strong>Listings differ in ways that affect price.</strong> Condition, included accessories, seller location, and shipping cost can all vary between two listings for what looks like "the same" item, and each of those differences legitimately changes what it's worth.</li>
+            <li><strong>Always verify on the original platform.</strong> Treat any price or estimate shown inside ResellWiseALL as a starting point for research, and confirm the real, current price, condition and availability directly on the source marketplace before buying or setting your own price.</li>
+            <li><strong>ResellWiseALL's results are not guaranteed offers.</strong> Nothing shown in the app is a confirmed transaction, a reservation, or a binding price — it is informational only.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- 5. BUYING USED SAFELY -->
+      <details class="kc-card" id="kc-buying-safely">
+        <summary>5. Buying Used Products Safely</summary>
+        <div class="kc-body">
+          <p>Buying used stock to resell carries more risk than buying new, so a consistent safety checklist is worth the extra few minutes.</p>
+          <ul class="kc-checklist">
+            <li>Seller reputation and review history checked</li>
+            <li>Real, recent photos reviewed (not stock or generic images)</li>
+            <li>Serial number, model number or edition confirmed where relevant</li>
+            <li>Condition described accurately and matches the photos</li>
+            <li>Proof of purchase or ownership requested where relevant and reasonable</li>
+            <li>Missing accessories, parts or documentation identified upfront</li>
+            <li>Signs of damage, repair or wear inspected closely, including in photos</li>
+            <li>Counterfeit risk considered, especially for branded or collectible items</li>
+            <li>Return policy checked and understood before paying</li>
+            <li>Payment made through a secure, traceable method with buyer protection where possible</li>
+            <li>Shipping protection or insurance considered for higher-value items</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- 6. SELLING STRATEGY -->
+      <details class="kc-card" id="kc-selling">
+        <summary>6. Selling Strategy</summary>
+        <div class="kc-body">
+          <p>How you list and handle an item affects both whether it sells and how much friction (and risk of a return or dispute) you experience.</p>
+          <ul>
+            <li><strong>Realistic pricing</strong> — price against what comparable items are actually selling for, not just what you'd like to get.</li>
+            <li><strong>Quality photos</strong> — clear, well-lit, multiple angles, including any flaws — this reduces disputes as much as it increases sales.</li>
+            <li><strong>Accurate title</strong> — include the details buyers actually search for (brand, model, size, key spec) without misleading keywords.</li>
+            <li><strong>Honest description</strong> — state what the item is and isn't; vague or optimistic descriptions increase returns and complaints.</li>
+            <li><strong>Condition disclosure</strong> — flag any defect, wear or missing part explicitly rather than letting a buyer discover it after purchase.</li>
+            <li><strong>Shipping options</strong> — offer a method appropriate to the item's value and fragility, and price shipping honestly.</li>
+            <li><strong>Response time</strong> — answering buyer questions promptly measurably affects conversion on most marketplaces.</li>
+            <li><strong>Packaging</strong> — adequate protection reduces damage-related returns and negative feedback.</li>
+            <li><strong>Handling returns</strong> — have a clear, calm process rather than improvising under pressure.</li>
+            <li><strong>Keeping records</strong> — note what you paid, what it sold for, and any issues, so you can refine future buying decisions.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- 7. FEES, SHIPPING & HIDDEN COSTS -->
+      <details class="kc-card" id="kc-fees">
+        <summary>7. Fees, Shipping and Hidden Costs</summary>
+        <div class="kc-body">
+          <p>A product that looks profitable at the purchase-price-versus-selling-price level can quietly become unprofitable once the following are subtracted:</p>
+          <ul>
+            <li><strong>Marketplace commission</strong> — usually a percentage of the sale price, sometimes with a fixed component too.</li>
+            <li><strong>Payment processing</strong> — a separate fee some payment providers charge on top of the marketplace's own commission.</li>
+            <li><strong>Shipping</strong> — actual carrier cost, which can be significantly higher than a flat estimate for heavy or oversized items.</li>
+            <li><strong>Packaging</strong> — materials cost per item, which is easy to forget when estimating margin.</li>
+            <li><strong>Currency conversion</strong> — if you buy or sell across currencies, conversion spreads and fees reduce the effective amount you receive.</li>
+            <li><strong>Returns</strong> — return shipping, a refund, and sometimes an item that comes back unsellable.</li>
+            <li><strong>Discounts</strong> — promotional pricing or negotiated discounts reduce the selling price you actually receive.</li>
+            <li><strong>Taxes or other applicable obligations</strong> — depending on where you are and how you operate, there may be tax or regulatory obligations tied to resale activity.</li>
+          </ul>
+          <div class="kc-callout">
+            <p>ResellWiseALL does not provide legal or tax advice for any specific country. Rules around reselling, income reporting and consumer protection vary by jurisdiction and by whether you're operating as an individual or a registered business — check the applicable local rules that apply to you.</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- 8. INVENTORY MANAGEMENT -->
+      <details class="kc-card" id="kc-inventory">
+        <summary>8. Inventory Management</summary>
+        <div class="kc-body">
+          <p>Good inventory habits are what turn a pile of individual flips into a process you can actually improve over time. At minimum, it helps to record, per item:</p>
+          <ul>
+            <li><strong>Purchase price</strong> — what you actually paid.</li>
+            <li><strong>Target selling price</strong> — what you expect or hope to get.</li>
+            <li><strong>Actual selling price</strong> — what it really sold for, once it does.</li>
+            <li><strong>Stock age</strong> — how long you've held it, so slow movers are visible rather than forgotten.</li>
+            <li><strong>Expected profit</strong> — your estimate before the sale, for comparison later.</li>
+            <li><strong>Realized profit</strong> — the actual outcome after all costs, once sold.</li>
+          </ul>
+          <p>Comparing expected versus realized profit over time is one of the most useful habits in reselling — it shows you where your estimates are consistently too optimistic (or too conservative). It's also worth periodically reviewing stock age: capital trapped in items that simply aren't moving is capital you can't redeploy into faster, more reliable opportunities, even if each individual item still looks "profitable on paper." The existing Inventory tab in ResellWiseALL lets you record purchase price and target price per item and see profit and ROI calculated automatically; the ROI Calculator further down the same tab lets you separately estimate a payback period once you know an item's expected monthly profit.</p>
+        </div>
+      </details>
+
+      <!-- 9. HOW RESELLWISEALL WORKS -->
+      <details class="kc-card" id="kc-how-it-works">
+        <summary>9. How ResellWiseALL Works</summary>
+        <div class="kc-body">
+          <p>This section describes the actual current workflow of the application, step by step:</p>
+          <ol>
+            <li><strong>Enter a product</strong> in the search box on the Marketplace Pretraga tab, optionally narrowing by category.</li>
+            <li><strong>The app searches available sources.</strong> The app attempts to fetch live listing data for eBay via a public CORS proxy. If the fetch succeeds, the app displays only successfully fetched eBay listings with their actual title, price and link. If the fetch fails or no usable listing price can be parsed, the result remains empty and the app displays a clear "Stvarni podaci trenutno nisu dostupni" message. No fallback, hash calculation or generated market price is used.</li>
+            <li><strong>Compare the displayed results.</strong> Real eBay listings are shown as cards with their actual price, each clearly labeled "Izvor: eBay". The other 13 listed platforms appear only as plain outbound search links — they are not queried for live data and are never shown with a price.</li>
+            <li><strong>Use the Profit Calculator</strong> (Kalkulator Profita tab) to work out net profit, margin and ROI from your own purchase price, selling price, shipping, platform fee and other costs.</li>
+            <li><strong>Use the ROI Calculator</strong> (inside the Inventar tab) for a separate return-on-investment and payback-period estimate, independent of the Profit Calculator.</li>
+            <li><strong>Save interesting listings</strong> with the star icon on any result card — they appear in the Spremljeno (Saved) tab, stored locally in your browser.</li>
+            <li><strong>Track purchased items in Inventory</strong> — record what you paid and your target price; ResellWiseALL computes profit and ROI per item automatically.</li>
+            <li><strong>Review Analytics/Insights</strong> for a chart-based view of the real eBay prices from your current search and a summary of your own Inventory entries (average purchase/selling price, average margin, total potential profit).</li>
+            <li><strong>Verify the final price and availability on the original marketplace</strong> before buying or selling — nothing shown in ResellWiseALL is a confirmed, binding offer.</li>
+          </ol>
+        </div>
+      </details>
+
+      <!-- 10. METHODOLOGY -->
+      <details class="kc-card" id="kc-methodology">
+        <summary>10. Price / Data Methodology</summary>
+        <div class="kc-body">
+          <p>Transparency about where the numbers on screen come from:</p>
+          <h4>Live data attempt</h4>
+          <p>When you search, ResellWiseALL attempts to fetch real eBay listing data through a public, third-party CORS proxy service that relays an eBay search feed. Each listing card shown on the Marketplace Pretraga tab — its title, price and link — comes directly from that live feed; nothing about it is generated, estimated or guessed.</p>
+          <h4>When live data isn't available</h4>
+          <p>External web requests like this are not always available — the proxy service, your network, or the upstream feed can be temporarily unreachable, rate-limited, or return nothing that can be parsed into a usable listing and price. When that happens, ResellWiseALL does <strong>not</strong> substitute a calculated, estimated or otherwise invented price. Instead, the app shows a clear "Stvarni podaci trenutno nisu dostupni" ("Real data is currently unavailable") message, and every metric that depends on real prices (the stat cards, the AI Analysis price panel, the eBay figures in Insights) shows "--" rather than a number.</p>
+          <div class="kc-callout">
+            <p><strong>There is no fallback price.</strong> ResellWiseALL previously used an internal calculation to fill the screen when live data wasn't available; that behavior has been removed. Every price you see for a search either came from a real, successfully fetched eBay listing, or isn't shown at all.</p>
+          </div>
+          <h4>The other 13 platforms</h4>
+          <p>The remaining marketplaces listed in the app (Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de, AutoScout24) are not queried for live data — ResellWiseALL does not have a working live connection to them. They appear only as plain outbound search links so you can check them yourself; they are never shown with a price or presented as fetched marketplace results.</p>
+          <h4>Why this matters for you</h4>
+          <p>You can treat any price shown in the app as a real, current eBay listing price at the time you searched — subject, of course, to the general caveats in the Marketplace Price Comparison section above (asking price vs. completed sale, condition differences, and so on). Always confirm the current price, availability and condition on eBay itself before buying or selling.</p>
+        </div>
+      </details>
+
+      <!-- 11. PRACTICAL CHECKLIST -->
+      <details class="kc-card" id="kc-checklist">
+        <summary>11. Practical Reselling Checklist</summary>
+        <div class="kc-body">
+          <h4>Before buying</h4>
+          <ul class="kc-checklist">
+            <li>Demand checked</li>
+            <li>Comparable prices checked across sources</li>
+            <li>Condition checked and verified as far as possible</li>
+            <li>All costs estimated (shipping, fees, packaging, returns allowance)</li>
+            <li>Expected net profit calculated, not just gross profit</li>
+            <li>ROI checked against the total amount invested</li>
+            <li>Return/counterfeit risk considered</li>
+          </ul>
+          <h4>Before listing</h4>
+          <ul class="kc-checklist">
+            <li>Item condition verified in hand</li>
+            <li>Photos prepared — clear, honest, multiple angles</li>
+            <li>Title optimized honestly, using terms buyers actually search</li>
+            <li>Description complete, including any flaws</li>
+            <li>Shipping cost known and priced accurately</li>
+            <li>Platform fee known and factored into the asking price</li>
+            <li>Realistic selling price chosen based on comparable listings</li>
+          </ul>
+          <h4>After selling</h4>
+          <ul class="kc-checklist">
+            <li>Actual profit recorded (not just the estimate)</li>
+            <li>Shipping tracked until delivery is confirmed</li>
+            <li>Inventory updated to reflect the sale</li>
+            <li>Return/refund recorded if applicable, including its effect on real profit</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- 12. GLOSSARY -->
+      <details class="kc-card" id="kc-glossary">
+        <summary>12. Reselling Glossary</summary>
+        <div class="kc-body">
+          <p>Short, practical definitions of terms used throughout ResellWiseALL and this guide.</p>
+          <div class="kc-glossary">
+            <div class="kc-term">
+              <div class="kc-term-name">Gross Profit</div>
+              <p>Selling price minus purchase price only — before any other costs are subtracted.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Net Profit</div>
+              <p>What's left after every real cost — shipping, fees, packaging, returns allowance and other costs — is subtracted from the selling price.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Margin</div>
+              <p>Net profit expressed as a percentage of the selling price: how much of each sale you actually keep.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">ROI</div>
+              <p>Return on investment — net profit as a percentage of the total amount you invested (purchase price plus input costs).</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">COGS</div>
+              <p>Cost of Goods Sold — the direct cost of acquiring the specific item you sold, typically the purchase price plus any direct input costs.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Marketplace Fee</div>
+              <p>The commission a platform charges, usually a percentage of the sale price, for hosting and facilitating the sale.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Conversion Rate</div>
+              <p>The share of interested viewers (or listings) that actually result in a completed sale.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Sell-Through Rate</div>
+              <p>The proportion of listed items that sell within a given period — a measure of how liquid your inventory is.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Inventory Turnover</div>
+              <p>How many times your inventory is sold and replaced over a period — higher turnover generally means capital is tied up for less time.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Average Selling Price</div>
+              <p>The mean price actually achieved across a set of sold items, as opposed to their asking prices.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Target Price</div>
+              <p>The price you plan or hope to sell an item for, recorded before the actual sale for later comparison.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Break-Even Price</div>
+              <p>The selling price at which net profit is exactly zero — below this, the item is sold at a loss once all costs are included.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Return Rate</div>
+              <p>The share of sold items that are returned or refunded, which directly reduces realized profit versus expected profit.</p>
+            </div>
+            <div class="kc-term">
+              <div class="kc-term-name">Stock Age</div>
+              <p>How long an item has been held in inventory without selling — a useful signal for spotting slow-moving stock early.</p>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
   </main>
 
   <!-- Google AdSense — designated zone below the main content (added). Empty/hidden until activated. -->
@@ -1318,6 +1905,8 @@
   <footer>
     ResellWiseALL &copy; 2026 — Pokretač sa Stvarnim Tržišnim Podacima u jednoj datoteci (<code>resellwiseall.html</code>).
     <div class="legal-links">
+      <button class="legal-link-btn" onclick="switchTab('knowledge')">Knowledge Center</button>
+      <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('privacy')">Privacy Policy</button>
       <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openLegalModal('terms')">Terms of Use</button>
@@ -1386,7 +1975,7 @@
       </ul>
 
       <h3>Product and Pricing Information</h3>
-      <p>Product, pricing and offer information shown in the app is fetched or estimated from external e-commerce sources. We do not generate this data ourselves — we only display it to help you compare and analyze. To fetch live eBay listings, your search term is sent, client-side, to a public CORS proxy service (<strong>api.allorigins.win</strong>), which in turn requests the corresponding public eBay search page; if that fetch is unavailable, ResellWiseALL falls back to an estimated calculation instead. This only transmits the text you typed into the search box — no other personal data is sent as part of this request. The "ResellWise Insights" section displays estimated/demo figures computed from your local Inventory and from estimated search results, and is clearly labeled as such — it is not verified real market data.</p>
+      <p>Product and pricing information shown on the Marketplace Pretraga tab comes exclusively from real, successfully fetched eBay listings — ResellWiseALL does not generate, estimate or guess a price. To fetch live eBay listings, your search term is sent, client-side, to a public CORS proxy service (<strong>api.allorigins.win</strong>), which in turn requests the corresponding public eBay search page. This only transmits the text you typed into the search box — no other personal data is sent as part of this request. If that fetch is unavailable or returns no usable listing for your search, no results are shown for that search, and the app clearly states that real data is currently unavailable — it never substitutes an invented or calculated price. The "ResellWise Insights" section on the Analytics tab shows figures from your own local Inventory entries (which you typed yourself) alongside real eBay price figures from your current search, when available; it never shows an invented or estimated market price. A fuller, non-technical explanation of how the eBay fetch works — and what happens when it's unavailable — is also available in the Knowledge Center's "Price / Data Methodology" section.</p>
 
       <h3>"ChatGPT Analiza" Button</h3>
       <p>If you click the <strong>"✨ ChatGPT Analiza"</strong> button, your search term is included in a URL and a new browser tab is opened to chatgpt.com (operated by OpenAI), pre-filled with a prompt containing your search term. This sends your search term to OpenAI as part of that page load, governed by OpenAI's own privacy policy — ResellWiseALL has no visibility into, or control over, how OpenAI processes it. This only happens if you click that specific button.</p>
@@ -1439,11 +2028,14 @@
       <h3>Nature of the Service</h3>
       <p>ResellWiseALL is an informational application for searching, comparing prices and estimating the resale profit potential of products across multiple e-commerce platforms. <strong>ResellWiseALL is not a seller or intermediary</strong> in any transaction between a user and a third-party platform.</p>
 
+      <h3>Educational Content (Knowledge Center)</h3>
+      <p>The guides, checklists and glossary in the "ResellWise Knowledge Center" and "Full ResellWise Knowledge Center" sections are original, general-purpose educational content about product reselling. They do not constitute financial, investment, tax or legal advice for your specific situation. Rules on reselling, income reporting, consumer protection and related obligations vary by country and by how you operate — always check the applicable local rules that apply to you.</p>
+
       <h3>Permitted Use</h3>
       <p>You may use ResellWiseALL for personal, non-commercial evaluation of resale opportunities, in compliance with applicable law and the terms of any third-party platform you visit through the app. You agree not to misuse the application (e.g. attempting to disrupt its operation or automate abusive requests against it).</p>
 
       <h3>Data Source</h3>
-      <p>Product, pricing, availability and offer information comes from external platforms and sources, and is partly calculated automatically. Data may be incomplete, outdated or inaccurate without prior notice, as ResellWiseALL does not directly control these external sources.</p>
+      <p>Product and pricing information on the Marketplace Pretraga tab comes only from real, successfully fetched eBay listings — ResellWiseALL does not calculate, estimate or invent a price. When a live fetch is not available, no result is shown for that search rather than a substituted figure. Data may still be incomplete, outdated or inaccurate without prior notice, as ResellWiseALL does not directly control eBay or the third-party proxy service used to fetch it. See the Knowledge Center's "Price / Data Methodology" section for full detail.</p>
 
       <h3>Check Before You Buy or Sell</h3>
       <p>You are responsible for verifying all information (price, availability, item condition and sale terms) directly with the original source or platform before making any purchasing or selling decision.</p>
@@ -1452,7 +2044,7 @@
       <p>Profit, ROI and AI profitability score calculations shown in the app are rough estimates and do not represent a guarantee of actual earnings or a successful sale.</p>
 
       <h3>ROI Calculator &amp; Insights Disclaimer</h3>
-      <p>The ROI Calculator and the "ResellWise Insights" section display estimates computed locally from data you enter, or from estimated/demo market data. These calculations do not constitute financial, investment, tax or legal advice, and are not a guarantee of actual profit, ROI or resale speed.</p>
+      <p>The Profit Calculator and ROI Calculator compute results locally from the values you enter. The "ResellWise Insights" section combines your own Inventory entries with real, successfully fetched eBay prices for your current search — if real eBay data isn't available, the corresponding fields show that plainly rather than an invented figure. None of these calculations constitute financial, investment, tax or legal advice, and none are a guarantee of actual profit, ROI or resale speed.</p>
 
       <h3>Third-Party Marketplaces &amp; Services</h3>
       <p>ResellWiseALL links to and references third-party marketplaces (including eBay, eBay Motors, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, Mobile.de and AutoScout24). ResellWiseALL is <strong>not affiliated with, endorsed by, or an official partner or representative of</strong> any of these platforms unless explicitly and separately confirmed. All trademarks and platform names belong to their respective owners and are used solely for identification and informational purposes. ResellWiseALL <strong>does not currently use affiliate or partner links</strong>; if this changes, this section will be updated.</p>
@@ -1464,7 +2056,7 @@
       <p>ResellWiseALL is prepared to display Google AdSense advertising once a real Publisher ID is configured; ads are not active today. When ads are enabled, they will be subject to Google's own advertising policies and to the consent choices described in the Privacy Policy and Cookie Policy.</p>
 
       <h3>Limitation of Liability</h3>
-      <p>You use ResellWiseALL at your own risk. To the fullest extent permitted by applicable law, ResellWiseALL shall not be liable for any damage, loss or dispute arising from your use of the information displayed, the calculators provided, or links to third-party platforms.</p>
+      <p>You use ResellWiseALL at your own risk. To the fullest extent permitted by applicable law, ResellWiseALL shall not be liable for any damage, loss or dispute arising from your use of the information displayed, the calculators provided, the educational content in the Knowledge Center, or links to third-party platforms.</p>
 
       <h3>Intellectual Property</h3>
       <p>Platform and product names shown within the application are the property of their respective rights holders and are listed solely for informational purposes.</p>
@@ -1525,6 +2117,9 @@
 
       <h3>ROI &amp; Profit Estimates</h3>
       <p>ROI, profit margin and payback period figures shown by the ROI Calculator, the Profit Calculator and the Insights section are estimates based on the values you provide or on estimated market data. They are <strong>not a guarantee of actual earnings</strong>.</p>
+
+      <h3>Educational Content</h3>
+      <p>The guides, checklists, worked example and glossary in the ResellWise Knowledge Center are general educational information about reselling practices. They are not financial, investment, tax or legal advice, and do not account for your specific circumstances or jurisdiction.</p>
 
       <h3>No Financial, Investment, Tax or Legal Advice</h3>
       <p>ResellWiseALL does not provide financial, investment, tax or legal advice. Decisions about buying, selling or reselling any item are made solely at your own discretion and risk.</p>
@@ -1588,7 +2183,7 @@
       <p>You can change your Analytics/Advertising cookie choice at any time via <strong>"Cookie Settings"</strong> in the footer — including rejecting previously-allowed categories. This has the same effect as never having consented, going forward.</p>
 
       <h3>Declining Non-Essential Cookies</h3>
-      <p>You are always free to reject Analytics and Advertising cookies. Doing so does not prevent you from using marketplace search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis or any other feature of ResellWiseALL.</p>
+      <p>You are always free to reject Analytics and Advertising cookies. Doing so does not prevent you from using marketplace search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis, the Knowledge Center, or any other feature of ResellWiseALL.</p>
     </div>
   </div>
 
@@ -1824,13 +2419,13 @@
     let inventory = JSON.parse(localStorage.getItem("resellwiseall_inventory") || "[]");
 
     document.addEventListener("DOMContentLoaded", () => {
-      renderPlatformPills();
       runSearch();
       renderInventory();
       updateSavedCount();
       calculateProfit();
       initConsent();
       renderInsights();
+      initKnowledgeCenterAnchors();
     });
 
     function showToast(msg) {
@@ -1854,40 +2449,60 @@
         renderInsights();
       } else if(tabId === 'saved') {
         renderSavedItems();
+      } else if(tabId === 'knowledge') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
 
-    function renderPlatformPills() {
+    /* renderPlatformPills(): the 13 non-eBay platforms (plus eBay itself for convenience) are
+       shown ONLY as plain outbound search links — never as generated "results" and never with
+       a price. Nothing here implies these 13 were actually queried or that any price was
+       fetched from them. */
+    function renderPlatformPills(query) {
       const container = document.getElementById("platformPills");
-      container.innerHTML = PLATFORMS.map(p => 
-        `<span class="platform-pill active" onclick="this.classList.toggle('active')">${p.name}</span>`
+      const q = (query || document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro");
+      container.innerHTML = PLATFORMS.map(p =>
+        `<a class="platform-pill" style="text-decoration:none;" href="${p.url}${encodeURIComponent(q)}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${p.name}'})">Pretraži: ${p.name} ↗</a>`
       ).join('');
     }
 
-    /* ResellWiseALL Live Data Fetching Engine */
+    /* ResellWiseALL Live Data Fetching Engine.
+       ResellWiseALL prikazuje SAMO stvarno dohvaćene eBay cijene. Nema hash/fallback niti
+       ikakvog drugog umjetnog generiranja cijena — ako dohvaćanje ne uspije, currentResults
+       ostaje prazan i UI to jasno prikazuje umjesto izmišljene vrijednosti. */
     async function runSearch() {
       const query = document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro";
       const category = document.getElementById("categoryFilter").value;
       const loading = document.getElementById("loadingStatus");
 
       loading.style.display = "flex";
+      renderPlatformPills(query);
       trackGAEvent("resellwiseall_search", { search_query: query });
 
+      let liveMarketItems = [];
       try {
-        const liveMarketItems = await fetchLiveMarketData(query);
-        processRealMarketResults(query, category, liveMarketItems);
+        liveMarketItems = await fetchLiveMarketData(query);
       } catch (err) {
-        console.warn("Mrežna ograničenja primijećena, primjenjujemo robusni dinamički proračun.", err);
-      } finally {
-        loading.style.display = "none";
-        renderMarketplaceGrid();
-        updateMetrics();
-        updateAIDashboard();
-        showToast("Podaci ažurirani u resellwiseall.html!");
+        console.warn("Stvarni eBay podaci nisu dostupni za ovu pretragu.", err);
+        liveMarketItems = [];
       }
+
+      processRealMarketResults(query, category, liveMarketItems);
+
+      loading.style.display = "none";
+      renderMarketplaceGrid();
+      updateMetrics();
+      updateAIDashboard();
+      renderInsights();
+
+      showToast(currentResults.length > 0
+        ? `Prikazano ${currentResults.length} stvarno dohvaćenih eBay oglasa.`
+        : "Stvarni podaci trenutno nisu dostupni.");
     }
 
-    /* Povezivanje na otvorena RSS/CORS sučelja */
+    /* Povezivanje na otvorena RSS/CORS sučelja. Vraća ISKLJUČIVO stvarno dohvaćene i uspješno
+       raščlanjene stavke, ili prazan niz ako dohvaćanje/raščlanjivanje ne uspije — nikad
+       izmišljenu ili procijenjenu stavku. */
     async function fetchLiveMarketData(query) {
       const targetUrl = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(query)}&_rss=1`;
       const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
@@ -1896,18 +2511,19 @@
         const response = await fetch(proxyUrl);
         if (!response.ok) throw new Error("Greška kod dohvaćanja");
         const json = await response.json();
-        
+
         if (json.contents) {
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(json.contents, "text/xml");
           const items = xmlDoc.querySelectorAll("item");
-          
+
           let parsedItems = [];
           items.forEach(item => {
-            const title = item.querySelector("title")?.textContent || query;
-            const link = item.querySelector("link")?.textContent || "#";
+            const title = item.querySelector("title")?.textContent || "";
+            const link = item.querySelector("link")?.textContent || "";
             const desc = item.querySelector("description")?.textContent || "";
-            
+            if (!title || !link) return; // bez stvarnog naslova/linka, stavka se ne koristi
+
             const priceMatch = desc.match(/\$([0-9\.,]+)|EUR\s*([0-9\.,]+)|€([0-9\.,]+)/i) || title.match(/\$([0-9\.,]+)|€([0-9\.,]+)/i);
             let price = 0;
             if (priceMatch) {
@@ -1915,62 +2531,35 @@
               price = parseFloat(rawPrice.replace(/,/g, ''));
             }
 
+            // Stavka se koristi SAMO ako je stvarna cijena uspješno pronađena i raščlanjena.
             if (price > 0) {
               parsedItems.push({ title, link, price: Math.round(price) });
             }
           });
 
-          if (parsedItems.length > 0) return parsedItems;
+          return parsedItems; // može biti prazan niz ako ništa nije uspješno raščlanjeno
         }
       } catch (e) {
-        console.log("CORS proxy nedostupan, prelazak na zadanu obradu.");
+        console.log("CORS proxy ili eBay feed nedostupan za ovu pretragu.");
       }
       return [];
     }
 
+    /* processRealMarketResults(): currentResults sadrži ISKLJUČIVO stavke koje su stvarno
+       dohvaćene i raščlanjene iz eBay feeda (realItems). Nema generiranja cijena za ostalih
+       13 platformi — one se prikazuju samo kao vanjske poveznice za pretragu (renderPlatformPills),
+       nikad kao dohvaćeni marketplace rezultati. */
     function processRealMarketResults(query, category, realItems) {
-      let extractedPrices = realItems.map(i => i.price).filter(p => p > 5);
-      
-      let baseAvg = 0;
-      if (extractedPrices.length > 0) {
-        baseAvg = Math.round(extractedPrices.reduce((a, b) => a + b, 0) / extractedPrices.length);
-      } else {
-        let hash = 0;
-        for (let i = 0; i < query.length; i++) hash = query.charCodeAt(i) + ((hash << 5) - hash);
-        baseAvg = Math.abs(hash % 400) + 80;
-      }
-
-      currentResults = PLATFORMS.map((plat, idx) => {
-        let factor = 1.0;
-        if (plat.type === "fashion" || plat.type === "bargain") factor = 0.78;
-        if (plat.type === "global" || plat.type === "auto") factor = 1.12;
-
-        const platformAvg = Math.round(baseAvg * factor);
-        const priceMin = Math.round(platformAvg * 0.82);
-        const priceMax = Math.round(platformAvg * 1.25);
-        
-        const estFee = Math.round(platformAvg * 0.12);
-        const profit = Math.max(10, Math.round((platformAvg - priceMin - estFee)));
-        const roi = Math.round((profit / priceMin) * 100);
-
-        const realTitle = (realItems[idx] && realItems[idx].title) ? realItems[idx].title : `${query} (Pregled Oglasa Uživo)`;
-        const realLink = (realItems[idx] && realItems[idx].link) ? realItems[idx].link : (plat.url + encodeURIComponent(query));
-
-        return {
-          id: `item-${idx}-${Date.now()}`,
-          query: query,
-          platform: plat.name,
-          platformUrl: realLink,
-          category: category === 'all' ? 'Općenito' : category,
-          title: realTitle,
-          priceMin: priceMin,
-          priceMax: priceMax,
-          avgPrice: platformAvg,
-          profit: profit,
-          roi: roi,
-          recommendation: roi > 30 ? "Izvrsna Prilika za Kupnju" : (roi > 15 ? "Umjeren Profit" : "Visok Rizik")
-        };
-      });
+      currentResults = realItems.map((item, idx) => ({
+        id: `ebay-${idx}-${Date.now()}`,
+        query: query,
+        platform: "eBay",
+        source: "eBay",
+        platformUrl: item.link,
+        category: category === 'all' ? 'Općenito' : category,
+        title: item.title,
+        price: item.price
+      }));
     }
 
     function searchWithAI() {
@@ -1985,91 +2574,134 @@
       window.open(url, "_blank");
     }
 
+    /* renderMarketplaceGrid(): prikazuje ISKLJUČIVO stvarno dohvaćene eBay oglase (stvarni
+       naslov, stvarna cijena, stvarni link, jasno označen izvor). Ako nema stvarnih podataka,
+       prikazuje se jasna poruka bez ikakve izmišljene ili procijenjene cijene. */
     function renderMarketplaceGrid() {
       const grid = document.getElementById("cardsGrid");
+
+      if (currentResults.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1;">
+            <div class="search-section" style="margin-bottom: 0;">
+              <p style="color: var(--text-main); font-weight: 700; margin-bottom: 6px;">Stvarni podaci trenutno nisu dostupni.</p>
+              <p style="color: var(--text-muted); margin-bottom: 0;">Dohvaćanje stvarnih eBay oglasa nije uspjelo za ovaj upit (izvor može biti privremeno nedostupan). ResellWiseALL ne prikazuje izmišljenu ili procijenjenu cijenu. Pokušajte ponovno, izmijenite upit, ili pretražite izravno preko poveznica platformi iznad.</p>
+            </div>
+          </div>`;
+        return;
+      }
+
       grid.innerHTML = currentResults.map(item => {
-        const isFav = savedFavorites.some(f => f.platform === item.platform && f.query === item.query);
+        const isFav = savedFavorites.some(f => f.platform === item.platform && f.query === item.query && f.platformUrl === item.platformUrl);
         return `
           <div class="card">
             <div>
               <div class="card-header">
-                <span class="platform-tag">${item.platform}</span>
+                <span class="platform-tag">Izvor: eBay</span>
                 <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${item.id}')">★</button>
               </div>
               <div class="product-title">${item.title}</div>
               <div class="category-text">Kategorija: ${item.category}</div>
-              
+
               <div class="price-block">
                 <div class="price-row">
-                  <span class="price-label">Raspon Cijena Uživo:</span>
-                  <span class="price-val">${item.priceMin} € - ${item.priceMax} €</span>
-                </div>
-                <div class="price-row">
-                  <span class="price-label">Prosjek Tržišta:</span>
-                  <span class="price-val highlight">${item.avgPrice} €</span>
-                </div>
-                <div class="price-row">
-                  <span class="price-label">Izračunati Profit / ROI:</span>
-                  <span class="price-val" style="color: var(--success);">+${item.profit} € (${item.roi}%)</span>
+                  <span class="price-label">Stvarna Cijena (eBay):</span>
+                  <span class="price-val highlight">${item.price} €</span>
                 </div>
               </div>
 
               <div class="ai-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                AI Ocjena: ${item.recommendation}
+                Stvarno dohvaćen oglas — Izvor: eBay
               </div>
             </div>
 
             <div class="card-actions">
-              <a href="${item.platformUrl}" target="_blank" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${item.platform}'})" class="btn-card btn-secondary">Detalji Oglasa</a>
-              <a href="${item.platformUrl}" target="_blank" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${item.platform}'})" class="btn-card btn-primary-card">Otvori Uživo</a>
+              <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'eBay'})" class="btn-card btn-secondary">Detalji Oglasa</a>
+              <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'eBay'})" class="btn-card btn-primary-card">Otvori na eBay-u</a>
             </div>
           </div>
         `;
       }).join('');
     }
 
+    /* updateMetrics(): svi brojevi računati ISKLJUČIVO iz currentResults (stvarno dohvaćeni eBay
+       oglasi). Bez stvarnih podataka, svi metrikacard-ovi prikazuju "--" / "Nedostupno". Kalkulator
+       Profita se više ne popunjava automatski izmišljenom "najboljom" cijenom — korisnik unosi
+       vlastite stvarne brojeve. */
     function updateMetrics() {
-      if(currentResults.length === 0) return;
-      const totalProfit = currentResults.reduce((acc, i) => acc + i.profit, 0);
-      const avgPrice = Math.round(currentResults.reduce((acc, i) => acc + i.avgPrice, 0) / currentResults.length);
-      const best = [...currentResults].sort((a,b) => a.priceMin - b.priceMin)[0];
+      const totalEl = document.getElementById("statTotalItems");
+      const totalSubEl = document.getElementById("statTotalSub");
+      const avgEl = document.getElementById("statAvgPrice");
+      const rangeEl = document.getElementById("statProfit");
+      const rangeSubEl = document.getElementById("statRoiSub");
+      const minEl = document.getElementById("statBestPlatform");
+      const minSubEl = document.getElementById("statBestSub");
 
-      document.getElementById("statTotalItems").innerText = currentResults.length * 12;
-      document.getElementById("statAvgPrice").innerText = `${avgPrice} €`;
-      document.getElementById("statProfit").innerText = `+${Math.round(totalProfit / currentResults.length)} €`;
-      document.getElementById("statBestPlatform").innerText = best ? best.platform : "Vinted";
-
-      if(best) {
-        document.getElementById("buyPrice").value = best.priceMin;
-        document.getElementById("sellPrice").value = avgPrice;
-        calculateProfit();
+      if (currentResults.length === 0) {
+        totalEl.innerText = "0";
+        totalSubEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
+        avgEl.innerText = "--";
+        rangeEl.innerText = "--";
+        rangeSubEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
+        minEl.innerText = "Nedostupno";
+        minSubEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
+        return;
       }
+
+      const prices = currentResults.map(i => i.price);
+      const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+
+      totalEl.innerText = currentResults.length;
+      totalSubEl.innerText = "Izvor: eBay (stvarno dohvaćeno)";
+      avgEl.innerText = `${avgPrice} €`;
+      rangeEl.innerText = `${minPrice} € - ${maxPrice} €`;
+      rangeSubEl.innerText = "Izvor: eBay (stvarno dohvaćeno)";
+      minEl.innerText = `${minPrice} €`;
+      minSubEl.innerText = "Izvor: eBay (stvarno dohvaćeno)";
     }
 
+    /* updateAIDashboard(): prikazuje isključivo stvarnu min/prosj./maks. cijenu iz stvarno
+       dohvaćenih eBay oglasa. Ne izračunava i ne prikazuje izmišljenu "AI ocjenu isplativosti",
+       potražnju, brzinu prodaje niti ROI — ti podaci zahtijevaju stvarnu nabavnu/prodajnu cijenu
+       koju korisnik unosi ručno u Kalkulator Profita / ROI Kalkulator. */
     function updateAIDashboard() {
-      if(currentResults.length === 0) return;
-      const avgRoi = Math.round(currentResults.reduce((acc, i) => acc + i.roi, 0) / currentResults.length);
-      const minPrice = Math.min(...currentResults.map(i => i.priceMin));
-      const maxPrice = Math.max(...currentResults.map(i => i.priceMax));
-      const avgPrice = Math.round(currentResults.reduce((acc, i) => acc + i.avgPrice, 0) / currentResults.length);
+      const scoreEl = document.getElementById("aiScoreVal");
+      const gaugeEl = document.getElementById("aiGauge");
+      const verdictEl = document.getElementById("aiVerdict");
+      const summaryEl = document.getElementById("aiSummaryText");
+      const minEl = document.getElementById("aiMinPrice");
+      const avgEl = document.getElementById("aiAvgPrice");
+      const maxEl = document.getElementById("aiMaxPrice");
 
-      const aiScore = Math.min(99, Math.max(45, Math.round(40 + avgRoi * 1.2)));
-      document.getElementById("aiScoreVal").innerText = aiScore;
-      document.getElementById("aiGauge").style.background = `conic-gradient(var(--accent-cyan) 0% ${aiScore}%, rgba(255,255,255,0.1) ${aiScore}% 100%)`;
-      
-      let verdict = "Umjereno Isplativo";
-      if(aiScore > 80) verdict = "Izvrsna Prilika za Profit";
-      else if(aiScore < 55) verdict = "Niska Margina / Rizik";
-      document.getElementById("aiVerdict").innerText = verdict;
+      if (currentResults.length === 0) {
+        scoreEl.innerText = "--";
+        gaugeEl.style.background = `conic-gradient(rgba(255,255,255,0.12) 0% 100%)`;
+        verdictEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
+        summaryEl.innerText = "Dohvaćanje stvarnih eBay oglasa nije uspjelo za ovu pretragu, pa AI izvještaj cijena nije dostupan. ResellWiseALL ne prikazuje izmišljenu ili procijenjenu cijenu u ovom slučaju.";
+        minEl.innerText = "-- €";
+        avgEl.innerText = "-- €";
+        maxEl.innerText = "-- €";
+        return;
+      }
 
-      document.getElementById("aiMinPrice").innerText = `${minPrice} €`;
-      document.getElementById("aiAvgPrice").innerText = `${avgPrice} €`;
-      document.getElementById("aiMaxPrice").innerText = `${maxPrice} €`;
-      document.getElementById("aiRoi").innerText = `${avgRoi}%`;
+      const prices = currentResults.map(i => i.price);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
 
-      document.getElementById("aiSummaryText").innerText = 
-        `ResellWiseALL analiza izračunala je najpovoljniju ulaznu cijenu od ${minPrice} €, dok prosječna prodajna cijena doseže ${avgPrice} €. Očekivani povrat na ulaganje iznosi ${avgRoi}%.`;
+      scoreEl.innerText = currentResults.length;
+      gaugeEl.style.background = `conic-gradient(var(--accent-cyan) 0% 100%, rgba(255,255,255,0.1) 100% 100%)`;
+      verdictEl.innerText = "Stvarni podaci dohvaćeni s eBay-a";
+
+      minEl.innerText = `${minPrice} €`;
+      avgEl.innerText = `${avgPrice} €`;
+      maxEl.innerText = `${maxPrice} €`;
+
+      summaryEl.innerText =
+        `Na temelju ${currentResults.length} stvarno dohvaćenih eBay oglasa, cijene se kreću od ${minPrice} € do ${maxPrice} €, uz prosjek od ${avgPrice} €. Za profit i ROI unesite stvarnu nabavnu i prodajnu cijenu u Kalkulator Profita ili ROI Kalkulator.`;
     }
 
     /* Profit Calculator */
@@ -2324,12 +2956,30 @@
       }
     }
 
-    /* Favorites Tracker */
+    /* ================= ResellWise Knowledge Center (added) =================
+       Opens the matching collapsible <details> card when the user clicks a table-of-contents
+       anchor, so a jump-to-section link never lands on a collapsed card. */
+    function initKnowledgeCenterAnchors() {
+      document.querySelectorAll('.kc-toc a').forEach(link => {
+        link.addEventListener('click', () => {
+          const targetId = link.getAttribute('href').slice(1);
+          const card = document.getElementById(targetId);
+          if (card && card.tagName.toLowerCase() === 'details') {
+            card.open = true;
+          }
+        });
+      });
+    }
+
+    /* Favorites Tracker.
+       Matching now uses platformUrl (the real listing link) instead of platform+query, because
+       multiple real eBay listings for the same search share platform:"eBay" and the same query —
+       platformUrl is what actually identifies one specific real listing. */
     function toggleFavorite(itemId) {
       const item = currentResults.find(i => i.id === itemId);
       if(!item) return;
 
-      const idx = savedFavorites.findIndex(f => f.platform === item.platform && f.query === item.query);
+      const idx = savedFavorites.findIndex(f => f.platformUrl === item.platformUrl);
       if(idx >= 0) {
         savedFavorites.splice(idx, 1);
         showToast("Uklonjeno iz omiljenih.");
@@ -2357,17 +3007,17 @@
       grid.innerHTML = savedFavorites.map(item => `
         <div class="card">
           <div class="card-header">
-            <span class="platform-tag">${item.platform}</span>
+            <span class="platform-tag">Izvor: ${item.platform}</span>
             <button class="fav-btn active" onclick="toggleFavorite('${item.id}')">★</button>
           </div>
           <div class="product-title">${item.title}</div>
           <div class="price-block">
             <div class="price-row">
-              <span class="price-label">Prosječna Cijena:</span>
-              <span class="price-val highlight">${item.avgPrice} €</span>
+              <span class="price-label">Stvarna Cijena (u trenutku spremanja):</span>
+              <span class="price-val highlight">${item.price} €</span>
             </div>
           </div>
-          <a href="${item.platformUrl}" target="_blank" class="btn-card btn-primary-card">Otvori na Platformi</a>
+          <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" class="btn-card btn-primary-card">Otvori na eBay-u</a>
         </div>
       `).join('');
     }
@@ -2376,6 +3026,17 @@
     function renderCharts() {
       drawPlatformChart();
       drawTrendChart();
+    }
+
+    /* Both charts now plot ONLY real per-listing eBay prices from currentResults — nothing is
+       computed, multiplied or invented to fill the chart. If there's no real data (or not enough
+       of it), the canvas shows a plain text message instead of a fabricated shape. */
+    function drawNoDataMessage(ctx, canvas, text) {
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '13px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+      ctx.textAlign = 'left';
     }
 
     function drawPlatformChart() {
@@ -2387,13 +3048,16 @@
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const data = currentResults.slice(0, 8);
-      if(data.length === 0) return;
+      if(data.length === 0) {
+        drawNoDataMessage(ctx, canvas, "Stvarni podaci trenutno nisu dostupni.");
+        return;
+      }
 
       const barWidth = (canvas.width - 50) / data.length;
-      const maxVal = Math.max(...data.map(d => d.avgPrice)) * 1.2 || 100;
+      const maxVal = Math.max(...data.map(d => d.price)) * 1.2 || 100;
 
       data.forEach((d, i) => {
-        const barHeight = (d.avgPrice / maxVal) * (canvas.height - 50);
+        const barHeight = (d.price / maxVal) * (canvas.height - 50);
         const x = 30 + i * barWidth;
         const y = canvas.height - 30 - barHeight;
 
@@ -2406,9 +3070,9 @@
 
         ctx.fillStyle = '#94a3b8';
         ctx.font = '10px sans-serif';
-        ctx.fillText(d.platform.substring(0, 6), x + 4, canvas.height - 10);
+        ctx.fillText(`#${i + 1}`, x + 4, canvas.height - 10);
         ctx.fillStyle = '#fff';
-        ctx.fillText(`${d.avgPrice}€`, x + 4, y - 5);
+        ctx.fillText(`${d.price}€`, x + 4, y - 5);
       });
     }
 
@@ -2420,17 +3084,16 @@
       canvas.height = 250;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      const avg = currentResults.length > 0 ? currentResults[0].avgPrice : 200;
-      const points = [
-        Math.round(avg * 0.85),
-        Math.round(avg * 0.92),
-        Math.round(avg * 0.88),
-        Math.round(avg * 1.05),
-        Math.round(avg * 0.98),
-        Math.round(avg * 1.12),
-        avg
-      ];
+
+      if (currentResults.length < 2) {
+        drawNoDataMessage(ctx, canvas, currentResults.length === 0
+          ? "Stvarni podaci trenutno nisu dostupni."
+          : "Premalo stvarnih oglasa za prikaz raspodjele.");
+        return;
+      }
+
+      // Real prices only, sorted ascending — no synthetic multipliers or invented points.
+      const points = currentResults.map(i => i.price).sort((a, b) => a - b);
 
       const step = (canvas.width - 60) / (points.length - 1);
       const maxP = Math.max(...points) * 1.2 || 100;
