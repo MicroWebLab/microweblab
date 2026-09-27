@@ -1187,7 +1187,7 @@
     <!-- Universal Search Engine -->
     <section class="search-section">
       <div class="search-title">ResellWiseALL Marketplace Pretraživač</div>
-      <div class="search-subtitle">Jedinstveno okruženje u resellwiseall.html za analizu cijena uživo s 14 e-commerce servisa.</div>
+      <div class="search-subtitle">ResellWiseALL: live eBay price search, plus 13 additional platforms available as outbound search links, in a single file (resellwiseall.html).</div>
       <div class="search-box">
         <div class="search-input-wrapper">
           <input type="text" id="searchQuery" class="search-input" placeholder="Unesite proizvod (npr. iPhone 13 Pro, Nike Air Jordan, PS5...)" value="iPhone 13 Pro">
@@ -1198,6 +1198,34 @@
           <option value="fashion">Moda i Odjeća</option>
           <option value="collectibles">Kolekcionarstvo</option>
           <option value="auto">Automobili i Dijelovi</option>
+        </select>
+        <!-- Platform / source filter (added). Only "All Sources" and "eBay" can ever trigger a
+             real fetch — every other option has no live integration and is handled entirely by
+             renderMarketplaceGrid()'s "Live data unavailable" state; selecting one never causes
+             a network request to be attempted for it. -->
+        <select id="sourceFilter" class="filter-select" onchange="runSearch()">
+          <option value="all">All Sources</option>
+          <option value="ebay">eBay (Live)</option>
+          <option value="vinted">Vinted</option>
+          <option value="amazon">Amazon</option>
+          <option value="depop">Depop</option>
+          <option value="poshmark">Poshmark</option>
+          <option value="mercari">Mercari</option>
+          <option value="etsy">Etsy</option>
+          <option value="facebook">Facebook Marketplace</option>
+          <option value="temu">Temu</option>
+          <option value="aliexpress">AliExpress</option>
+          <option value="walmart">Walmart</option>
+          <option value="ebaymotors">eBay Motors</option>
+          <option value="mobilede">Mobile.de</option>
+          <option value="autoscout24">AutoScout24</option>
+        </select>
+        <!-- Sort order (added). Applied only to real, successfully fetched results — see
+             sortItems() in the script below. -->
+        <select id="sortOrder" class="filter-select" onchange="runSearch()">
+          <option value="newest">Newest</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
         </select>
         <button class="btn-search" id="searchBtn" onclick="runSearch()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -1216,35 +1244,35 @@
       <div class="platform-pills" id="platformPills"></div>
 
       <p class="legal-disclaimer" style="margin-left:0; margin-right:0; max-width:none;">
-        New to reselling? Read the practical introduction in the
+        Only results explicitly labeled <strong style="color: var(--text-main);">Source: eBay</strong> are real, live-fetched listings. Every other platform pill above is an outbound search link only — ResellWiseALL does not have live API access to it and never shows a price for it. New to reselling? Read the practical introduction in the
         <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">ResellWise Knowledge Center</button>
         below — how profit is really calculated, how to evaluate a product before buying, and how to interpret marketplace prices.
       </p>
     </section>
 
-    <!-- Stat Metrics — all four cards now reflect ONLY real, successfully-fetched eBay data.
-         If no real data was fetched, every value shows "--" / "Nedostupno" instead of any
-         generated or estimated figure. -->
+    <!-- Stat Metrics — all four cards reflect ONLY real, successfully-fetched eBay data.
+         If no real data was fetched, every value shows "--" instead of any generated,
+         estimated, hashed or fallback figure. -->
     <div class="metrics-row">
       <div class="metric-card">
-        <div class="metric-label">Stvarno Dohvaćeno Oglasa (eBay)</div>
+        <div class="metric-label">Live Listings</div>
         <div class="metric-value" id="statTotalItems">--</div>
-        <div class="metric-sub" id="statTotalSub">Stvarni podaci trenutno nisu dostupni.</div>
+        <div class="metric-sub" id="statTotalSub">Real data currently unavailable.</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Prosječna Cijena (eBay, stvarno)</div>
-        <div class="metric-value" id="statAvgPrice">-- €</div>
-        <div class="metric-sub">Izračunato samo iz stvarno dohvaćenih oglasa</div>
+        <div class="metric-label">Average Live Price</div>
+        <div class="metric-value" id="statAvgPrice">--</div>
+        <div class="metric-sub">Source: eBay, when available</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Raspon Cijena (eBay, stvarno)</div>
-        <div class="metric-value" style="color: var(--success);" id="statProfit">-- €</div>
-        <div class="metric-sub" id="statRoiSub">Stvarni podaci trenutno nisu dostupni.</div>
+        <div class="metric-label">Lowest Live Price</div>
+        <div class="metric-value" style="color: var(--success);" id="statProfit">--</div>
+        <div class="metric-sub" id="statRoiSub">Real data currently unavailable.</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Najniža Cijena (eBay, stvarno)</div>
+        <div class="metric-label">Highest Live Price</div>
         <div class="metric-value" style="color: var(--accent-cyan);" id="statBestPlatform">--</div>
-        <div class="metric-sub" id="statBestSub">Stvarni podaci trenutno nisu dostupni.</div>
+        <div class="metric-sub" id="statBestSub">Real data currently unavailable.</div>
       </div>
     </div>
 
@@ -1766,7 +1794,7 @@
           <p>This section describes the actual current workflow of the application, step by step:</p>
           <ol>
             <li><strong>Enter a product</strong> in the search box on the Marketplace Pretraga tab, optionally narrowing by category.</li>
-            <li><strong>The app searches available sources.</strong> The app attempts to fetch live listing data for eBay via a public CORS proxy. If the fetch succeeds, the app displays only successfully fetched eBay listings with their actual title, price and link. If the fetch fails or no usable listing price can be parsed, the result remains empty and the app displays a clear "Stvarni podaci trenutno nisu dostupni" message. No fallback, hash calculation or generated market price is used.</li>
+            <li><strong>The app searches available sources.</strong> The app attempts to fetch live listing data for eBay through ResellWiseALL's own backend (a Cloudflare Worker), which calls the official eBay Browse API using server-side credentials. If the fetch succeeds, the app displays only successfully fetched eBay listings with their actual title, price, currency, condition (when provided) and link. If the fetch fails, the backend isn't configured, or no usable listing can be parsed, the result remains empty and the app displays a clear "Stvarni podaci trenutno nisu dostupni" message. No fallback, hash calculation or generated market price is used.</li>
             <li><strong>Compare the displayed results.</strong> Real eBay listings are shown as cards with their actual price, each clearly labeled "Izvor: eBay". The other 13 listed platforms appear only as plain outbound search links — they are not queried for live data and are never shown with a price.</li>
             <li><strong>Use the Profit Calculator</strong> (Kalkulator Profita tab) to work out net profit, margin and ROI from your own purchase price, selling price, shipping, platform fee and other costs.</li>
             <li><strong>Use the ROI Calculator</strong> (inside the Inventar tab) for a separate return-on-investment and payback-period estimate, independent of the Profit Calculator.</li>
@@ -1783,15 +1811,15 @@
         <summary>10. Price / Data Methodology</summary>
         <div class="kc-body">
           <p>Transparency about where the numbers on screen come from:</p>
-          <h4>Live data attempt</h4>
-          <p>When you search, ResellWiseALL attempts to fetch real eBay listing data through a public, third-party CORS proxy service that relays an eBay search feed. Each listing card shown on the Marketplace Pretraga tab — its title, price and link — comes directly from that live feed; nothing about it is generated, estimated or guessed.</p>
+          <h4>Live data via ResellWiseALL's own backend</h4>
+          <p>When you search, ResellWiseALL sends your search term to its own backend — a small Cloudflare Worker — which calls the official eBay Browse API using server-side OAuth credentials and returns the results to your browser. Your eBay API credentials (client ID and client secret) live only on that backend; they are never present in this page's HTML or JavaScript. Each real listing card shown on the Marketplace Pretraga tab — its title, price, currency, condition (when eBay provides one) and link — comes directly from that live eBay response; nothing about it is generated, estimated or guessed.</p>
           <h4>When live data isn't available</h4>
-          <p>External web requests like this are not always available — the proxy service, your network, or the upstream feed can be temporarily unreachable, rate-limited, or return nothing that can be parsed into a usable listing and price. When that happens, ResellWiseALL does <strong>not</strong> substitute a calculated, estimated or otherwise invented price. Instead, the app shows a clear "Stvarni podaci trenutno nisu dostupni" ("Real data is currently unavailable") message, and every metric that depends on real prices (the stat cards, the AI Analysis price panel, the eBay figures in Insights) shows "--" rather than a number.</p>
+          <p>Live requests like this are not always available — the backend may not be deployed/configured yet, eBay's API can be temporarily unreachable or rate-limited, or a given search can simply return zero matching listings. When that happens, ResellWiseALL does <strong>not</strong> substitute a calculated, estimated or otherwise invented price. Instead, the app shows a clear "Stvarni podaci trenutno nisu dostupni" ("Real data is currently unavailable") message, and every metric that depends on real prices (the stat cards, the AI Analysis price panel, the eBay figures in Insights) shows "--" rather than a number.</p>
           <div class="kc-callout">
-            <p><strong>There is no fallback price.</strong> ResellWiseALL previously used an internal calculation to fill the screen when live data wasn't available; that behavior has been removed. Every price you see for a search either came from a real, successfully fetched eBay listing, or isn't shown at all.</p>
+            <p><strong>There is no fallback price.</strong> ResellWiseALL previously used an internal calculation to fill the screen when live data wasn't available; that behavior has been permanently removed. Every price you see for a search either came from a real, successfully fetched eBay listing, or isn't shown at all.</p>
           </div>
           <h4>The other 13 platforms</h4>
-          <p>The remaining marketplaces listed in the app (Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de, AutoScout24) are not queried for live data — ResellWiseALL does not have a working live connection to them. They appear only as plain outbound search links so you can check them yourself; they are never shown with a price or presented as fetched marketplace results.</p>
+          <p>The remaining marketplaces listed in the app (Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de, AutoScout24) are not queried for live data — ResellWiseALL does not have authorized API access to them. They appear only as plain outbound search links so you can check them yourself; they are never shown with a price or presented as fetched marketplace results. If you select one of them in the source filter, the app tells you plainly that live data for that platform isn't available rather than attempting any workaround.</p>
           <h4>Why this matters for you</h4>
           <p>You can treat any price shown in the app as a real, current eBay listing price at the time you searched — subject, of course, to the general caveats in the Marketplace Price Comparison section above (asking price vs. completed sale, condition differences, and so on). Always confirm the current price, availability and condition on eBay itself before buying or selling.</p>
         </div>
@@ -1975,7 +2003,7 @@
       </ul>
 
       <h3>Product and Pricing Information</h3>
-      <p>Product and pricing information shown on the Marketplace Pretraga tab comes exclusively from real, successfully fetched eBay listings — ResellWiseALL does not generate, estimate or guess a price. To fetch live eBay listings, your search term is sent, client-side, to a public CORS proxy service (<strong>api.allorigins.win</strong>), which in turn requests the corresponding public eBay search page. This only transmits the text you typed into the search box — no other personal data is sent as part of this request. If that fetch is unavailable or returns no usable listing for your search, no results are shown for that search, and the app clearly states that real data is currently unavailable — it never substitutes an invented or calculated price. The "ResellWise Insights" section on the Analytics tab shows figures from your own local Inventory entries (which you typed yourself) alongside real eBay price figures from your current search, when available; it never shows an invented or estimated market price. A fuller, non-technical explanation of how the eBay fetch works — and what happens when it's unavailable — is also available in the Knowledge Center's "Price / Data Methodology" section.</p>
+      <p>Product and pricing information shown on the Marketplace Pretraga tab comes exclusively from real, successfully fetched eBay listings — ResellWiseALL does not generate, estimate or guess a price. To fetch live eBay listings, your search term is sent to ResellWiseALL's own backend (a Cloudflare Worker), which calls the official eBay Browse API using server-side OAuth credentials that are never exposed in this page's HTML or JavaScript. This only transmits the text you typed into the search box — no other personal data is sent as part of this request. If that fetch is unavailable, not yet configured, or returns no usable listing for your search, no results are shown for that search, and the app clearly states that real data is currently unavailable — it never substitutes an invented or calculated price. The "ResellWise Insights" section on the Analytics tab shows figures from your own local Inventory entries (which you typed yourself) alongside real eBay price figures from your current search, when available; it never shows an invented or estimated market price. The other 13 marketplaces listed in the app (Vinted, Amazon, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de, AutoScout24) are not queried by ResellWiseALL at all — clicking their link only takes you to that platform's own website. A fuller, non-technical explanation of how the eBay fetch works — and what happens when it's unavailable — is also available in the Knowledge Center's "Price / Data Methodology" section.</p>
 
       <h3>"ChatGPT Analiza" Button</h3>
       <p>If you click the <strong>"✨ ChatGPT Analiza"</strong> button, your search term is included in a URL and a new browser tab is opened to chatgpt.com (operated by OpenAI), pre-filled with a prompt containing your search term. This sends your search term to OpenAI as part of that page load, governed by OpenAI's own privacy policy — ResellWiseALL has no visibility into, or control over, how OpenAI processes it. This only happens if you click that specific button.</p>
@@ -2035,7 +2063,7 @@
       <p>You may use ResellWiseALL for personal, non-commercial evaluation of resale opportunities, in compliance with applicable law and the terms of any third-party platform you visit through the app. You agree not to misuse the application (e.g. attempting to disrupt its operation or automate abusive requests against it).</p>
 
       <h3>Data Source</h3>
-      <p>Product and pricing information on the Marketplace Pretraga tab comes only from real, successfully fetched eBay listings — ResellWiseALL does not calculate, estimate or invent a price. When a live fetch is not available, no result is shown for that search rather than a substituted figure. Data may still be incomplete, outdated or inaccurate without prior notice, as ResellWiseALL does not directly control eBay or the third-party proxy service used to fetch it. See the Knowledge Center's "Price / Data Methodology" section for full detail.</p>
+      <p>Product and pricing information on the Marketplace Pretraga tab comes only from real, successfully fetched eBay listings, retrieved through ResellWiseALL's own backend and the official eBay Browse API — ResellWiseALL does not calculate, estimate or invent a price. When a live fetch is not available, no result is shown for that search rather than a substituted figure. Data may still be incomplete, outdated or inaccurate without prior notice, as ResellWiseALL does not directly control eBay or its API. See the Knowledge Center's "Price / Data Methodology" section for full detail.</p>
 
       <h3>Check Before You Buy or Sell</h3>
       <p>You are responsible for verifying all information (price, availability, item condition and sale terms) directly with the original source or platform before making any purchasing or selling decision.</p>
@@ -2397,24 +2425,73 @@
       });
     }
 
+    /* PLATFORMS: only eBay has a real, authorized live integration (via our own Cloudflare
+       Worker + the eBay Browse API — see cloudflare-worker.js). The other 13 are NOT queried
+       for data at all; they exist only as plain outbound search links. `live:true` is the only
+       flag that changes any behavior below. */
     const PLATFORMS = [
-      { name: "eBay Global", type: "global", url: "https://www.ebay.com/sch/i.html?_nkw=" },
-      { name: "Amazon", type: "global", url: "https://www.amazon.com/s?k=" },
-      { name: "Vinted", type: "fashion", url: "https://www.vinted.com/catalog?search_text=" },
-      { name: "Depop", type: "fashion", url: "https://www.depop.com/search/?q=" },
-      { name: "Poshmark", type: "fashion", url: "https://poshmark.com/search?query=" },
-      { name: "Mercari", type: "general", url: "https://www.mercari.com/search/?keyword=" },
-      { name: "Etsy", type: "collectibles", url: "https://www.etsy.com/search?q=" },
-      { name: "Facebook Marketplace", type: "general", url: "https://www.facebook.com/marketplace/search/?query=" },
-      { name: "Temu", type: "bargain", url: "https://www.temu.com/search_result.html?search_key=" },
-      { name: "AliExpress", type: "bargain", url: "https://www.aliexpress.com/w/wholesale-" },
-      { name: "Walmart", type: "general", url: "https://www.walmart.com/search?q=" },
-      { name: "eBay Motors", type: "auto", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=" },
-      { name: "Mobile.de", type: "auto", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=" },
-      { name: "AutoScout24", type: "auto", url: "https://www.autoscout24.com/lst?query=" }
+      { key: "ebay", name: "eBay", type: "global", url: "https://www.ebay.com/sch/i.html?_nkw=", live: true },
+      { key: "amazon", name: "Amazon", type: "global", url: "https://www.amazon.com/s?k=", live: false },
+      { key: "vinted", name: "Vinted", type: "fashion", url: "https://www.vinted.com/catalog?search_text=", live: false },
+      { key: "depop", name: "Depop", type: "fashion", url: "https://www.depop.com/search/?q=", live: false },
+      { key: "poshmark", name: "Poshmark", type: "fashion", url: "https://poshmark.com/search?query=", live: false },
+      { key: "mercari", name: "Mercari", type: "general", url: "https://www.mercari.com/search/?keyword=", live: false },
+      { key: "etsy", name: "Etsy", type: "collectibles", url: "https://www.etsy.com/search?q=", live: false },
+      { key: "facebook", name: "Facebook Marketplace", type: "general", url: "https://www.facebook.com/marketplace/search/?query=", live: false },
+      { key: "temu", name: "Temu", type: "bargain", url: "https://www.temu.com/search_result.html?search_key=", live: false },
+      { key: "aliexpress", name: "AliExpress", type: "bargain", url: "https://www.aliexpress.com/w/wholesale-", live: false },
+      { key: "walmart", name: "Walmart", type: "general", url: "https://www.walmart.com/search?q=", live: false },
+      { key: "ebaymotors", name: "eBay Motors", type: "auto", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=", live: false },
+      { key: "mobilede", name: "Mobile.de", type: "auto", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=", live: false },
+      { key: "autoscout24", name: "AutoScout24", type: "auto", url: "https://www.autoscout24.com/lst?query=", live: false }
     ];
 
+    /* ================= Live Marketplace Backend (added) =================
+       ResellWiseALL calls its own Cloudflare Worker backend, which holds the eBay Browse API
+       OAuth credentials server-side and calls eBay on ResellWiseALL's behalf — see the
+       accompanying cloudflare-worker.js and DEPLOYMENT.md. No API secret, client secret or
+       token of any kind is ever present in this frontend file.
+       Set WORKER_BASE_URL below to your deployed Worker's URL once you've deployed it. While
+       the placeholder is left in place, ResellWiseALL treats the backend as "not configured"
+       and shows "Stvarni podaci trenutno nisu dostupni." for every search — it never falls
+       back to any generated, estimated, hashed or cached-as-current price. */
+    const WORKER_BASE_URL = "https://REPLACE-WITH-YOUR-CLOUDFLARE-WORKER-URL.workers.dev";
+
+    function isWorkerConfigured() {
+      return !!WORKER_BASE_URL && WORKER_BASE_URL.indexOf('REPLACE-WITH-YOUR-CLOUDFLARE-WORKER-URL') === -1;
+    }
+
+    function formatPrice(price, currency) {
+      const symbols = { EUR: '€', USD: '$', GBP: '£' };
+      if (typeof price !== 'number' || !Number.isFinite(price)) return '--';
+      const symbol = symbols[currency];
+      return symbol ? `${symbol}${price.toFixed(2)}` : `${price.toFixed(2)} ${currency || ''}`.trim();
+    }
+
+    function dedupeItems(items) {
+      const seen = new Set();
+      const out = [];
+      items.forEach(it => {
+        const key = it.platformUrl || it.id;
+        if (key && !seen.has(key)) {
+          seen.add(key);
+          out.push(it);
+        }
+      });
+      return out;
+    }
+
+    function sortItems(items, mode) {
+      const copy = items.slice();
+      if (mode === 'price_asc') copy.sort((a, b) => a.price - b.price);
+      else if (mode === 'price_desc') copy.sort((a, b) => b.price - a.price);
+      // 'newest' keeps the order eBay itself returned for sort=newlyListed — no client-side
+      // reordering is applied on top of that.
+      return copy;
+    }
+
     let currentResults = [];
+    let currentErrorMessage = null;
     let savedFavorites = JSON.parse(localStorage.getItem("resellwiseall_favs") || "[]");
     let inventory = JSON.parse(localStorage.getItem("resellwiseall_inventory") || "[]");
 
@@ -2454,43 +2531,55 @@
       }
     }
 
-    /* renderPlatformPills(): the 13 non-eBay platforms (plus eBay itself for convenience) are
-       shown ONLY as plain outbound search links — never as generated "results" and never with
-       a price. Nothing here implies these 13 were actually queried or that any price was
-       fetched from them. */
-    function renderPlatformPills(query) {
+    /* renderPlatformPills(): ALL 14 platforms, including eBay, are shown ONLY as plain outbound
+       search links — never as generated "results" and never with a price. eBay's own live
+       results (when available) are rendered separately by renderMarketplaceGrid(); this pills
+       row never implies that the other 13 were actually queried. */
+    function renderPlatformPills(query, sourceFilter) {
       const container = document.getElementById("platformPills");
       const q = (query || document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro");
-      container.innerHTML = PLATFORMS.map(p =>
-        `<a class="platform-pill" style="text-decoration:none;" href="${p.url}${encodeURIComponent(q)}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${p.name}'})">Pretraži: ${p.name} ↗</a>`
-      ).join('');
+      container.innerHTML = PLATFORMS.map(p => {
+        const label = p.live ? `${p.name} (Live)` : `Search: ${p.name}`;
+        const dim = (sourceFilter && sourceFilter !== 'all' && sourceFilter !== p.key) ? 'opacity:0.55;' : '';
+        return `<a class="platform-pill" style="text-decoration:none;${dim}" href="${p.url}${encodeURIComponent(q)}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${p.name}'})">${label} ↗</a>`;
+      }).join('');
     }
 
     /* ResellWiseALL Live Data Fetching Engine.
-       ResellWiseALL prikazuje SAMO stvarno dohvaćene eBay cijene. Nema hash/fallback niti
-       ikakvog drugog umjetnog generiranja cijena — ako dohvaćanje ne uspije, currentResults
-       ostaje prazan i UI to jasno prikazuje umjesto izmišljene vrijednosti. */
+       ResellWiseALL prikazuje SAMO stvarno dohvaćene cijene (trenutno: eBay, putem vlastitog
+       Cloudflare Worker backenda i eBay Browse API-ja). Nema hash/fallback niti ikakvog drugog
+       umjetnog generiranja cijena — ako dohvaćanje ne uspije, currentResults ostaje prazan i UI
+       to jasno prikazuje umjesto izmišljene vrijednosti. */
     async function runSearch() {
       const query = document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro";
-      const category = document.getElementById("categoryFilter").value;
+      const sourceFilter = document.getElementById("sourceFilter").value; // 'all' or a PLATFORMS[].key
+      const sortMode = document.getElementById("sortOrder").value; // 'newest' | 'price_asc' | 'price_desc'
       const loading = document.getElementById("loadingStatus");
 
       loading.style.display = "flex";
-      renderPlatformPills(query);
-      trackGAEvent("resellwiseall_search", { search_query: query });
+      renderPlatformPills(query, sourceFilter);
+      trackGAEvent("resellwiseall_search", { search_query: query, source: sourceFilter, sort: sortMode });
 
-      let liveMarketItems = [];
-      try {
-        liveMarketItems = await fetchLiveMarketData(query);
-      } catch (err) {
-        console.warn("Stvarni eBay podaci nisu dostupni za ovu pretragu.", err);
-        liveMarketItems = [];
+      currentResults = [];
+      currentErrorMessage = null;
+
+      // Only eBay has a real, authorized live integration. If the user picked one of the other
+      // 13 sources, no fetch is attempted at all for it — nothing to fetch, so nothing to fake.
+      const wantsEbay = sourceFilter === 'all' || sourceFilter === 'ebay';
+      if (wantsEbay) {
+        try {
+          const result = await fetchLiveMarketData(query, sortMode);
+          currentResults = sortItems(dedupeItems(result.items), sortMode);
+          currentErrorMessage = result.errorMessage;
+        } catch (err) {
+          console.warn("Stvarni eBay podaci nisu dostupni za ovu pretragu.", err);
+          currentResults = [];
+          currentErrorMessage = 'Live data unavailable — unexpected error.';
+        }
       }
 
-      processRealMarketResults(query, category, liveMarketItems);
-
       loading.style.display = "none";
-      renderMarketplaceGrid();
+      renderMarketplaceGrid(sourceFilter);
       updateMetrics();
       updateAIDashboard();
       renderInsights();
@@ -2500,66 +2589,75 @@
         : "Stvarni podaci trenutno nisu dostupni.");
     }
 
-    /* Povezivanje na otvorena RSS/CORS sučelja. Vraća ISKLJUČIVO stvarno dohvaćene i uspješno
-       raščlanjene stavke, ili prazan niz ako dohvaćanje/raščlanjivanje ne uspije — nikad
-       izmišljenu ili procijenjenu stavku. */
-    async function fetchLiveMarketData(query) {
-      const targetUrl = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(query)}&_rss=1`;
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-
-      try {
-        const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error("Greška kod dohvaćanja");
-        const json = await response.json();
-
-        if (json.contents) {
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(json.contents, "text/xml");
-          const items = xmlDoc.querySelectorAll("item");
-
-          let parsedItems = [];
-          items.forEach(item => {
-            const title = item.querySelector("title")?.textContent || "";
-            const link = item.querySelector("link")?.textContent || "";
-            const desc = item.querySelector("description")?.textContent || "";
-            if (!title || !link) return; // bez stvarnog naslova/linka, stavka se ne koristi
-
-            const priceMatch = desc.match(/\$([0-9\.,]+)|EUR\s*([0-9\.,]+)|€([0-9\.,]+)/i) || title.match(/\$([0-9\.,]+)|€([0-9\.,]+)/i);
-            let price = 0;
-            if (priceMatch) {
-              const rawPrice = priceMatch[1] || priceMatch[2] || priceMatch[3];
-              price = parseFloat(rawPrice.replace(/,/g, ''));
-            }
-
-            // Stavka se koristi SAMO ako je stvarna cijena uspješno pronađena i raščlanjena.
-            if (price > 0) {
-              parsedItems.push({ title, link, price: Math.round(price) });
-            }
-          });
-
-          return parsedItems; // može biti prazan niz ako ništa nije uspješno raščlanjeno
-        }
-      } catch (e) {
-        console.log("CORS proxy ili eBay feed nedostupan za ovu pretragu.");
+    /* fetchLiveMarketData(): calls ONLY our own Cloudflare Worker backend (never eBay directly
+       from the browser, and never with any embedded secret — see cloudflare-worker.js).
+       Returns { items, errorMessage }. items is ALWAYS either real, successfully fetched
+       listings or an empty array — never a generated, estimated or hashed one. errorMessage is
+       set only for genuine failures (auth, rate-limit, network, malformed response); a normal
+       zero-result search leaves it null and the UI shows the standard "no data" message. */
+    async function fetchLiveMarketData(query, sortMode) {
+      if (!isWorkerConfigured()) {
+        // Not an error — the operator simply hasn't deployed/configured the backend yet.
+        return { items: [], errorMessage: null };
       }
-      return [];
-    }
 
-    /* processRealMarketResults(): currentResults sadrži ISKLJUČIVO stavke koje su stvarno
-       dohvaćene i raščlanjene iz eBay feeda (realItems). Nema generiranja cijena za ostalih
-       13 platformi — one se prikazuju samo kao vanjske poveznice za pretragu (renderPlatformPills),
-       nikad kao dohvaćeni marketplace rezultati. */
-    function processRealMarketResults(query, category, realItems) {
-      currentResults = realItems.map((item, idx) => ({
-        id: `ebay-${idx}-${Date.now()}`,
-        query: query,
-        platform: "eBay",
-        source: "eBay",
-        platformUrl: item.link,
-        category: category === 'all' ? 'Općenito' : category,
-        title: item.title,
-        price: item.price
-      }));
+      const apiSort = sortMode === 'price_asc' ? 'price' : sortMode === 'price_desc' ? '-price' : 'newlyListed';
+      const url = `${WORKER_BASE_URL}/api/search?q=${encodeURIComponent(query)}&sort=${encodeURIComponent(apiSort)}&limit=24`;
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
+
+      let response;
+      try {
+        response = await fetch(url, { signal: controller.signal });
+      } catch (err) {
+        clearTimeout(timeoutId);
+        if (err && err.name === 'AbortError') {
+          return { items: [], errorMessage: 'Live data unavailable — request timed out.' };
+        }
+        return { items: [], errorMessage: 'Live data unavailable — network or CORS error.' };
+      }
+      clearTimeout(timeoutId);
+
+      if (response.status === 401 || response.status === 403) {
+        return { items: [], errorMessage: 'Live data unavailable — authorization error.' };
+      }
+      if (response.status === 429) {
+        return { items: [], errorMessage: 'Live data unavailable — rate limited, please try again shortly.' };
+      }
+      if (!response.ok) {
+        return { items: [], errorMessage: 'Live data unavailable — server error.' };
+      }
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (err) {
+        return { items: [], errorMessage: 'Live data unavailable — unexpected response.' };
+      }
+
+      if (data && data.error) {
+        return { items: [], errorMessage: 'Live data unavailable — ' + (data.message || 'error from data source.') };
+      }
+
+      const rawItems = Array.isArray(data && data.items) ? data.items : [];
+      // Defensive normalization: an item is only kept if it has a real title, a real link, and a
+      // real numeric price greater than zero. Anything else is dropped rather than guessed at.
+      const items = rawItems
+        .filter(it => it && it.title && it.url && typeof it.price === 'number' && it.price > 0)
+        .map(it => ({
+          id: it.id || it.url,
+          source: it.source || 'eBay',
+          title: it.title,
+          price: it.price,
+          currency: it.currency || 'USD',
+          condition: it.condition || null,
+          image: it.image || null,
+          platformUrl: it.url,
+          fetchedAt: it.fetchedAt || new Date().toISOString()
+        }));
+
+      return { items, errorMessage: null };
     }
 
     function searchWithAI() {
@@ -2575,50 +2673,78 @@
     }
 
     /* renderMarketplaceGrid(): prikazuje ISKLJUČIVO stvarno dohvaćene eBay oglase (stvarni
-       naslov, stvarna cijena, stvarni link, jasno označen izvor). Ako nema stvarnih podataka,
+       naslov, stvarna cijena i valuta, stvarni link, jasno označen izvor, "Fetched: just now").
+       Ako je odabran jedan od 13 platformi bez live integracije, prikazuje jasnu poruku i gumb
+       za pretragu na toj platformi — nikad izmišljenu cijenu. Ako eBay dohvaćanje ne uspije,
        prikazuje se jasna poruka bez ikakve izmišljene ili procijenjene cijene. */
-    function renderMarketplaceGrid() {
+    function renderMarketplaceGrid(sourceFilter) {
+      sourceFilter = sourceFilter || document.getElementById("sourceFilter").value;
       const grid = document.getElementById("cardsGrid");
+      const query = document.getElementById("searchQuery").value.trim() || "";
 
-      if (currentResults.length === 0) {
+      if (sourceFilter !== 'all' && sourceFilter !== 'ebay') {
+        const plat = PLATFORMS.find(p => p.key === sourceFilter);
+        const name = plat ? plat.name : sourceFilter;
+        const searchUrl = plat ? (plat.url + encodeURIComponent(query)) : '#';
         grid.innerHTML = `
           <div style="grid-column: 1 / -1;">
             <div class="search-section" style="margin-bottom: 0;">
-              <p style="color: var(--text-main); font-weight: 700; margin-bottom: 6px;">Stvarni podaci trenutno nisu dostupni.</p>
-              <p style="color: var(--text-muted); margin-bottom: 0;">Dohvaćanje stvarnih eBay oglasa nije uspjelo za ovaj upit (izvor može biti privremeno nedostupan). ResellWiseALL ne prikazuje izmišljenu ili procijenjenu cijenu. Pokušajte ponovno, izmijenite upit, ili pretražite izravno preko poveznica platformi iznad.</p>
+              <p style="color: var(--text-main); font-weight: 700; margin-bottom: 6px;">${name}: Live data unavailable — API access required</p>
+              <p style="color: var(--text-muted); margin-bottom: 12px;">ResellWiseALL does not have authorized API access to ${name}. No price is shown for it. You can search directly on the platform instead.</p>
+              <a href="${searchUrl}" target="_blank" rel="noopener noreferrer" class="btn-card btn-primary-card" style="display:inline-block; width:auto; padding:10px 20px;">Search ${name} ↗</a>
+            </div>
+          </div>`;
+        return;
+      }
+
+      if (currentResults.length === 0) {
+        const message = currentErrorMessage || "Stvarni podaci trenutno nisu dostupni.";
+        const detail = !isWorkerConfigured()
+          ? 'Backend za dohvaćanje stvarnih eBay podataka još nije konfiguriran za ovu instalaciju. Dok se ne postavi, pretražite izravno preko poveznica platformi iznad.'
+          : 'Dohvaćanje stvarnih eBay oglasa nije uspjelo za ovaj upit. ResellWiseALL ne prikazuje izmišljenu ili procijenjenu cijenu. Pokušajte ponovno, izmijenite upit, ili pretražite izravno preko poveznica platformi iznad.';
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1;">
+            <div class="search-section" style="margin-bottom: 0;">
+              <p style="color: var(--text-main); font-weight: 700; margin-bottom: 6px;">${message}</p>
+              <p style="color: var(--text-muted); margin-bottom: 0;">${detail}</p>
             </div>
           </div>`;
         return;
       }
 
       grid.innerHTML = currentResults.map(item => {
-        const isFav = savedFavorites.some(f => f.platform === item.platform && f.query === item.query && f.platformUrl === item.platformUrl);
+        const isFav = savedFavorites.some(f => f.platformUrl === item.platformUrl);
+        const priceText = formatPrice(item.price, item.currency);
+        const conditionText = item.condition ? `<div class="category-text">Condition: ${item.condition}</div>` : '';
+        const imageHtml = item.image
+          ? `<img src="${item.image}" alt="" style="width:100%; max-height:160px; object-fit:cover; border-radius:10px; margin-bottom:0.8rem;" onerror="this.remove();">`
+          : '';
         return `
           <div class="card">
             <div>
               <div class="card-header">
-                <span class="platform-tag">Izvor: eBay</span>
+                <span class="platform-tag">Source: ${item.source}</span>
                 <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${item.id}')">★</button>
               </div>
+              ${imageHtml}
               <div class="product-title">${item.title}</div>
-              <div class="category-text">Kategorija: ${item.category}</div>
+              ${conditionText}
 
               <div class="price-block">
                 <div class="price-row">
-                  <span class="price-label">Stvarna Cijena (eBay):</span>
-                  <span class="price-val highlight">${item.price} €</span>
+                  <span class="price-label">Live Price:</span>
+                  <span class="price-val highlight">${priceText}</span>
                 </div>
               </div>
 
               <div class="ai-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Stvarno dohvaćen oglas — Izvor: eBay
+                Fetched: just now
               </div>
             </div>
 
             <div class="card-actions">
-              <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'eBay'})" class="btn-card btn-secondary">Detalji Oglasa</a>
-              <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'eBay'})" class="btn-card btn-primary-card">Otvori na eBay-u</a>
+              <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${item.source}'})" class="btn-card btn-primary-card" style="grid-column: 1 / -1;">Open original listing ↗</a>
             </div>
           </div>
         `;
@@ -2626,41 +2752,42 @@
     }
 
     /* updateMetrics(): svi brojevi računati ISKLJUČIVO iz currentResults (stvarno dohvaćeni eBay
-       oglasi). Bez stvarnih podataka, svi metrikacard-ovi prikazuju "--" / "Nedostupno". Kalkulator
-       Profita se više ne popunjava automatski izmišljenom "najboljom" cijenom — korisnik unosi
-       vlastite stvarne brojeve. */
+       oglasi). Bez stvarnih podataka, svaki metrika-card prikazuje "--". Kalkulator Profita se
+       ne popunjava automatski nikakvom generiranom cijenom — korisnik unosi vlastite stvarne
+       brojeve. */
     function updateMetrics() {
       const totalEl = document.getElementById("statTotalItems");
       const totalSubEl = document.getElementById("statTotalSub");
       const avgEl = document.getElementById("statAvgPrice");
-      const rangeEl = document.getElementById("statProfit");
-      const rangeSubEl = document.getElementById("statRoiSub");
-      const minEl = document.getElementById("statBestPlatform");
-      const minSubEl = document.getElementById("statBestSub");
+      const lowEl = document.getElementById("statProfit");
+      const lowSubEl = document.getElementById("statRoiSub");
+      const highEl = document.getElementById("statBestPlatform");
+      const highSubEl = document.getElementById("statBestSub");
 
       if (currentResults.length === 0) {
-        totalEl.innerText = "0";
-        totalSubEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
+        totalEl.innerText = "--";
+        totalSubEl.innerText = "Real data currently unavailable.";
         avgEl.innerText = "--";
-        rangeEl.innerText = "--";
-        rangeSubEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
-        minEl.innerText = "Nedostupno";
-        minSubEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
+        lowEl.innerText = "--";
+        lowSubEl.innerText = "Real data currently unavailable.";
+        highEl.innerText = "--";
+        highSubEl.innerText = "Real data currently unavailable.";
         return;
       }
 
       const prices = currentResults.map(i => i.price);
-      const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+      const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
+      const cur = currentResults[0].currency;
 
       totalEl.innerText = currentResults.length;
-      totalSubEl.innerText = "Izvor: eBay (stvarno dohvaćeno)";
-      avgEl.innerText = `${avgPrice} €`;
-      rangeEl.innerText = `${minPrice} € - ${maxPrice} €`;
-      rangeSubEl.innerText = "Izvor: eBay (stvarno dohvaćeno)";
-      minEl.innerText = `${minPrice} €`;
-      minSubEl.innerText = "Izvor: eBay (stvarno dohvaćeno)";
+      totalSubEl.innerText = "Source: eBay";
+      avgEl.innerText = formatPrice(avgPrice, cur);
+      lowEl.innerText = formatPrice(minPrice, cur);
+      lowSubEl.innerText = "Source: eBay";
+      highEl.innerText = formatPrice(maxPrice, cur);
+      highSubEl.innerText = "Source: eBay";
     }
 
     /* updateAIDashboard(): prikazuje isključivo stvarnu min/prosj./maks. cijenu iz stvarno
@@ -2681,27 +2808,28 @@
         gaugeEl.style.background = `conic-gradient(rgba(255,255,255,0.12) 0% 100%)`;
         verdictEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
         summaryEl.innerText = "Dohvaćanje stvarnih eBay oglasa nije uspjelo za ovu pretragu, pa AI izvještaj cijena nije dostupan. ResellWiseALL ne prikazuje izmišljenu ili procijenjenu cijenu u ovom slučaju.";
-        minEl.innerText = "-- €";
-        avgEl.innerText = "-- €";
-        maxEl.innerText = "-- €";
+        minEl.innerText = "--";
+        avgEl.innerText = "--";
+        maxEl.innerText = "--";
         return;
       }
 
       const prices = currentResults.map(i => i.price);
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
-      const avgPrice = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+      const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+      const cur = currentResults[0].currency;
 
       scoreEl.innerText = currentResults.length;
       gaugeEl.style.background = `conic-gradient(var(--accent-cyan) 0% 100%, rgba(255,255,255,0.1) 100% 100%)`;
       verdictEl.innerText = "Stvarni podaci dohvaćeni s eBay-a";
 
-      minEl.innerText = `${minPrice} €`;
-      avgEl.innerText = `${avgPrice} €`;
-      maxEl.innerText = `${maxPrice} €`;
+      minEl.innerText = formatPrice(minPrice, cur);
+      avgEl.innerText = formatPrice(avgPrice, cur);
+      maxEl.innerText = formatPrice(maxPrice, cur);
 
       summaryEl.innerText =
-        `Na temelju ${currentResults.length} stvarno dohvaćenih eBay oglasa, cijene se kreću od ${minPrice} € do ${maxPrice} €, uz prosjek od ${avgPrice} €. Za profit i ROI unesite stvarnu nabavnu i prodajnu cijenu u Kalkulator Profita ili ROI Kalkulator.`;
+        `Na temelju ${currentResults.length} stvarno dohvaćenih eBay oglasa, cijene se kreću od ${formatPrice(minPrice, cur)} do ${formatPrice(maxPrice, cur)}, uz prosjek od ${formatPrice(avgPrice, cur)}. Za profit i ROI unesite stvarnu nabavnu i prodajnu cijenu u Kalkulator Profita ili ROI Kalkulator.`;
     }
 
     /* Profit Calculator */
@@ -2946,10 +3074,12 @@
       }
 
       if (currentResults.length > 0) {
-        const avgRoi = Math.round(currentResults.reduce((acc, i) => acc + i.roi, 0) / currentResults.length);
-        roiTrendEl.innerText = `~ ${avgRoi} % (estimated)`;
-        const bestPlatform = [...currentResults].sort((a, b) => b.roi - a.roi)[0];
-        bestPlatformEl.innerText = bestPlatform ? `${bestPlatform.platform} (~${bestPlatform.roi}%)` : '--';
+        const prices = currentResults.map(i => i.price);
+        const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+        const minPrice = Math.min(...prices);
+        const cur = currentResults[0].currency;
+        roiTrendEl.innerText = formatPrice(avgPrice, cur);
+        bestPlatformEl.innerText = formatPrice(minPrice, cur);
       } else {
         roiTrendEl.innerText = '--';
         bestPlatformEl.innerText = '--';
@@ -2972,11 +3102,13 @@
     }
 
     /* Favorites Tracker.
-       Matching now uses platformUrl (the real listing link) instead of platform+query, because
-       multiple real eBay listings for the same search share platform:"eBay" and the same query —
-       platformUrl is what actually identifies one specific real listing. */
+       Matching uses platformUrl (the real listing link), since it's the one field that uniquely
+       identifies a specific real listing across searches. toggleFavorite() checks both
+       currentResults (card clicked on the main grid) and savedFavorites (star clicked on the
+       Saved tab, where the item may no longer be in currentResults after a new search). */
     function toggleFavorite(itemId) {
-      const item = currentResults.find(i => i.id === itemId);
+      let item = currentResults.find(i => i.id === itemId);
+      if (!item) item = savedFavorites.find(i => i.id === itemId);
       if(!item) return;
 
       const idx = savedFavorites.findIndex(f => f.platformUrl === item.platformUrl);
@@ -2991,6 +3123,7 @@
       localStorage.setItem("resellwiseall_favs", JSON.stringify(savedFavorites));
       updateSavedCount();
       renderMarketplaceGrid();
+      renderSavedItems();
     }
 
     function updateSavedCount() {
@@ -3007,19 +3140,20 @@
       grid.innerHTML = savedFavorites.map(item => `
         <div class="card">
           <div class="card-header">
-            <span class="platform-tag">Izvor: ${item.platform}</span>
+            <span class="platform-tag">Source: ${item.source || item.platform || 'eBay'}</span>
             <button class="fav-btn active" onclick="toggleFavorite('${item.id}')">★</button>
           </div>
           <div class="product-title">${item.title}</div>
           <div class="price-block">
             <div class="price-row">
-              <span class="price-label">Stvarna Cijena (u trenutku spremanja):</span>
-              <span class="price-val highlight">${item.price} €</span>
+              <span class="price-label">Live Price (at time saved):</span>
+              <span class="price-val highlight">${formatPrice(item.price, item.currency || 'EUR')}</span>
             </div>
           </div>
-          <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" class="btn-card btn-primary-card">Otvori na eBay-u</a>
+          <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" class="btn-card btn-primary-card">Open original listing ↗</a>
         </div>
       `).join('');
+
     }
 
     /* Canvas Charts Renderer */
