@@ -7,8 +7,7 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
     // Google Consent Mode v2 default: analytics/ad storage stays denied until the user makes a
-    // choice via the consent banner or Cookie Settings. This does not change the Measurement ID
-    // or any gtag('event', ...) calls elsewhere in this file — those are unchanged.
+    // choice via the consent banner or Cookie Settings.
     gtag('consent', 'default', {
       'ad_storage': 'denied',
       'ad_user_data': 'denied',
@@ -22,680 +21,132 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ResellWiseALL - Universal Marketplace & Profit Engine</title>
-  <meta name="description" content="ResellWiseALL - Cjelovita jednostranična aplikacija (resellwiseall.html) za analizu tržišnih cijena, izračun profita i vođenje inventara, uz ResellWise Knowledge Center s vodičima o preprodaji.">
+  <meta name="description" content="ResellWiseALL - Cjelovita jednostranična aplikacija (resellwiseall.html) za indikativne procjene vrijednosti, izračun profita i vođenje inventara, uz ResellWise Knowledge Center s vodičima o preprodaji.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://microweblab.github.io/microweblab/resellwiseall.html">
 
   <style>
     :root {
-      --bg-dark: #070b14;
-      --bg-card: rgba(15, 23, 42, 0.7);
-      --bg-card-hover: rgba(30, 41, 59, 0.85);
-      --border-glass: rgba(56, 189, 248, 0.2);
-      --border-glow: rgba(56, 189, 248, 0.5);
-      --primary-blue: #0284c7;
-      --accent-cyan: #38bdf8;
-      --neon-blue: #60a5fa;
+      --bg-dark: #070b14; --bg-card: rgba(15, 23, 42, 0.7); --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-glass: rgba(56, 189, 248, 0.2); --border-glow: rgba(56, 189, 248, 0.5);
+      --primary-blue: #0284c7; --accent-cyan: #38bdf8; --neon-blue: #60a5fa;
       --neon-glow: 0 0 20px rgba(56, 189, 248, 0.35);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --purple-accent: #8b5cf6;
-      --radius: 16px;
+      --text-main: #f8fafc; --text-muted: #94a3b8;
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --purple-accent: #8b5cf6; --radius: 16px;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     body {
       background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(circle at 10% 15%, rgba(14, 165, 233, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
+      background-image: radial-gradient(circle at 10% 15%, rgba(14, 165, 233, 0.15) 0%, transparent 40%), radial-gradient(circle at 90% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
+      color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
     }
-
-    /* Navigation Header */
     header {
-      background: rgba(7, 11, 20, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-glass);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: rgba(7, 11, 20, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-glass); position: sticky; top: 0; z-index: 100;
+      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-    }
-
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .brand-logo {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: #fff;
-      box-shadow: var(--neon-glow);
+      width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem; color: #fff; box-shadow: var(--neon-glow);
     }
-
-    .brand-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      background: linear-gradient(to right, #fff, var(--accent-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .badge-edition {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent-cyan);
-      border: 1px solid var(--border-glass);
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-    }
-
-    nav {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .nav-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      padding: 8px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.88rem;
-      transition: all 0.3s ease;
-    }
-
-    .nav-btn:hover {
-      color: var(--text-main);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .nav-btn.active {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--accent-cyan);
-      border-color: var(--border-glass);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-    }
-
-    /* Main Container */
-    main {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem;
-      width: 100%;
-      flex: 1;
-    }
-
-    /* Universal Search Card */
+    .brand-title { font-size: 1.4rem; font-weight: 700; background: linear-gradient(to right, #fff, var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .badge-edition { background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); border: 1px solid var(--border-glass); font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+    nav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 14px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.88rem; transition: all 0.3s ease; }
+    .nav-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+    .nav-btn.active { background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); border-color: var(--border-glass); box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+    main { max-width: 1400px; margin: 0 auto; padding: 2rem; width: 100%; flex: 1; }
     .search-section {
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      padding: 2rem;
-      margin-bottom: 2rem;
+      background: var(--bg-card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem;
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
-
-    .search-title {
-      font-size: 1.8rem;
-      margin-bottom: 0.4rem;
-      font-weight: 700;
-    }
-
-    .search-subtitle {
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .search-input-wrapper {
-      flex: 1;
-      min-width: 280px;
-    }
-
+    .search-title { font-size: 1.8rem; margin-bottom: 0.4rem; font-weight: 700; }
+    .search-subtitle { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .search-box { display: flex; gap: 12px; flex-wrap: wrap; }
+    .search-input-wrapper { flex: 1; min-width: 280px; }
     .search-input, .calc-input, .calc-select {
-      width: 100%;
-      background: rgba(7, 11, 20, 0.7);
-      border: 1px solid var(--border-glass);
-      border-radius: 12px;
-      padding: 14px 18px;
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      transition: all 0.3s ease;
+      width: 100%; background: rgba(7, 11, 20, 0.7); border: 1px solid var(--border-glass); border-radius: 12px;
+      padding: 14px 18px; color: #fff; font-size: 0.95rem; outline: none; transition: all 0.3s ease;
     }
-
-    .search-input:focus, .calc-input:focus, .calc-select:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: var(--neon-glow);
-    }
-
-    .filter-select {
-      background: rgba(7, 11, 20, 0.7);
-      border: 1px solid var(--border-glass);
-      border-radius: 12px;
-      padding: 0 16px;
-      color: var(--text-main);
-      font-size: 0.95rem;
-      outline: none;
-      cursor: pointer;
-      min-width: 160px;
-    }
-
+    .search-input:focus, .calc-input:focus, .calc-select:focus { border-color: var(--accent-cyan); box-shadow: var(--neon-glow); }
+    .filter-select { background: rgba(7, 11, 20, 0.7); border: 1px solid var(--border-glass); border-radius: 12px; padding: 0 16px; color: var(--text-main); font-size: 0.95rem; outline: none; cursor: pointer; min-width: 160px; }
     .btn-search {
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 0 24px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: var(--neon-glow);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan)); color: #fff; border: none; border-radius: 12px;
+      padding: 0 24px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+      box-shadow: var(--neon-glow); display: flex; align-items: center; gap: 8px;
     }
-
-    .btn-search:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.1);
-    }
-
+    .btn-search:hover { transform: translateY(-2px); filter: brightness(1.1); }
     .btn-ai-prompt {
-      background: linear-gradient(135deg, var(--purple-accent), #a855f7);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 0 20px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: linear-gradient(135deg, var(--purple-accent), #a855f7); color: #fff; border: none; border-radius: 12px;
+      padding: 0 20px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
     }
-
-    .btn-ai-prompt:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.1);
-    }
-
-    .platform-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 1.2rem;
-    }
-
-    .platform-pill {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .platform-pill.active {
-      background: rgba(56, 189, 248, 0.2);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-    }
-
-    .loading-status {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      color: var(--accent-cyan);
-      font-size: 0.9rem;
-      margin-top: 1rem;
-    }
-
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(56, 189, 248, 0.3);
-      border-top-color: var(--accent-cyan);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Views Nav */
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Metrics Overview Grid */
-    .metrics-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 2rem;
-    }
-
-    .metric-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      padding: 1.2rem;
-      backdrop-filter: blur(12px);
-    }
-
-    .metric-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .metric-value {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .metric-sub {
-      font-size: 0.8rem;
-      margin-top: 6px;
-      color: var(--success);
-    }
-
-    /* Product Cards Grid */
-    .marketplace-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-
+    .btn-ai-prompt:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .platform-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.2rem; }
+    .platform-pill { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; }
+    .platform-pill.active { background: rgba(56, 189, 248, 0.2); border-color: var(--accent-cyan); color: var(--accent-cyan); }
+    .loading-status { display: none; align-items: center; gap: 10px; color: var(--accent-cyan); font-size: 0.9rem; margin-top: 1rem; }
+    .spinner { width: 18px; height: 18px; border: 2px solid rgba(56, 189, 248, 0.3); border-top-color: var(--accent-cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+    .metric-card { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 1.2rem; backdrop-filter: blur(12px); }
+    .metric-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+    .metric-value { font-size: 1.6rem; font-weight: 800; color: var(--text-main); }
+    .metric-sub { font-size: 0.8rem; margin-top: 6px; color: var(--success); }
+    .marketplace-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      backdrop-filter: blur(12px);
+      background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 1.5rem;
+      transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; backdrop-filter: blur(12px);
     }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.3);
-      background: var(--bg-card-hover);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .platform-tag {
-      background: rgba(2, 132, 199, 0.2);
-      color: var(--accent-cyan);
-      border: 1px solid var(--border-glass);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 8px;
-      text-transform: uppercase;
-    }
-
-    .fav-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .fav-btn.active {
-      color: var(--warning);
-    }
-
-    .product-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-      line-height: 1.35;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .category-text {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 1.2rem;
-    }
-
-    .price-block {
-      background: rgba(7, 11, 20, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-bottom: 1rem;
-    }
-
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .price-label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .price-val {
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .price-val.highlight {
-      color: var(--accent-cyan);
-      font-size: 1.1rem;
-    }
-
-    .ai-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: var(--success);
-      margin-bottom: 1.2rem;
-      font-weight: 600;
-    }
-
-    .card-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .btn-card {
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      border: none;
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-main);
-      border: 1px solid var(--border-glass);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-primary-card {
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan));
-      color: #fff;
-    }
-
-    /* Calculator & Forms */
-    .form-grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    /* AI Analysis Section */
-    .ai-dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 900px) {
-      .ai-dashboard-grid { grid-template-columns: 1fr; }
-    }
-
-    .ai-score-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .gauge-circle {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      background: conic-gradient(var(--accent-cyan) 0% 88%, rgba(255,255,255,0.1) 88% 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 1.5rem 0;
-      box-shadow: var(--neon-glow);
-    }
-
-    .gauge-inner {
-      width: 120px;
-      height: 120px;
-      background: var(--bg-dark);
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .gauge-num {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-    }
-
-    .gauge-lbl {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .ai-details-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      padding: 2rem;
-    }
-
-    .ai-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.2rem;
-      margin-top: 1.5rem;
-    }
-
-    .ai-item {
-      background: rgba(7, 11, 20, 0.5);
-      border: 1px solid var(--border-glass);
-      border-radius: 12px;
-      padding: 1rem;
-    }
-
-    .ai-item-lbl {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .ai-item-val {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    /* Charts Canvas Grid */
-    .charts-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 900px) {
-      .charts-grid { grid-template-columns: 1fr; }
-    }
-
-    .chart-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-    }
-
-    .chart-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: 250px !important;
-    }
-
-    /* Inventory Glass Table */
-    .glass-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .glass-table th, .glass-table td {
-      padding: 14px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .glass-table th {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-    }
-
-    .btn-del {
-      background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .btn-del:hover {
-      background: rgba(239, 68, 68, 0.4);
-    }
-
-    /* Floating Toast Notifications */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--accent-cyan);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 12px;
-      box-shadow: var(--neon-glow);
-      display: none;
-      z-index: 1000;
-      backdrop-filter: blur(12px);
-    }
-
-    footer {
-      border-top: 1px solid var(--border-glass);
-      padding: 2rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: auto;
-    }
-
+    .card:hover { transform: translateY(-4px); border-color: var(--accent-cyan); box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.3); background: var(--bg-card-hover); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+    .platform-tag { background: rgba(2, 132, 199, 0.2); color: var(--accent-cyan); border: 1px solid var(--border-glass); font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; }
+    .fav-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+    .fav-btn.active { color: var(--warning); }
+    .product-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .category-text { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+    .price-block { background: rgba(7, 11, 20, 0.5); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 10px; padding: 10px 14px; margin-bottom: 1rem; }
+    .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .price-label { font-size: 0.8rem; color: var(--text-muted); }
+    .price-val { font-weight: 700; font-size: 0.95rem; }
+    .price-val.highlight { color: var(--accent-cyan); font-size: 1.1rem; }
+    .ai-badge { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--success); margin-bottom: 1.2rem; font-weight: 600; }
+    .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-card { padding: 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; text-align: center; cursor: pointer; text-decoration: none; transition: all 0.2s ease; border: none; }
+    .btn-secondary { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--border-glass); }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+    .btn-primary-card { background: linear-gradient(135deg, var(--primary-blue), var(--accent-cyan)); color: #fff; }
+    .form-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .ai-dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+    @media (max-width: 900px) { .ai-dashboard-grid { grid-template-columns: 1fr; } }
+    .ai-score-card { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .gauge-circle { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(var(--accent-cyan) 0% 88%, rgba(255,255,255,0.1) 88% 100%); display: flex; align-items: center; justify-content: center; margin: 1.5rem 0; box-shadow: var(--neon-glow); }
+    .gauge-inner { width: 120px; height: 120px; background: var(--bg-dark); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .gauge-num { font-size: 2.2rem; font-weight: 800; color: var(--accent-cyan); }
+    .gauge-lbl { font-size: 0.75rem; color: var(--text-muted); }
+    .ai-details-panel { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 2rem; }
+    .ai-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-top: 1.5rem; }
+    .ai-item { background: rgba(7, 11, 20, 0.5); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; }
+    .ai-item-lbl { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+    .ai-item-val { font-size: 1.2rem; font-weight: 700; }
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+    .chart-card { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 1.5rem; }
+    .chart-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+    canvas { width: 100% !important; height: 250px !important; }
+    .glass-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .glass-table th, .glass-table td { padding: 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .glass-table th { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+    .btn-del { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .btn-del:hover { background: rgba(239, 68, 68, 0.4); }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--bg-card); border: 1px solid var(--accent-cyan); color: #fff; padding: 12px 20px; border-radius: 12px; box-shadow: var(--neon-glow); display: none; z-index: 1000; backdrop-filter: blur(12px); }
+    footer { border-top: 1px solid var(--border-glass); padding: 2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: auto; }
     @media (max-width: 768px) {
       header { padding: 1rem; flex-direction: column; gap: 12px; }
       nav { width: 100%; justify-content: center; }
@@ -703,455 +154,74 @@
       .search-box { flex-direction: column; }
       .card-actions { grid-template-columns: 1fr; }
     }
-
-    /* ================= Legal pages (Privacy / Terms) — added, does not alter existing UI ================= */
-    .legal-links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .legal-link-btn {
-      background: transparent;
-      border: none;
-      color: var(--accent-cyan);
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 2px 4px;
-    }
-
-    .legal-link-btn:hover {
-      color: var(--success);
-    }
-
-    .legal-sep {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-    }
-
-    .legal-disclaimer {
-      margin-top: 12px;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.5;
-    }
-
-    .legal-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(7, 11, 20, 0.78);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 500;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .legal-modal-overlay.show {
-      display: flex;
-    }
-
-    .legal-modal-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      max-width: 680px;
-      width: 100%;
-      max-height: 82vh;
-      overflow-y: auto;
-      padding: 2rem;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
-    }
-
-    .legal-modal-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .legal-modal-head h2 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      background: linear-gradient(to right, #fff, var(--accent-cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .legal-close-btn {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-main);
-      border: 1px solid var(--border-glass);
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-
-    .legal-close-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .legal-modal-box h3 {
-      font-size: 0.95rem;
-      color: var(--accent-cyan);
-      margin-top: 1.2rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .legal-modal-box p, .legal-modal-box li {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      line-height: 1.65;
-      margin-bottom: 0.6rem;
-    }
-
-    .legal-modal-box ul {
-      padding-left: 1.2rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .legal-modal-box strong {
-      color: var(--text-main);
-    }
-
-    .legal-updated {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-    }
-
-    /* ================= ROI Calculator (added — modular, separate from the Profit Calculator; reuses existing styles) ================= */
-    .roi-section {
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border-glass);
-    }
-
-    .roi-error-box {
-      display: none;
-      margin-top: 1rem;
-      padding: 12px 16px;
-      border-radius: 10px;
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .roi-hint {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-
-    .calc-msg {
-      font-size: 0.82rem;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    /* ================= ResellWise Insights (added — inside the existing Analytics tab) ================= */
-    .insights-section {
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border-glass);
-    }
-
-    .insights-badge {
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 20px;
-      text-transform: uppercase;
-    }
-
-    /* ================= Advertising Consent Banner (added — inert unless AdSense is actually configured) ================= */
-    .consent-banner {
-      display: none;
-      position: fixed;
-      left: 20px;
-      right: 20px;
-      bottom: 20px;
-      max-width: 640px;
-      margin: 0 auto;
-      z-index: 900;
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
-      padding: 1.2rem 1.5rem;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .consent-banner.show {
-      display: flex;
-    }
-
-    .consent-text {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
-
-    .consent-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
-
-    .consent-actions .btn-card {
-      flex: 0 0 auto;
-      padding: 10px 18px;
-    }
-
-    /* ================= Google AdSense zone (added — skriveno dok se ne postavi stvarni Publisher ID) ================= */
-    .ad-slot {
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      overflow: hidden;
-      text-align: center;
-    }
-
-    .ad-slot-sidebar {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 160px;
-      min-height: 600px;
-      z-index: 10;
-    }
-
+    /* Legal pages */
+    .legal-links { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    .legal-link-btn { background: transparent; border: none; color: var(--accent-cyan); font-size: 0.85rem; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 2px 4px; }
+    .legal-link-btn:hover { color: var(--success); }
+    .legal-sep { color: var(--text-muted); font-size: 0.8rem; }
+    .legal-disclaimer { margin-top: 12px; font-size: 0.75rem; color: var(--text-muted); max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+    .legal-modal-overlay { position: fixed; inset: 0; background: rgba(7, 11, 20, 0.78); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .legal-modal-overlay.show { display: flex; }
+    .legal-modal-box { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); max-width: 680px; width: 100%; max-height: 82vh; overflow-y: auto; padding: 2rem; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6); }
+    .legal-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
+    .legal-modal-head h2 { font-size: 1.4rem; font-weight: 700; background: linear-gradient(to right, #fff, var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .legal-close-btn { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--border-glass); width: 34px; height: 34px; border-radius: 10px; cursor: pointer; font-size: 1rem; line-height: 1; flex-shrink: 0; }
+    .legal-close-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .legal-modal-box h3 { font-size: 0.95rem; color: var(--accent-cyan); margin-top: 1.2rem; margin-bottom: 0.4rem; }
+    .legal-modal-box p, .legal-modal-box li { color: var(--text-muted); font-size: 0.88rem; line-height: 1.65; margin-bottom: 0.6rem; }
+    .legal-modal-box ul { padding-left: 1.2rem; margin-bottom: 0.6rem; }
+    .legal-modal-box strong { color: var(--text-main); }
+    .legal-updated { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+    /* ROI Calculator */
+    .roi-section { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-glass); }
+    .roi-error-box { display: none; margin-top: 1rem; padding: 12px 16px; border-radius: 10px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; font-size: 0.85rem; font-weight: 600; }
+    .roi-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; }
+    .calc-msg { font-size: 0.82rem; font-weight: 600; line-height: 1.4; }
+    /* Insights */
+    .insights-section { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-glass); }
+    .insights-badge { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+    /* Consent banner */
+    .consent-banner { display: none; position: fixed; left: 20px; right: 20px; bottom: 20px; max-width: 640px; margin: 0 auto; z-index: 900; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6); padding: 1.2rem 1.5rem; flex-direction: column; gap: 12px; }
+    .consent-banner.show { display: flex; }
+    .consent-text { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+    .consent-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+    .consent-actions .btn-card { flex: 0 0 auto; padding: 10px 18px; }
+    /* AdSense zones (hidden until a real Publisher ID is set) */
+    .ad-slot { display: none; align-items: center; justify-content: center; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); overflow: hidden; text-align: center; }
+    .ad-slot-sidebar { position: fixed; top: 50%; transform: translateY(-50%); width: 160px; min-height: 600px; z-index: 10; }
     .ad-slot-sidebar-left { left: 16px; }
     .ad-slot-sidebar-right { right: 16px; }
-
-    /* Sidebar ad zones are shown only on very wide screens, outside the centered content column,
-       so they can never cover the navigation, calculators, ROI results or buttons. */
-    @media (max-width: 1800px) {
-      .ad-slot-sidebar { display: none !important; }
-    }
-
-    .ad-slot-bottom {
-      max-width: 1400px;
-      width: calc(100% - 4rem);
-      margin: 2rem auto 0 auto;
-      min-height: 90px;
-    }
-
-    @media (max-width: 768px) {
-      .ad-slot-bottom { width: calc(100% - 2rem); min-height: 100px; }
-    }
-
-    /* ================= ResellWise Knowledge Center (added) =================
-       Reuses the existing glassmorphism tokens (--bg-card, --border-glass, --accent-cyan,
-       --success, --warning, --purple-accent, --radius) so the visual identity is unchanged.
-       .kc-visible-intro is the always-visible summary (plain .search-section + .kc-body,
-       never inside .tab-content). .kc-card/.kc-toc/.kc-checklist/.kc-glossary/.kc-callout
-       style the deeper "Full ResellWise Knowledge Center" tab, built from collapsible
-       <details> elements to keep the page clean. */
-    .kc-toc {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 1.2rem;
-    }
-
-    .kc-toc a {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .kc-toc a:hover, .kc-toc a:focus {
-      background: rgba(56, 189, 248, 0.18);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-      outline: none;
-    }
-
-    .kc-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-glass);
-      border-radius: var(--radius);
-      padding: 1.4rem 1.6rem;
-      margin-bottom: 1.2rem;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      scroll-margin-top: 110px;
-    }
-
-    .kc-card > summary {
-      cursor: pointer;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
+    @media (max-width: 1800px) { .ad-slot-sidebar { display: none !important; } }
+    .ad-slot-bottom { max-width: 1400px; width: calc(100% - 4rem); margin: 2rem auto 0 auto; min-height: 90px; }
+    @media (max-width: 768px) { .ad-slot-bottom { width: calc(100% - 2rem); min-height: 100px; } }
+    /* Knowledge Center */
+    .kc-toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.2rem; }
+    .kc-toc a { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; color: var(--text-muted); text-decoration: none; transition: all 0.2s ease; }
+    .kc-toc a:hover, .kc-toc a:focus { background: rgba(56, 189, 248, 0.18); border-color: var(--accent-cyan); color: var(--accent-cyan); outline: none; }
+    .kc-card { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: var(--radius); padding: 1.4rem 1.6rem; margin-bottom: 1.2rem; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); scroll-margin-top: 110px; }
+    .kc-card > summary { cursor: pointer; font-size: 1.05rem; font-weight: 700; color: var(--text-main); list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
     .kc-card > summary::-webkit-details-marker { display: none; }
-
-    .kc-card > summary::after {
-      content: '+';
-      color: var(--accent-cyan);
-      font-size: 1.4rem;
-      font-weight: 800;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-
+    .kc-card > summary::after { content: '+'; color: var(--accent-cyan); font-size: 1.4rem; font-weight: 800; line-height: 1; flex-shrink: 0; }
     .kc-card[open] > summary::after { content: '−'; }
-
-    .kc-card > summary:focus-visible {
-      outline: 2px solid var(--accent-cyan);
-      outline-offset: 4px;
-      border-radius: 6px;
-    }
-
-    .kc-body {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .kc-body h4 {
-      font-size: 0.92rem;
-      color: var(--accent-cyan);
-      margin-top: 1.2rem;
-      margin-bottom: 0.4rem;
-      font-weight: 700;
-    }
-
+    .kc-card > summary:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 4px; border-radius: 6px; }
+    .kc-body { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    .kc-body h4 { font-size: 0.92rem; color: var(--accent-cyan); margin-top: 1.2rem; margin-bottom: 0.4rem; font-weight: 700; }
     .kc-body h4:first-child { margin-top: 0; }
-
-    .kc-body p, .kc-body li {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.7;
-      margin-bottom: 0.7rem;
-    }
-
-    .kc-body ul, .kc-body ol {
-      padding-left: 1.3rem;
-      margin-bottom: 0.7rem;
-    }
-
+    .kc-body p, .kc-body li { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 0.7rem; }
+    .kc-body ul, .kc-body ol { padding-left: 1.3rem; margin-bottom: 0.7rem; }
     .kc-body strong { color: var(--text-main); }
-
-    .kc-checklist {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .kc-checklist li {
-      position: relative;
-      padding-left: 1.6rem;
-      margin-bottom: 0.55rem;
-    }
-
-    .kc-checklist li::before {
-      content: '☐';
-      position: absolute;
-      left: 0;
-      top: 0;
-      color: var(--accent-cyan);
-      font-size: 0.95rem;
-    }
-
-    .kc-glossary {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .kc-term {
-      background: rgba(7, 11, 20, 0.5);
-      border: 1px solid var(--border-glass);
-      border-radius: 12px;
-      padding: 1rem;
-    }
-
-    .kc-term-name {
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-      margin-bottom: 4px;
-    }
-
-    .kc-term p {
-      margin-bottom: 0;
-      font-size: 0.85rem;
-    }
-
-    .kc-callout {
-      background: rgba(7, 11, 20, 0.6);
-      border: 1px solid var(--border-glass);
-      border-left: 3px solid var(--warning);
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin: 1rem 0;
-    }
-
+    .kc-checklist { list-style: none; padding-left: 0; }
+    .kc-checklist li { position: relative; padding-left: 1.6rem; margin-bottom: 0.55rem; }
+    .kc-checklist li::before { content: '☐'; position: absolute; left: 0; top: 0; color: var(--accent-cyan); font-size: 0.95rem; }
+    .kc-glossary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .kc-term { background: rgba(7, 11, 20, 0.5); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; }
+    .kc-term-name { font-size: 0.88rem; font-weight: 800; color: var(--accent-cyan); margin-bottom: 4px; }
+    .kc-term p { margin-bottom: 0; font-size: 0.85rem; }
+    .kc-callout { background: rgba(7, 11, 20, 0.6); border: 1px solid var(--border-glass); border-left: 3px solid var(--warning); border-radius: 10px; padding: 12px 16px; margin: 1rem 0; }
     .kc-callout p { margin-bottom: 0; font-size: 0.85rem; }
-
-    .kc-example-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0.8rem 0;
-      font-size: 0.85rem;
-    }
-
-    .kc-example-table th, .kc-example-table td {
-      padding: 8px 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      color: var(--text-muted);
-    }
-
-    .kc-example-table th {
-      color: var(--text-main);
-      font-weight: 700;
-    }
-
+    .kc-example-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.85rem; }
+    .kc-example-table th, .kc-example-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); color: var(--text-muted); }
+    .kc-example-table th { color: var(--text-main); font-weight: 700; }
     .kc-example-table td.kc-num { text-align: right; font-variant-numeric: tabular-nums; }
     .kc-example-table tr.kc-total td { color: var(--text-main); font-weight: 700; }
     .kc-example-table tr.kc-total td.kc-profit-pos { color: var(--success); }
@@ -1178,34 +248,31 @@
     </nav>
   </header>
 
-  <!-- Google AdSense — designated sidebar zones (added). Hidden until a real Publisher ID is set,
-       and never overlap the navigation, cards, calculators or ROI/Insights results. -->
+  <!-- Google AdSense — designated sidebar zones. Hidden until a real Publisher ID is set,
+       and never overlap the navigation, cards, calculators or results. -->
   <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-left" data-ad-slot-key="sidebarLeft" aria-hidden="true"></div>
   <div class="ad-slot ad-slot-sidebar ad-slot-sidebar-right" data-ad-slot-key="sidebarRight" aria-hidden="true"></div>
 
   <main>
-    <!-- Universal Search Engine -->
+    <!-- Search: indicative estimate + search links for 14 platforms -->
     <section class="search-section">
       <div class="search-title">ResellWiseALL Marketplace Pretraživač</div>
-      <div class="search-subtitle">ResellWiseALL: live eBay price search, plus 13 additional platforms available as outbound search links, in a single file (resellwiseall.html).</div>
+      <div class="search-subtitle">ResellWiseALL: lokalna indikativna procjena vrijednosti proizvoda plus poveznice za stvarnu pretragu na 14 platformi, u jednoj datoteci (resellwiseall.html).</div>
       <div class="search-box">
         <div class="search-input-wrapper">
           <input type="text" id="searchQuery" class="search-input" placeholder="Unesite proizvod (npr. iPhone 13 Pro, Nike Air Jordan, PS5...)" value="iPhone 13 Pro">
         </div>
-        <select id="categoryFilter" class="filter-select">
+        <select id="categoryFilter" class="filter-select" onchange="runSearch()">
           <option value="all">Sve Kategorije</option>
           <option value="electronics">Elektronika</option>
           <option value="fashion">Moda i Odjeća</option>
           <option value="collectibles">Kolekcionarstvo</option>
           <option value="auto">Automobili i Dijelovi</option>
         </select>
-        <!-- Platform / source filter (added). Only "All Sources" and "eBay" can ever trigger a
-             real fetch — every other option has no live integration and is handled entirely by
-             renderMarketplaceGrid()'s "Live data unavailable" state; selecting one never causes
-             a network request to be attempted for it. -->
+        <!-- Platform filter: shows all 14 search links or just the selected one. -->
         <select id="sourceFilter" class="filter-select" onchange="runSearch()">
           <option value="all">All Sources</option>
-          <option value="ebay">eBay (Live)</option>
+          <option value="ebay">eBay</option>
           <option value="vinted">Vinted</option>
           <option value="amazon">Amazon</option>
           <option value="depop">Depop</option>
@@ -1220,16 +287,15 @@
           <option value="mobilede">Mobile.de</option>
           <option value="autoscout24">AutoScout24</option>
         </select>
-        <!-- Sort order (added). Applied only to real, successfully fetched results — see
-             sortItems() in the script below. -->
+        <!-- Order of the platform search links. -->
         <select id="sortOrder" class="filter-select" onchange="runSearch()">
-          <option value="newest">Newest</option>
-          <option value="price_asc">Price: Low to High</option>
-          <option value="price_desc">Price: High to Low</option>
+          <option value="newest">Default platform order</option>
+          <option value="price_asc">Platforms A–Z</option>
+          <option value="price_desc">Platforms Z–A</option>
         </select>
         <button class="btn-search" id="searchBtn" onclick="runSearch()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          Pretraži Uživo
+          Izračunaj Procjenu
         </button>
         <button class="btn-ai-prompt" onclick="searchWithAI()">
           ✨ ChatGPT Analiza
@@ -1238,41 +304,39 @@
 
       <div class="loading-status" id="loadingStatus">
         <div class="spinner"></div>
-        <span>ResellWiseALL dohvaća stvarne cijene i ponude s mreže...</span>
+        <span>ResellWiseALL računa indikativnu procjenu...</span>
       </div>
 
       <div class="platform-pills" id="platformPills"></div>
 
       <p class="legal-disclaimer" style="margin-left:0; margin-right:0; max-width:none;">
-        Only results explicitly labeled <strong style="color: var(--text-main);">Source: eBay</strong> are real, live-fetched listings. Every other platform pill above is an outbound search link only — ResellWiseALL does not have live API access to it and never shows a price for it. New to reselling? Read the practical introduction in the
+        The estimate shown is an <strong style="color: var(--text-main);">indicative market estimate, not an actual listing price</strong>, taken from a local reference table. ResellWiseALL has no backend and does not fetch prices or listings from any marketplace; every platform button is a plain search link, so always check the real price, condition and availability on the original platform. New to reselling? Read the practical introduction in the
         <button type="button" class="legal-link-btn" onclick="switchTab('knowledge')">ResellWise Knowledge Center</button>
         below — how profit is really calculated, how to evaluate a product before buying, and how to interpret marketplace prices.
       </p>
     </section>
 
-    <!-- Stat Metrics — all four cards reflect ONLY real, successfully-fetched eBay data.
-         If no real data was fetched, every value shows "--" instead of any generated,
-         estimated, hashed or fallback figure. -->
+    <!-- Stat Metrics: derived only from the local indicative estimate; "--" when no reference data exists. -->
     <div class="metrics-row">
       <div class="metric-card">
-        <div class="metric-label">Live Listings</div>
+        <div class="metric-label">Platform Search Links</div>
         <div class="metric-value" id="statTotalItems">--</div>
-        <div class="metric-sub" id="statTotalSub">Real data currently unavailable.</div>
+        <div class="metric-sub" id="statTotalSub">Poveznice za pretragu</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Average Live Price</div>
+        <div class="metric-label">Indicative Midpoint</div>
         <div class="metric-value" id="statAvgPrice">--</div>
-        <div class="metric-sub">Source: eBay, when available</div>
+        <div class="metric-sub">Illustrative value, not a market price</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Lowest Live Price</div>
+        <div class="metric-label">Indicative Low</div>
         <div class="metric-value" style="color: var(--success);" id="statProfit">--</div>
-        <div class="metric-sub" id="statRoiSub">Real data currently unavailable.</div>
+        <div class="metric-sub" id="statRoiSub">Indikativna procjena nije dostupna.</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Highest Live Price</div>
+        <div class="metric-label">Indicative High</div>
         <div class="metric-value" style="color: var(--accent-cyan);" id="statBestPlatform">--</div>
-        <div class="metric-sub" id="statBestSub">Real data currently unavailable.</div>
+        <div class="metric-sub" id="statBestSub">Indikativna procjena nije dostupna.</div>
       </div>
     </div>
 
@@ -1281,10 +345,7 @@
       <div class="marketplace-grid" id="cardsGrid"></div>
     </div>
 
-    <!-- ResellWise Knowledge Center — visible summary (added). Always visible, NOT inside
-         .tab-content, so it is never affected by the tab display:none rule and needs no search
-         or click to be readable. This is a condensed introduction in its own original wording;
-         the full, detailed Knowledge Center tab further down is not duplicated here. -->
+    <!-- ResellWise Knowledge Center — visible summary. Always visible, NOT inside .tab-content. -->
     <section class="search-section" id="kc-visible-summary">
       <h2 class="search-title" style="font-size: 1.5rem;">ResellWise Knowledge Center — Getting Started With Reselling</h2>
       <p class="search-subtitle" style="margin-bottom: 1.2rem;">A practical introduction to product reselling and flipping. No search or calculator needed to read it.</p>
@@ -1306,7 +367,7 @@
         <p>Before committing money to any item, it's worth checking a short set of factors rather than going on instinct. <strong>Demand</strong> — is this something people are actively searching for and buying, or a niche item that might sit for months? <strong>Competition</strong> — how many other sellers are already listing the same or a similar item, and at what price? <strong>Condition</strong> — does the item work fully, are there cosmetic issues, and is the condition accurately described by the source you're buying from? <strong>Brand, model and version</strong> — small differences (a specific model year, storage size, colorway or regional variant) can significantly change both demand and price, so confirm you have the exact item, not just a similar one. <strong>Included accessories</strong> — original box, cables, manuals or authentication documents often affect resale value more than buyers expect. <strong>Seasonality</strong> — some categories (holiday items, seasonal fashion, certain electronics around a new model launch) sell far better at specific times of year. <strong>Expected selling time</strong> — a faster-moving item ties up your money for less time, even at a smaller margin. <strong>Risk of returns or defects</strong> — items with a history of being fragile, easily misrepresented, or frequently DOA (dead on arrival) carry a higher chance of eating into your margin after the sale.</p>
 
         <h4>Reading marketplace prices sensibly</h4>
-        <p>When you compare prices across sources, remember that an asking price is not the same as a completed sale — plenty of listings sit unsold at optimistic prices. Availability, condition, included accessories, location and shipping cost can all differ between two listings that look similar at a glance. Treat any price shown by ResellWiseALL, or by any marketplace, as a reference point to investigate further, not as a guaranteed offer — always confirm the real price, condition and availability on the original platform before you act.</p>
+        <p>When you compare prices across sources, remember that an asking price is not the same as a completed sale — plenty of listings sit unsold at optimistic prices. Availability, condition, included accessories, location and shipping cost can all differ between two listings that look similar at a glance. Treat any estimate shown by ResellWiseALL, and any price on a marketplace, as a reference point to investigate further, not as a guaranteed offer — always confirm the real price, condition and availability on the original platform before you act.</p>
       </div>
 
       <div style="display:flex; justify-content:center; margin-top: 1.4rem;">
@@ -1411,7 +472,7 @@
           <tbody id="invBody"></tbody>
         </table>
 
-        <!-- ROI Calculator (added — separate from the Profit Calculator, uses the same existing card/form styles) -->
+        <!-- ROI Calculator (separate from the Profit Calculator) -->
         <div class="roi-section">
           <h2 style="margin-bottom: 0.5rem;">ROI Calculator</h2>
           <p class="search-subtitle">A separate return-on-investment calculation for an item, independent from the Profit Calculator above. Everything is computed locally in your browser.</p>
@@ -1478,50 +539,40 @@
     <div id="tab-ai" class="tab-content">
       <div class="ai-dashboard-grid">
         <div class="ai-score-card">
-          <h3>Pregled Stvarnih Cijena (eBay)</h3>
-          <div class="gauge-circle" id="aiGauge">
-            <div class="gauge-inner">
-              <span class="gauge-num" id="aiScoreVal">--</span>
-              <span class="gauge-lbl">stvarnih oglasa</span>
-            </div>
+          <h3>Pregled Indikativne Procjene</h3>
+          <div class="price-block" style="width:100%; margin:1.5rem 0;">
+            <div class="gauge-lbl">Ilustrativni raspon</div>
+            <div class="gauge-num" id="aiRangeVal" style="font-size:1.8rem;">--</div>
           </div>
-          <p style="font-weight: 700; color: var(--success);" id="aiVerdict">Analiza U Tijeku...</p>
+          <p style="font-weight: 700; color: var(--success);" id="aiVerdict">Indikativna procjena</p>
         </div>
 
         <div class="ai-details-panel">
           <h3>ResellWiseALL AI Izvještaj Cijena</h3>
           <p style="color: var(--text-muted); margin-top: 6px;" id="aiSummaryText">
-            Prikazuje minimalnu, prosječnu i maksimalnu cijenu isključivo iz stvarno dohvaćenih eBay oglasa za trenutnu pretragu. Ako dohvaćanje ne uspije, nikakva procijenjena ili izmišljena cijena se ne prikazuje.
+            Prikazuje najnižu, srednju i najvišu ilustrativnu vrijednost iz interne tablice za trenutnu pretragu (bez provjerenog izvora i datuma). To nije cijena nijedne platforme ni konkretnog oglasa.
           </p>
 
           <div class="ai-list">
             <div class="ai-item">
-              <div class="ai-item-lbl">Stvarna Min. Cijena (eBay)</div>
+              <div class="ai-item-lbl">Ilustrativni Minimum</div>
               <div class="ai-item-val" id="aiMinPrice">-- €</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Prosječna Cijena (eBay)</div>
+              <div class="ai-item-lbl">Ilustrativna Sredina</div>
               <div class="ai-item-val" id="aiAvgPrice">-- €</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Stvarna Maks. Cijena (eBay)</div>
+              <div class="ai-item-lbl">Ilustrativni Maksimum</div>
               <div class="ai-item-val" id="aiMaxPrice">-- €</div>
             </div>
             <div class="ai-item">
-              <div class="ai-item-lbl">Razina Potražnje</div>
-              <div class="ai-item-val" id="aiDemand">N/A</div>
-            </div>
-            <div class="ai-item">
-              <div class="ai-item-lbl">Procjena Brzine Prodaje</div>
-              <div class="ai-item-val" id="aiSpeed">N/A</div>
-            </div>
-            <div class="ai-item">
-              <div class="ai-item-lbl">ROI</div>
-              <div class="ai-item-val" style="color: var(--accent-cyan);" id="aiRoi">Unesite u ROI Kalkulator</div>
+              <div class="ai-item-lbl">Širina Raspona</div>
+              <div class="ai-item-val" id="aiSpread">-- €</div>
             </div>
           </div>
           <p class="legal-disclaimer" style="margin-left:0; margin-right:0; max-width:none;">
-            ResellWiseALL ne procjenjuje potražnju, brzinu prodaje niti ROI automatski — za ROI unesite stvarnu nabavnu i prodajnu cijenu u <button type="button" class="legal-link-btn" onclick="switchTab('inventory')">ROI Kalkulator</button>.
+            Vrijednosti su indikativne procjene, ne stvarne cijene. ResellWiseALL ne procjenjuje potražnju, brzinu prodaje niti ROI automatski — za ROI unesite stvarnu nabavnu i prodajnu cijenu u <button type="button" class="legal-link-btn" onclick="switchTab('inventory')">ROI Kalkulator</button>.
           </p>
         </div>
       </div>
@@ -1531,22 +582,22 @@
     <div id="tab-analytics" class="tab-content">
       <div class="charts-grid">
         <div class="chart-card">
-          <div class="chart-title">Cijene Stvarno Dohvaćenih eBay Oglasa (€)</div>
+          <div class="chart-title">Ilustrativni Raspon Procjene (€)</div>
           <canvas id="chartPlatforms"></canvas>
         </div>
         <div class="chart-card">
-          <div class="chart-title">Raspodjela Stvarnih Cijena (eBay, rastuće)</div>
+          <div class="chart-title">Inventar: Očekivani Profit po Artiklu (€)</div>
           <canvas id="chartTrend"></canvas>
         </div>
       </div>
 
-      <!-- ResellWise Insights (added — separate section, does not touch the charts above) -->
+      <!-- ResellWise Insights (separate section, does not touch the charts above) -->
       <div class="insights-section">
         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
           <h2 style="margin:0;">ResellWise Insights</h2>
-          <span class="insights-badge">Inventory: Your Own Data · eBay Prices: Real Only</span>
+          <span class="insights-badge">Inventory: Your Own Data · Prices: Indicative Estimate</span>
         </div>
-        <p class="search-subtitle" style="margin-top:6px;">The Inventory figures below come from what you entered yourself. The eBay price figures come only from real, successfully fetched listings for your current search — if eBay data wasn't available, those fields show "--" instead of an invented price.</p>
+        <p class="search-subtitle" style="margin-top:6px;">The Inventory figures below come from what you entered yourself. The price figures come from the local indicative estimate for your current search — not from any marketplace listing — and show "--" when no reference data exists.</p>
 
         <div class="ai-list" id="insightsGrid">
           <div class="ai-item">
@@ -1566,11 +617,11 @@
             <div class="ai-item-val" style="color: var(--success);" id="insTotalProfit">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">Avg. eBay Price (Current Search, Real)</div>
+            <div class="ai-item-lbl">Indicative Midpoint (Current Search)</div>
             <div class="ai-item-val" style="color: var(--accent-cyan);" id="insRoiTrend">--</div>
           </div>
           <div class="ai-item">
-            <div class="ai-item-lbl">Lowest eBay Price (Current Search, Real)</div>
+            <div class="ai-item-lbl">Indicative Low (Current Search)</div>
             <div class="ai-item-val" style="color: var(--purple-accent);" id="insBestPlatform">--</div>
           </div>
         </div>
@@ -1583,7 +634,7 @@
       <div class="marketplace-grid" id="savedGrid"></div>
     </div>
 
-    <!-- TAB 7: Full ResellWise Knowledge Center (added) — original educational content -->
+    <!-- TAB 7: Full ResellWise Knowledge Center — original educational content -->
     <div id="tab-knowledge" class="tab-content">
       <section class="search-section" style="margin-bottom: 1.5rem;">
         <h2 class="search-title">Full ResellWise Knowledge Center</h2>
@@ -1702,8 +753,8 @@
             <li><strong>Advertised prices are not completed-sale prices.</strong> A listing's asking price only tells you what a seller hopes to get, not what buyers are actually paying. Some listings sit unsold for a long time at unrealistic prices.</li>
             <li><strong>Availability changes constantly.</strong> An item shown as available can sell out, be relisted at a different price, or be removed entirely between when you see it and when you act.</li>
             <li><strong>Listings differ in ways that affect price.</strong> Condition, included accessories, seller location, and shipping cost can all vary between two listings for what looks like "the same" item, and each of those differences legitimately changes what it's worth.</li>
-            <li><strong>Always verify on the original platform.</strong> Treat any price or estimate shown inside ResellWiseALL as a starting point for research, and confirm the real, current price, condition and availability directly on the source marketplace before buying or setting your own price.</li>
-            <li><strong>ResellWiseALL's results are not guaranteed offers.</strong> Nothing shown in the app is a confirmed transaction, a reservation, or a binding price — it is informational only.</li>
+            <li><strong>Always verify on the original platform.</strong> Treat any estimate shown inside ResellWiseALL as a starting point for research, and confirm the real, current price, condition and availability directly on the source marketplace before buying or setting your own price.</li>
+            <li><strong>ResellWiseALL's estimates are not offers.</strong> Nothing shown in the app is a confirmed transaction, a reservation, or a binding price — it is informational only.</li>
           </ul>
         </div>
       </details>
@@ -1794,13 +845,13 @@
           <p>This section describes the actual current workflow of the application, step by step:</p>
           <ol>
             <li><strong>Enter a product</strong> in the search box on the Marketplace Pretraga tab, optionally narrowing by category.</li>
-            <li><strong>The app searches available sources.</strong> The app attempts to fetch live listing data for eBay through ResellWiseALL's own backend (a Cloudflare Worker), which calls the official eBay Browse API using server-side credentials. If the fetch succeeds, the app displays only successfully fetched eBay listings with their actual title, price, currency, condition (when provided) and link. If the fetch fails, the backend isn't configured, or no usable listing can be parsed, the result remains empty and the app displays a clear "Stvarni podaci trenutno nisu dostupni" message. No fallback, hash calculation or generated market price is used.</li>
-            <li><strong>Compare the displayed results.</strong> Real eBay listings are shown as cards with their actual price, each clearly labeled "Izvor: eBay". The other 13 listed platforms appear only as plain outbound search links — they are not queried for live data and are never shown with a price.</li>
+            <li><strong>The app calculates a local estimate.</strong> ResellWiseALL has no backend and makes no price requests. It looks the product up in an internal table of illustrative value ranges that have no verified source or date. If the product is known, you see an illustrative range; if not, you see "--" and the message that no estimate is available.</li>
+            <li><strong>Open real searches.</strong> Each of the 14 platforms gets a card with a link that opens a real search for your product on that platform. These cards show no price, because ResellWiseALL does not fetch platform prices or listings.</li>
             <li><strong>Use the Profit Calculator</strong> (Kalkulator Profita tab) to work out net profit, margin and ROI from your own purchase price, selling price, shipping, platform fee and other costs.</li>
             <li><strong>Use the ROI Calculator</strong> (inside the Inventar tab) for a separate return-on-investment and payback-period estimate, independent of the Profit Calculator.</li>
-            <li><strong>Save interesting listings</strong> with the star icon on any result card — they appear in the Spremljeno (Saved) tab, stored locally in your browser.</li>
+            <li><strong>Save interesting searches</strong> with the star icon on any platform card — they appear in the Spremljeno (Saved) tab, stored locally in your browser.</li>
             <li><strong>Track purchased items in Inventory</strong> — record what you paid and your target price; ResellWiseALL computes profit and ROI per item automatically.</li>
-            <li><strong>Review Analytics/Insights</strong> for a chart-based view of the real eBay prices from your current search and a summary of your own Inventory entries (average purchase/selling price, average margin, total potential profit).</li>
+            <li><strong>Review Analytics/Insights</strong> for a chart-based view of the indicative estimate for your current search and a summary of your own Inventory entries (average purchase/selling price, average margin, total potential profit).</li>
             <li><strong>Verify the final price and availability on the original marketplace</strong> before buying or selling — nothing shown in ResellWiseALL is a confirmed, binding offer.</li>
           </ol>
         </div>
@@ -1810,18 +861,15 @@
       <details class="kc-card" id="kc-methodology">
         <summary>10. Price / Data Methodology</summary>
         <div class="kc-body">
-          <p>Transparency about where the numbers on screen come from:</p>
-          <h4>Live data via ResellWiseALL's own backend</h4>
-          <p>When you search, ResellWiseALL sends your search term to its own backend — a small Cloudflare Worker — which calls the official eBay Browse API using server-side OAuth credentials and returns the results to your browser. Your eBay API credentials (client ID and client secret) live only on that backend; they are never present in this page's HTML or JavaScript. Each real listing card shown on the Marketplace Pretraga tab — its title, price, currency, condition (when eBay provides one) and link — comes directly from that live eBay response; nothing about it is generated, estimated or guessed.</p>
-          <h4>When live data isn't available</h4>
-          <p>Live requests like this are not always available — the backend may not be deployed/configured yet, eBay's API can be temporarily unreachable or rate-limited, or a given search can simply return zero matching listings. When that happens, ResellWiseALL does <strong>not</strong> substitute a calculated, estimated or otherwise invented price. Instead, the app shows a clear "Stvarni podaci trenutno nisu dostupni" ("Real data is currently unavailable") message, and every metric that depends on real prices (the stat cards, the AI Analysis price panel, the eBay figures in Insights) shows "--" rather than a number.</p>
-          <div class="kc-callout">
-            <p><strong>There is no fallback price.</strong> ResellWiseALL previously used an internal calculation to fill the screen when live data wasn't available; that behavior has been permanently removed. Every price you see for a search either came from a real, successfully fetched eBay listing, or isn't shown at all.</p>
-          </div>
-          <h4>The other 13 platforms</h4>
-          <p>The remaining marketplaces listed in the app (Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de, AutoScout24) are not queried for live data — ResellWiseALL does not have authorized API access to them. They appear only as plain outbound search links so you can check them yourself; they are never shown with a price or presented as fetched marketplace results. If you select one of them in the source filter, the app tells you plainly that live data for that platform isn't available rather than attempting any workaround.</p>
-          <h4>Why this matters for you</h4>
-          <p>You can treat any price shown in the app as a real, current eBay listing price at the time you searched — subject, of course, to the general caveats in the Marketplace Price Comparison section above (asking price vs. completed sale, condition differences, and so on). Always confirm the current price, availability and condition on eBay itself before buying or selling.</p>
+          <h4>Indicative estimates from a local reference table</h4>
+          <p>ResellWiseALL contains a small internal table of <strong>illustrative value ranges</strong> for common products. These values have <strong>no verified source and no date</strong>; they are not confirmed market prices. When your search matches an entry (and your category filter, if set), the range is shown as an <strong>indicative estimate</strong>. The calculation is stable: the same input always gives the same range.</p>
+          <div class="kc-callout"><p><strong>This is not an actual listing price or a confirmed market price.</strong> The range is not the price of any platform or any specific listing, and it is not a sold price or an offer. Real prices depend on condition, accessories, location, timing and demand, and can be well outside the range.</p></div>
+          <h4>When there is no reference data</h4>
+          <p>If a product is not in the table, ResellWiseALL shows "--" and "Indikativna procjena nije dostupna." It never invents a number.</p>
+          <h4>Search links for 14 platforms</h4>
+          <p>eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de and AutoScout24 each get a plain outbound link that opens a real search for your product. ResellWiseALL does not fetch anything from them.</p>
+          <h4>How to use it</h4>
+          <p>Treat the range as a starting point, check real listings and completed sales through the platform links, and enter your real costs in the Profit and ROI calculators.</p>
         </div>
       </details>
 
@@ -1865,73 +913,31 @@
         <div class="kc-body">
           <p>Short, practical definitions of terms used throughout ResellWiseALL and this guide.</p>
           <div class="kc-glossary">
-            <div class="kc-term">
-              <div class="kc-term-name">Gross Profit</div>
-              <p>Selling price minus purchase price only — before any other costs are subtracted.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Net Profit</div>
-              <p>What's left after every real cost — shipping, fees, packaging, returns allowance and other costs — is subtracted from the selling price.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Margin</div>
-              <p>Net profit expressed as a percentage of the selling price: how much of each sale you actually keep.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">ROI</div>
-              <p>Return on investment — net profit as a percentage of the total amount you invested (purchase price plus input costs).</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">COGS</div>
-              <p>Cost of Goods Sold — the direct cost of acquiring the specific item you sold, typically the purchase price plus any direct input costs.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Marketplace Fee</div>
-              <p>The commission a platform charges, usually a percentage of the sale price, for hosting and facilitating the sale.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Conversion Rate</div>
-              <p>The share of interested viewers (or listings) that actually result in a completed sale.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Sell-Through Rate</div>
-              <p>The proportion of listed items that sell within a given period — a measure of how liquid your inventory is.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Inventory Turnover</div>
-              <p>How many times your inventory is sold and replaced over a period — higher turnover generally means capital is tied up for less time.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Average Selling Price</div>
-              <p>The mean price actually achieved across a set of sold items, as opposed to their asking prices.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Target Price</div>
-              <p>The price you plan or hope to sell an item for, recorded before the actual sale for later comparison.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Break-Even Price</div>
-              <p>The selling price at which net profit is exactly zero — below this, the item is sold at a loss once all costs are included.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Return Rate</div>
-              <p>The share of sold items that are returned or refunded, which directly reduces realized profit versus expected profit.</p>
-            </div>
-            <div class="kc-term">
-              <div class="kc-term-name">Stock Age</div>
-              <p>How long an item has been held in inventory without selling — a useful signal for spotting slow-moving stock early.</p>
-            </div>
+            <div class="kc-term"><div class="kc-term-name">Gross Profit</div><p>Selling price minus purchase price only — before any other costs are subtracted.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Net Profit</div><p>What's left after every real cost — shipping, fees, packaging, returns allowance and other costs — is subtracted from the selling price.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Margin</div><p>Net profit expressed as a percentage of the selling price: how much of each sale you actually keep.</p></div>
+            <div class="kc-term"><div class="kc-term-name">ROI</div><p>Return on investment — net profit as a percentage of the total amount you invested (purchase price plus input costs).</p></div>
+            <div class="kc-term"><div class="kc-term-name">COGS</div><p>Cost of Goods Sold — the direct cost of acquiring the specific item you sold, typically the purchase price plus any direct input costs.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Marketplace Fee</div><p>The commission a platform charges, usually a percentage of the sale price, for hosting and facilitating the sale.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Conversion Rate</div><p>The share of interested viewers (or listings) that actually result in a completed sale.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Sell-Through Rate</div><p>The proportion of listed items that sell within a given period — a measure of how liquid your inventory is.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Inventory Turnover</div><p>How many times your inventory is sold and replaced over a period — higher turnover generally means capital is tied up for less time.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Average Selling Price</div><p>The mean price actually achieved across a set of sold items, as opposed to their asking prices.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Target Price</div><p>The price you plan or hope to sell an item for, recorded before the actual sale for later comparison.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Break-Even Price</div><p>The selling price at which net profit is exactly zero — below this, the item is sold at a loss once all costs are included.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Return Rate</div><p>The share of sold items that are returned or refunded, which directly reduces realized profit versus expected profit.</p></div>
+            <div class="kc-term"><div class="kc-term-name">Stock Age</div><p>How long an item has been held in inventory without selling — a useful signal for spotting slow-moving stock early.</p></div>
           </div>
         </div>
       </details>
     </div>
   </main>
 
-  <!-- Google AdSense — designated zone below the main content (added). Empty/hidden until activated. -->
+  <!-- Google AdSense — designated zone below the main content. Empty/hidden until activated. -->
   <div class="ad-slot ad-slot-bottom" data-ad-slot-key="bottomBanner" aria-hidden="true"></div>
 
   <footer>
-    ResellWiseALL &copy; 2026 — Pokretač sa Stvarnim Tržišnim Podacima u jednoj datoteci (<code>resellwiseall.html</code>).
+    ResellWiseALL &copy; 2026 — Indikativne procjene i pretraga platformi u jednoj datoteci (<code>resellwiseall.html</code>).
     <div class="legal-links">
       <button class="legal-link-btn" onclick="switchTab('knowledge')">Knowledge Center</button>
       <span class="legal-sep">·</span>
@@ -1947,7 +953,6 @@
       <span class="legal-sep">·</span>
       <button class="legal-link-btn" onclick="openCookieSettings()">Cookie Settings</button>
     </div>
-    <!-- Contact (added — same visual pattern as EVChargeWiseALL's footer contact line) -->
     <div class="legal-links" style="margin-top:6px;">
       <a class="legal-link-btn" href="mailto:microweblabinfo@gmail.com">Contact: microweblabinfo@gmail.com</a>
     </div>
@@ -1956,10 +961,7 @@
 
   <div class="toast" id="toast">Obavijest</div>
 
-  <!-- Cookie / Consent Banner (extended). Reuses the same existing visual style. Now covers both
-       Google Analytics and (future) Google AdSense — shown once, before any non-essential cookie
-       is set, until the user makes a choice. Choices can always be changed later via the
-       "Cookie Settings" footer link. -->
+  <!-- Cookie / Consent Banner: covers Google Analytics and (future) Google AdSense -->
   <div class="consent-banner" id="consentBanner" role="dialog" aria-label="Cookie and advertising consent">
     <p class="consent-text">
       ResellWiseALL uses Google Analytics to understand how the app is used, and is prepared for future
@@ -1975,7 +977,7 @@
     </div>
   </div>
 
-  <!-- Privacy Policy Modal (rewritten in English — expanded per current app behavior; does not alter main page layout or functionality) -->
+  <!-- Privacy Policy Modal -->
   <div class="legal-modal-overlay" id="privacyModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
@@ -1988,7 +990,7 @@
       <p>ResellWiseALL is operated by MicroWebLab. For any privacy question or request, contact: <a href="mailto:microweblabinfo@gmail.com" style="color: var(--accent-cyan); text-decoration: underline;">microweblabinfo@gmail.com</a>. Full operator details (legal entity name, registered address and registration number, where applicable) are provided in the <strong>Legal Notice</strong>, accessible from the footer.</p>
 
       <h3>No Account Required</h3>
-      <p>ResellWiseALL does not require registration or login. All core features — marketplace search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis and Analytics/Insights — work without creating an account.</p>
+      <p>ResellWiseALL does not require registration or login. All core features — product search and estimate, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis and Analytics/Insights — work without creating an account.</p>
 
       <h3>What We Store Locally</h3>
       <p>ResellWiseALL stores data locally in your browser using <strong>LocalStorage</strong> — specifically, the favorite (saved) items and Inventory entries you explicitly add, and your cookie/consent preferences. This data stays on your device and is not transmitted to our servers or shared with third parties. The ROI Calculator runs entirely in your browser and does not persist its input values — a calculation is cleared on page refresh unless you manually save the item to Inventory.</p>
@@ -1996,14 +998,14 @@
       <h3>Purposes and Legal Basis for Processing (GDPR)</h3>
       <p>Where the GDPR applies, ResellWiseALL relies on the following purposes and legal bases:</p>
       <ul>
-        <li><strong>Providing the service itself</strong> (search, calculators, LocalStorage-based Favorites/Inventory) — this does not involve us receiving or processing personal data on a server, so it is not "processing" by ResellWiseALL in the GDPR sense; where it is, the basis is performance of a contract at your request (Art. 6(1)(b)) / legitimate interest in operating the tool you requested (Art. 6(1)(f)).</li>
+        <li><strong>Providing the service itself</strong> (search links, calculators, LocalStorage-based Favorites/Inventory) — this does not involve us receiving or processing personal data on a server, so it is not "processing" by ResellWiseALL in the GDPR sense; where it is, the basis is performance of a contract at your request (Art. 6(1)(b)) / legitimate interest in operating the tool you requested (Art. 6(1)(f)).</li>
         <li><strong>Analytics (Google Analytics)</strong> — based on your consent (Art. 6(1)(a)), given via the consent banner or Cookie Settings. No analytics cookies are set before you consent.</li>
         <li><strong>Advertising (Google AdSense, once activated)</strong> — based on your consent (Art. 6(1)(a)), given separately from Analytics via the same banner or Cookie Settings. No advertising cookies are set before you consent, and no ads load at all until a real AdSense Publisher ID is configured.</li>
-        <li><strong>Fetching live pricing data</strong> — see "Product and Pricing Information" below for the specific third-party service involved.</li>
+        <li><strong>Indicative estimates</strong> — calculated locally in your browser from a built-in table; no personal data is sent anywhere for this.</li>
       </ul>
 
       <h3>Product and Pricing Information</h3>
-      <p>Product and pricing information shown on the Marketplace Pretraga tab comes exclusively from real, successfully fetched eBay listings — ResellWiseALL does not generate, estimate or guess a price. To fetch live eBay listings, your search term is sent to ResellWiseALL's own backend (a Cloudflare Worker), which calls the official eBay Browse API using server-side OAuth credentials that are never exposed in this page's HTML or JavaScript. This only transmits the text you typed into the search box — no other personal data is sent as part of this request. If that fetch is unavailable, not yet configured, or returns no usable listing for your search, no results are shown for that search, and the app clearly states that real data is currently unavailable — it never substitutes an invented or calculated price. The "ResellWise Insights" section on the Analytics tab shows figures from your own local Inventory entries (which you typed yourself) alongside real eBay price figures from your current search, when available; it never shows an invented or estimated market price. The other 13 marketplaces listed in the app (Vinted, Amazon, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de, AutoScout24) are not queried by ResellWiseALL at all — clicking their link only takes you to that platform's own website. A fuller, non-technical explanation of how the eBay fetch works — and what happens when it's unavailable — is also available in the Knowledge Center's "Price / Data Methodology" section.</p>
+      <p>The estimate shown on the Marketplace Pretraga tab is an <strong>illustrative value calculated locally in your browser</strong> from a built-in table that has no verified source or date. It is not a confirmed market price or the listing price of any platform. ResellWiseALL has no backend or API and does not send your search term to any server to calculate it. The 14 marketplaces listed in the app (eBay, Vinted, Amazon, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de, AutoScout24) are not queried; clicking a platform button only opens that platform's own website with your search term in the URL. See the Knowledge Center's "Price / Data Methodology" section for details.</p>
 
       <h3>"ChatGPT Analiza" Button</h3>
       <p>If you click the <strong>"✨ ChatGPT Analiza"</strong> button, your search term is included in a URL and a new browser tab is opened to chatgpt.com (operated by OpenAI), pre-filled with a prompt containing your search term. This sends your search term to OpenAI as part of that page load, governed by OpenAI's own privacy policy — ResellWiseALL has no visibility into, or control over, how OpenAI processes it. This only happens if you click that specific button.</p>
@@ -2024,7 +1026,7 @@
       <p>ResellWiseALL <strong>does not currently use any affiliate or partner links</strong> — marketplace links go directly to the platform's own search results, with no tracking parameters or commission arrangement. If an affiliate or partner program is introduced in the future, this Privacy Policy and the relevant links will be updated to clearly disclose it before it takes effect.</p>
 
       <h3>Third-Party Marketplaces</h3>
-      <p>Clicking a listing or a button such as "Open Live" / "Listing Details" takes you to an external platform (e.g. eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de or AutoScout24). Those platforms have their own privacy policies, which apply once you visit them. ResellWiseALL has no visibility into, or control over, data collected by those platforms.</p>
+      <p>Clicking a button such as "Search on [platform]" takes you to an external platform (e.g. eBay, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, eBay Motors, Mobile.de or AutoScout24). Those platforms have their own privacy policies, which apply once you visit them. ResellWiseALL has no visibility into, or control over, data collected by those platforms.</p>
 
       <h3>Your Rights &amp; Control Over Your Data</h3>
       <p>Because ResellWiseALL does not use accounts or a backend database, most data protection rights apply directly to the data stored in your own browser, and to your Analytics/Advertising consent choice:</p>
@@ -2041,7 +1043,7 @@
     </div>
   </div>
 
-  <!-- Terms of Use Modal (rewritten in English — expanded per current app behavior; does not alter main page layout or functionality) -->
+  <!-- Terms of Use Modal -->
   <div class="legal-modal-overlay" id="termsModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
@@ -2054,7 +1056,7 @@
       <p>By using ResellWiseALL, you agree to these Terms of Use. If you do not agree, please discontinue use of the application.</p>
 
       <h3>Nature of the Service</h3>
-      <p>ResellWiseALL is an informational application for searching, comparing prices and estimating the resale profit potential of products across multiple e-commerce platforms. <strong>ResellWiseALL is not a seller or intermediary</strong> in any transaction between a user and a third-party platform.</p>
+      <p>ResellWiseALL is an informational application for finding products on multiple e-commerce platforms via search links and estimating indicative value and resale profit potential. <strong>ResellWiseALL is not a seller or intermediary</strong> in any transaction between a user and a third-party platform.</p>
 
       <h3>Educational Content (Knowledge Center)</h3>
       <p>The guides, checklists and glossary in the "ResellWise Knowledge Center" and "Full ResellWise Knowledge Center" sections are original, general-purpose educational content about product reselling. They do not constitute financial, investment, tax or legal advice for your specific situation. Rules on reselling, income reporting, consumer protection and related obligations vary by country and by how you operate — always check the applicable local rules that apply to you.</p>
@@ -2063,7 +1065,7 @@
       <p>You may use ResellWiseALL for personal, non-commercial evaluation of resale opportunities, in compliance with applicable law and the terms of any third-party platform you visit through the app. You agree not to misuse the application (e.g. attempting to disrupt its operation or automate abusive requests against it).</p>
 
       <h3>Data Source</h3>
-      <p>Product and pricing information on the Marketplace Pretraga tab comes only from real, successfully fetched eBay listings, retrieved through ResellWiseALL's own backend and the official eBay Browse API — ResellWiseALL does not calculate, estimate or invent a price. When a live fetch is not available, no result is shown for that search rather than a substituted figure. Data may still be incomplete, outdated or inaccurate without prior notice, as ResellWiseALL does not directly control eBay or its API. See the Knowledge Center's "Price / Data Methodology" section for full detail.</p>
+      <p>The estimate shown is an illustrative value from a built-in table, with no verified source or date, calculated in your browser. It is not a confirmed market price, an actual listing price or an offer and may differ significantly from real prices. ResellWiseALL has no backend or API access to any marketplace. See the Knowledge Center's "Price / Data Methodology" section.</p>
 
       <h3>Check Before You Buy or Sell</h3>
       <p>You are responsible for verifying all information (price, availability, item condition and sale terms) directly with the original source or platform before making any purchasing or selling decision.</p>
@@ -2072,7 +1074,7 @@
       <p>Profit, ROI and AI profitability score calculations shown in the app are rough estimates and do not represent a guarantee of actual earnings or a successful sale.</p>
 
       <h3>ROI Calculator &amp; Insights Disclaimer</h3>
-      <p>The Profit Calculator and ROI Calculator compute results locally from the values you enter. The "ResellWise Insights" section combines your own Inventory entries with real, successfully fetched eBay prices for your current search — if real eBay data isn't available, the corresponding fields show that plainly rather than an invented figure. None of these calculations constitute financial, investment, tax or legal advice, and none are a guarantee of actual profit, ROI or resale speed.</p>
+      <p>The Profit and ROI Calculators compute results locally from the values you enter. "ResellWise Insights" combines your own Inventory entries with the local indicative estimate. None of this is financial, investment, tax or legal advice, and none of it guarantees profit, ROI or resale speed.</p>
 
       <h3>Third-Party Marketplaces &amp; Services</h3>
       <p>ResellWiseALL links to and references third-party marketplaces (including eBay, eBay Motors, Amazon, Vinted, Depop, Poshmark, Mercari, Etsy, Facebook Marketplace, Temu, AliExpress, Walmart, Mobile.de and AutoScout24). ResellWiseALL is <strong>not affiliated with, endorsed by, or an official partner or representative of</strong> any of these platforms unless explicitly and separately confirmed. All trademarks and platform names belong to their respective owners and are used solely for identification and informational purposes. ResellWiseALL <strong>does not currently use affiliate or partner links</strong>; if this changes, this section will be updated.</p>
@@ -2097,7 +1099,7 @@
     </div>
   </div>
 
-  <!-- Legal Notice / Contact Modal (added — reuses the existing legal-modal styling) -->
+  <!-- Legal Notice / Contact Modal -->
   <div class="legal-modal-overlay" id="legalNoticeModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
@@ -2125,7 +1127,7 @@
     </div>
   </div>
 
-  <!-- Reselling / Marketplace Disclaimer Modal (added — reuses the existing legal-modal styling) -->
+  <!-- Disclaimer Modal -->
   <div class="legal-modal-overlay" id="disclaimerModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
@@ -2138,13 +1140,13 @@
       <p>ResellWiseALL is a tool for searching, comparing and estimating the potential resale value of products. It does not process transactions, hold inventory, or act as a marketplace itself.</p>
 
       <h3>Prices &amp; Availability May Change</h3>
-      <p>Prices, availability, item condition, shipping costs, platform fees and other details shown in the app may change at any time and may not reflect the current state of the original listing. Always verify details directly on the source platform before buying or selling.</p>
+      <p>Prices, availability, item condition, shipping costs, platform fees and other details on third-party platforms may change at any time and may differ from the indicative estimate shown in the app. Always verify details directly on the source platform before buying or selling.</p>
 
-      <h3>Third-Party Data</h3>
-      <p>Data from third-party platforms is not under the direct control of ResellWiseALL and may be delayed, incomplete or inaccurate.</p>
+      <h3>Estimates Are Not Third-Party Data</h3>
+      <p>ResellWiseALL shows no data from third-party platforms. Real prices and availability there are outside its control and may differ significantly from the indicative estimate.</p>
 
       <h3>ROI &amp; Profit Estimates</h3>
-      <p>ROI, profit margin and payback period figures shown by the ROI Calculator, the Profit Calculator and the Insights section are estimates based on the values you provide or on estimated market data. They are <strong>not a guarantee of actual earnings</strong>.</p>
+      <p>ROI, profit margin and payback period figures shown by the ROI Calculator, the Profit Calculator and the Insights section are estimates based on the values you provide or on indicative reference data. They are <strong>not a guarantee of actual earnings</strong>.</p>
 
       <h3>Educational Content</h3>
       <p>The guides, checklists, worked example and glossary in the ResellWise Knowledge Center are general educational information about reselling practices. They are not financial, investment, tax or legal advice, and do not account for your specific circumstances or jurisdiction.</p>
@@ -2154,9 +1156,7 @@
     </div>
   </div>
 
-  <!-- Cookie Settings Modal (added — reuses the existing legal-modal styling and existing btn-card
-       button styles; no new CSS classes were introduced for this modal). Lets the user grant or
-       withdraw consent per category at any time, satisfying the "change your decision later" requirement. -->
+  <!-- Cookie Settings Modal -->
   <div class="legal-modal-overlay" id="cookieSettingsModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
@@ -2188,8 +1188,7 @@
     </div>
   </div>
 
-  <!-- Cookie Policy Modal (added — read-only explanation, separate from the interactive Cookie
-       Settings modal above; reuses the same existing legal-modal CSS classes) -->
+  <!-- Cookie Policy Modal -->
   <div class="legal-modal-overlay" id="cookiePolicyModal">
     <div class="legal-modal-box">
       <div class="legal-modal-head">
@@ -2211,7 +1210,7 @@
       <p>You can change your Analytics/Advertising cookie choice at any time via <strong>"Cookie Settings"</strong> in the footer — including rejecting previously-allowed categories. This has the same effect as never having consented, going forward.</p>
 
       <h3>Declining Non-Essential Cookies</h3>
-      <p>You are always free to reject Analytics and Advertising cookies. Doing so does not prevent you from using marketplace search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis, the Knowledge Center, or any other feature of ResellWiseALL.</p>
+      <p>You are always free to reject Analytics and Advertising cookies. Doing so does not prevent you from using product search, the Profit Calculator, the ROI Calculator, Inventory, AI Analysis, the Knowledge Center, or any other feature of ResellWiseALL.</p>
     </div>
   </div>
 
@@ -2223,10 +1222,7 @@
       }
     }
 
-    /* ================= Legal modal controls (added) ================= */
-    /* ================= Legal modal controls (extended) =================
-       Generalized to a lookup map so it supports Privacy, Terms, Legal Notice and Disclaimer
-       modals; the original privacy/terms behavior is unchanged. */
+    /* ================= Legal modal controls ================= */
     const LEGAL_MODAL_IDS = {
       privacy: 'privacyModal',
       terms: 'termsModal',
@@ -2261,27 +1257,16 @@
       }
     });
 
-    /* ================= Google AdSense preparation (added) =================
-       ResellWiseALL does NOT use a fake/invented AdSense Publisher ID.
-       Once you have a real Publisher ID and real ad slot IDs, just fill them in below —
-       nothing else in the code needs to change. While these fields are empty, the app
-       works completely normally, WITH NO ads and no consent banner shown. */
+    /* ================= Google AdSense preparation =================
+       No fake Publisher ID. While these fields are empty the app works normally with NO ads. */
     const ADSENSE_CLIENT_ID = ''; // e.g. 'ca-pub-1234567890123456'
     const ADSENSE_SLOTS = {
-      sidebarLeft: '',   // ad unit ID for the left sidebar zone
-      sidebarRight: '',  // ad unit ID for the right sidebar zone
-      bottomBanner: ''   // ad unit ID for the zone below the main content
+      sidebarLeft: '',
+      sidebarRight: '',
+      bottomBanner: ''
     };
 
-    /* ================= Consent management (extended) =================
-       Originally this only gated AdSense (and only appeared once a Publisher ID was set),
-       which left Google Analytics running with no consent gate at all. This is now generalized
-       to two categories — "analytics" and "ads" — using Google's own Consent Mode v2 API
-       (gtag('consent', 'update', ...)), which was already initialized to "denied" by default in
-       the <head> script above. The banner now always appears (regardless of AdSense status)
-       until the user makes a choice, and that choice can be revisited anytime via the
-       "Cookie Settings" footer link. loadAdSenseAds() itself is unchanged — ads still never load
-       without both a real ADSENSE_CLIENT_ID and the user's "ads" consent. */
+    /* ================= Consent management (Analytics + Ads, Google Consent Mode v2) ================= */
     const CONSENT_STORAGE_KEY = 'resellwiseall_consent_v1';
     let pendingConsent = { analytics: false, ads: false };
 
@@ -2295,7 +1280,7 @@
     }
 
     function persistConsent(consent) {
-      localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(consent));
+      try { localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(consent)); } catch (e) { /* storage unavailable */ }
     }
 
     function applyConsentToGtag(consent) {
@@ -2317,7 +1302,6 @@
         if (stored.ads) loadAdSenseAds();
         return;
       }
-      // No stored decision yet — ask before anything non-essential is set.
       showConsentBanner();
     }
 
@@ -2332,7 +1316,6 @@
     }
 
     function handleBannerChoice(choice) {
-      // choice: 'accept' | 'reject'
       const consent = { analytics: choice === 'accept', ads: choice === 'accept' };
       persistConsent(consent);
       applyConsentToGtag(consent);
@@ -2401,7 +1384,7 @@
       document.querySelectorAll('.ad-slot').forEach(slot => {
         const slotKey = slot.getAttribute('data-ad-slot-key');
         const adSlotId = ADSENSE_SLOTS[slotKey];
-        if (!adSlotId) return; // this zone stays hidden until it has its own slot ID
+        if (!adSlotId) return;
 
         const ins = document.createElement('ins');
         ins.className = 'adsbygoogle';
@@ -2425,40 +1408,72 @@
       });
     }
 
-    /* PLATFORMS: only eBay has a real, authorized live integration (via our own Cloudflare
-       Worker + the eBay Browse API — see cloudflare-worker.js). The other 13 are NOT queried
-       for data at all; they exist only as plain outbound search links. `live:true` is the only
-       flag that changes any behavior below. */
+    /* PLATFORMS: svih 14 platformi služi isključivo kao poveznica za stvarnu pretragu na njihovoj
+       stranici. ResellWiseALL ne dohvaća njihove cijene ni oglase. */
     const PLATFORMS = [
-      { key: "ebay", name: "eBay", type: "global", url: "https://www.ebay.com/sch/i.html?_nkw=", live: true },
-      { key: "amazon", name: "Amazon", type: "global", url: "https://www.amazon.com/s?k=", live: false },
-      { key: "vinted", name: "Vinted", type: "fashion", url: "https://www.vinted.com/catalog?search_text=", live: false },
-      { key: "depop", name: "Depop", type: "fashion", url: "https://www.depop.com/search/?q=", live: false },
-      { key: "poshmark", name: "Poshmark", type: "fashion", url: "https://poshmark.com/search?query=", live: false },
-      { key: "mercari", name: "Mercari", type: "general", url: "https://www.mercari.com/search/?keyword=", live: false },
-      { key: "etsy", name: "Etsy", type: "collectibles", url: "https://www.etsy.com/search?q=", live: false },
-      { key: "facebook", name: "Facebook Marketplace", type: "general", url: "https://www.facebook.com/marketplace/search/?query=", live: false },
-      { key: "temu", name: "Temu", type: "bargain", url: "https://www.temu.com/search_result.html?search_key=", live: false },
-      { key: "aliexpress", name: "AliExpress", type: "bargain", url: "https://www.aliexpress.com/w/wholesale-", live: false },
-      { key: "walmart", name: "Walmart", type: "general", url: "https://www.walmart.com/search?q=", live: false },
-      { key: "ebaymotors", name: "eBay Motors", type: "auto", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=", live: false },
-      { key: "mobilede", name: "Mobile.de", type: "auto", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=", live: false },
-      { key: "autoscout24", name: "AutoScout24", type: "auto", url: "https://www.autoscout24.com/lst?query=", live: false }
+      { key: "ebay", name: "eBay", type: "global", url: "https://www.ebay.com/sch/i.html?_nkw=" },
+      { key: "amazon", name: "Amazon", type: "global", url: "https://www.amazon.com/s?k=" },
+      { key: "vinted", name: "Vinted", type: "fashion", url: "https://www.vinted.com/catalog?search_text=" },
+      { key: "depop", name: "Depop", type: "fashion", url: "https://www.depop.com/search/?q=" },
+      { key: "poshmark", name: "Poshmark", type: "fashion", url: "https://poshmark.com/search?query=" },
+      { key: "mercari", name: "Mercari", type: "general", url: "https://www.mercari.com/search/?keyword=" },
+      { key: "etsy", name: "Etsy", type: "collectibles", url: "https://www.etsy.com/search?q=" },
+      { key: "facebook", name: "Facebook Marketplace", type: "general", url: "https://www.facebook.com/marketplace/search/?query=" },
+      { key: "temu", name: "Temu", type: "bargain", url: "https://www.temu.com/search_result.html?search_key=" },
+      { key: "aliexpress", name: "AliExpress", type: "bargain", url: "https://www.aliexpress.com/w/wholesale-" },
+      { key: "walmart", name: "Walmart", type: "general", url: "https://www.walmart.com/search?q=" },
+      { key: "ebaymotors", name: "eBay Motors", type: "auto", url: "https://www.ebay.com/b/Auto-Parts-and-Vehicles/6000/bn_1865334?_nkw=" },
+      { key: "mobilede", name: "Mobile.de", type: "auto", url: "https://www.mobile.de/srp/search?isSearchRequest=true&vc=Car&q=" },
+      { key: "autoscout24", name: "AutoScout24", type: "auto", url: "https://www.autoscout24.com/lst?query=" }
     ];
 
-    /* ================= Live Marketplace Backend (added) =================
-       ResellWiseALL calls its own Cloudflare Worker backend, which holds the eBay Browse API
-       OAuth credentials server-side and calls eBay on ResellWiseALL's behalf — see the
-       accompanying cloudflare-worker.js and DEPLOYMENT.md. No API secret, client secret or
-       token of any kind is ever present in this frontend file.
-       Set WORKER_BASE_URL below to your deployed Worker's URL once you've deployed it. While
-       the placeholder is left in place, ResellWiseALL treats the backend as "not configured"
-       and shows "Stvarni podaci trenutno nisu dostupni." for every search — it never falls
-       back to any generated, estimated, hashed or cached-as-current price. */
-    const WORKER_BASE_URL = "https://REPLACE-WITH-YOUR-CLOUDFLARE-WORKER-URL.workers.dev";
+    /* ================= Indikativne procjene (lokalno, bez backenda) =================
+       Interna tablica ILUSTRATIVNIH raspona (EUR). Vrijednosti nemaju provjeren izvor ni datum i
+       nisu potvrđene tržišne cijene; autor ih mora sam provjeriti i ažurirati prije oslanjanja na njih. Isti unos uvijek daje isti
+       rezultat: nema slučajnih brojeva, hasheva ni mrežnih poziva. Nepoznat proizvod = nema procjene. */
+    const EST_NOTE = 'Indikativna tržišna procjena — nije stvarna cijena oglasa.';
+    const EST_SOURCE_NOTE = 'Ilustrativna vrijednost iz interne tablice, bez provjerenog izvora i datuma — nije potvrđena tržišna cijena.';
+    const EST_REFERENCE = [
+      [/iphone 13 pro max/, 'iPhone 13 Pro Max', 'electronics', 380, 560],
+      [/iphone 13 pro/, 'iPhone 13 Pro', 'electronics', 300, 480],
+      [/iphone 13/, 'iPhone 13', 'electronics', 220, 360],
+      [/iphone 14/, 'iPhone 14', 'electronics', 380, 550],
+      [/iphone 12/, 'iPhone 12', 'electronics', 170, 290],
+      [/iphone 11/, 'iPhone 11', 'electronics', 110, 200],
+      [/galaxy s22/, 'Samsung Galaxy S22', 'electronics', 170, 300],
+      [/ps5|playstation 5/, 'PlayStation 5', 'electronics', 280, 420],
+      [/ps4|playstation 4/, 'PlayStation 4', 'electronics', 90, 170],
+      [/xbox series x/, 'Xbox Series X', 'electronics', 270, 400],
+      [/nintendo switch|switch oled/, 'Nintendo Switch', 'electronics', 130, 240],
+      [/airpods pro/, 'AirPods Pro', 'electronics', 90, 160],
+      [/macbook air m1/, 'MacBook Air M1', 'electronics', 400, 620],
+      [/air jordan 1|jordan 1/, 'Nike Air Jordan 1', 'fashion', 110, 260],
+      [/air force 1/, 'Nike Air Force 1', 'fashion', 50, 100],
+      [/adidas samba/, 'Adidas Samba', 'fashion', 55, 100],
+      [/levi.?s 501|levis 501/, "Levi's 501", 'fashion', 20, 50]
+    ];
 
-    function isWorkerConfigured() {
-      return !!WORKER_BASE_URL && WORKER_BASE_URL.indexOf('REPLACE-WITH-YOUR-CLOUDFLARE-WORKER-URL') === -1;
+    function esc(v) {
+      return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    /* lookupEstimate(): vraća { name, min, max } iz referentne tablice ili null ako nema podataka. */
+    function lookupEstimate(query, category) {
+      const qn = String(query).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      for (const [re, name, cat, min, max] of EST_REFERENCE) {
+        if (re.test(qn) && (category === 'all' || category === cat)) return { name, min, max };
+      }
+      return null;
+    }
+
+    /* buildPlatformLinks(): po jedna poveznica za stvarnu pretragu na svakoj od 14 platformi (bez cijene). */
+    function buildPlatformLinks(query, sourceFilter) {
+      const slug = query.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40);
+      return PLATFORMS
+        .filter(p => sourceFilter === 'all' || p.key === sourceFilter)
+        .map(p => ({ id: 'link-' + p.key + '-' + slug,
+                     source: p.name, title: query, platformUrl: p.url + encodeURIComponent(query),
+                     estimateText: currentEstimate ? `${currentEstimate.min}–${currentEstimate.max} €` : '--' }));
     }
 
     function formatPrice(price, currency) {
@@ -2468,32 +1483,13 @@
       return symbol ? `${symbol}${price.toFixed(2)}` : `${price.toFixed(2)} ${currency || ''}`.trim();
     }
 
-    function dedupeItems(items) {
-      const seen = new Set();
-      const out = [];
-      items.forEach(it => {
-        const key = it.platformUrl || it.id;
-        if (key && !seen.has(key)) {
-          seen.add(key);
-          out.push(it);
-        }
-      });
-      return out;
-    }
-
-    function sortItems(items, mode) {
-      const copy = items.slice();
-      if (mode === 'price_asc') copy.sort((a, b) => a.price - b.price);
-      else if (mode === 'price_desc') copy.sort((a, b) => b.price - a.price);
-      // 'newest' keeps the order eBay itself returned for sort=newlyListed — no client-side
-      // reordering is applied on top of that.
-      return copy;
-    }
-
+    let currentEstimate = null;
     let currentResults = [];
-    let currentErrorMessage = null;
-    let savedFavorites = JSON.parse(localStorage.getItem("resellwiseall_favs") || "[]");
-    let inventory = JSON.parse(localStorage.getItem("resellwiseall_inventory") || "[]");
+    function safeParse(key) {
+      try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) { return []; }
+    }
+    let savedFavorites = safeParse("resellwiseall_favs");
+    let inventory = safeParse("resellwiseall_inventory");
 
     document.addEventListener("DOMContentLoaded", () => {
       runSearch();
@@ -2516,148 +1512,52 @@
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-      const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(tabId));
-      if(activeBtn) activeBtn.classList.add('active');
+      const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick') === `switchTab('${tabId}')`);
+      if (activeBtn) activeBtn.classList.add('active');
 
       document.getElementById(`tab-${tabId}`).classList.add('active');
 
-      if(tabId === 'analytics') {
+      if (tabId === 'analytics') {
         setTimeout(renderCharts, 100);
         renderInsights();
-      } else if(tabId === 'saved') {
+      } else if (tabId === 'saved') {
         renderSavedItems();
-      } else if(tabId === 'knowledge') {
+      } else if (tabId === 'knowledge') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
 
-    /* renderPlatformPills(): ALL 14 platforms, including eBay, are shown ONLY as plain outbound
-       search links — never as generated "results" and never with a price. eBay's own live
-       results (when available) are rendered separately by renderMarketplaceGrid(); this pills
-       row never implies that the other 13 were actually queried. */
+    /* renderPlatformPills(): svih 14 platformi kao obične poveznice za pretragu — bez cijena. */
     function renderPlatformPills(query, sourceFilter) {
       const container = document.getElementById("platformPills");
       const q = (query || document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro");
       container.innerHTML = PLATFORMS.map(p => {
-        const label = p.live ? `${p.name} (Live)` : `Search: ${p.name}`;
         const dim = (sourceFilter && sourceFilter !== 'all' && sourceFilter !== p.key) ? 'opacity:0.55;' : '';
-        return `<a class="platform-pill" style="text-decoration:none;${dim}" href="${p.url}${encodeURIComponent(q)}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${p.name}'})">${label} ↗</a>`;
+        return `<a class="platform-pill" style="text-decoration:none;${dim}" href="${esc(p.url + encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${esc(p.name)}'})">Search: ${esc(p.name)} ↗</a>`;
       }).join('');
     }
 
-    /* ResellWiseALL Live Data Fetching Engine.
-       ResellWiseALL prikazuje SAMO stvarno dohvaćene cijene (trenutno: eBay, putem vlastitog
-       Cloudflare Worker backenda i eBay Browse API-ja). Nema hash/fallback niti ikakvog drugog
-       umjetnog generiranja cijena — ako dohvaćanje ne uspije, currentResults ostaje prazan i UI
-       to jasno prikazuje umjesto izmišljene vrijednosti. */
-    async function runSearch() {
+    /* runSearch(): lokalna procjena iz referentne tablice + poveznice za pretragu na platformama. */
+    function runSearch() {
       const query = document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro";
-      const sourceFilter = document.getElementById("sourceFilter").value; // 'all' or a PLATFORMS[].key
-      const sortMode = document.getElementById("sortOrder").value; // 'newest' | 'price_asc' | 'price_desc'
-      const loading = document.getElementById("loadingStatus");
+      const sourceFilter = document.getElementById("sourceFilter").value;
+      const sortMode = document.getElementById("sortOrder").value;
+      const category = document.getElementById("categoryFilter").value;
 
-      loading.style.display = "flex";
       renderPlatformPills(query, sourceFilter);
       trackGAEvent("resellwiseall_search", { search_query: query, source: sourceFilter, sort: sortMode });
 
-      currentResults = [];
-      currentErrorMessage = null;
+      currentEstimate = lookupEstimate(query, category);
+      const links = buildPlatformLinks(query, sourceFilter);
+      if (sortMode === 'price_asc') links.sort((a, b) => a.source.localeCompare(b.source));
+      else if (sortMode === 'price_desc') links.sort((a, b) => b.source.localeCompare(a.source));
+      currentResults = links;
 
-      // Only eBay has a real, authorized live integration. If the user picked one of the other
-      // 13 sources, no fetch is attempted at all for it — nothing to fetch, so nothing to fake.
-      const wantsEbay = sourceFilter === 'all' || sourceFilter === 'ebay';
-      if (wantsEbay) {
-        try {
-          const result = await fetchLiveMarketData(query, sortMode);
-          currentResults = sortItems(dedupeItems(result.items), sortMode);
-          currentErrorMessage = result.errorMessage;
-        } catch (err) {
-          console.warn("Stvarni eBay podaci nisu dostupni za ovu pretragu.", err);
-          currentResults = [];
-          currentErrorMessage = 'Live data unavailable — unexpected error.';
-        }
-      }
-
-      loading.style.display = "none";
       renderMarketplaceGrid(sourceFilter);
       updateMetrics();
       updateAIDashboard();
       renderInsights();
-
-      showToast(currentResults.length > 0
-        ? `Prikazano ${currentResults.length} stvarno dohvaćenih eBay oglasa.`
-        : "Stvarni podaci trenutno nisu dostupni.");
-    }
-
-    /* fetchLiveMarketData(): calls ONLY our own Cloudflare Worker backend (never eBay directly
-       from the browser, and never with any embedded secret — see cloudflare-worker.js).
-       Returns { items, errorMessage }. items is ALWAYS either real, successfully fetched
-       listings or an empty array — never a generated, estimated or hashed one. errorMessage is
-       set only for genuine failures (auth, rate-limit, network, malformed response); a normal
-       zero-result search leaves it null and the UI shows the standard "no data" message. */
-    async function fetchLiveMarketData(query, sortMode) {
-      if (!isWorkerConfigured()) {
-        // Not an error — the operator simply hasn't deployed/configured the backend yet.
-        return { items: [], errorMessage: null };
-      }
-
-      const apiSort = sortMode === 'price_asc' ? 'price' : sortMode === 'price_desc' ? '-price' : 'newlyListed';
-      const url = `${WORKER_BASE_URL}/api/search?q=${encodeURIComponent(query)}&sort=${encodeURIComponent(apiSort)}&limit=24`;
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 12000);
-
-      let response;
-      try {
-        response = await fetch(url, { signal: controller.signal });
-      } catch (err) {
-        clearTimeout(timeoutId);
-        if (err && err.name === 'AbortError') {
-          return { items: [], errorMessage: 'Live data unavailable — request timed out.' };
-        }
-        return { items: [], errorMessage: 'Live data unavailable — network or CORS error.' };
-      }
-      clearTimeout(timeoutId);
-
-      if (response.status === 401 || response.status === 403) {
-        return { items: [], errorMessage: 'Live data unavailable — authorization error.' };
-      }
-      if (response.status === 429) {
-        return { items: [], errorMessage: 'Live data unavailable — rate limited, please try again shortly.' };
-      }
-      if (!response.ok) {
-        return { items: [], errorMessage: 'Live data unavailable — server error.' };
-      }
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (err) {
-        return { items: [], errorMessage: 'Live data unavailable — unexpected response.' };
-      }
-
-      if (data && data.error) {
-        return { items: [], errorMessage: 'Live data unavailable — ' + (data.message || 'error from data source.') };
-      }
-
-      const rawItems = Array.isArray(data && data.items) ? data.items : [];
-      // Defensive normalization: an item is only kept if it has a real title, a real link, and a
-      // real numeric price greater than zero. Anything else is dropped rather than guessed at.
-      const items = rawItems
-        .filter(it => it && it.title && it.url && typeof it.price === 'number' && it.price > 0)
-        .map(it => ({
-          id: it.id || it.url,
-          source: it.source || 'eBay',
-          title: it.title,
-          price: it.price,
-          currency: it.currency || 'USD',
-          condition: it.condition || null,
-          image: it.image || null,
-          platformUrl: it.url,
-          fetchedAt: it.fetchedAt || new Date().toISOString()
-        }));
-
-      return { items, errorMessage: null };
+      showToast(currentEstimate ? "Izračunata indikativna procjena (nije stvarna cijena)." : "Indikativna procjena nije dostupna.");
     }
 
     function searchWithAI() {
@@ -2672,164 +1572,86 @@
       window.open(url, "_blank");
     }
 
-    /* renderMarketplaceGrid(): prikazuje ISKLJUČIVO stvarno dohvaćene eBay oglase (stvarni
-       naslov, stvarna cijena i valuta, stvarni link, jasno označen izvor, "Fetched: just now").
-       Ako je odabran jedan od 13 platformi bez live integracije, prikazuje jasnu poruku i gumb
-       za pretragu na toj platformi — nikad izmišljenu cijenu. Ako eBay dohvaćanje ne uspije,
-       prikazuje se jasna poruka bez ikakve izmišljene ili procijenjene cijene. */
-    function renderMarketplaceGrid(sourceFilter) {
-      sourceFilter = sourceFilter || document.getElementById("sourceFilter").value;
+    /* renderMarketplaceGrid(): jedna kartica indikativne procjene proizvoda + kartice s poveznicama za
+       pretragu po platformi. Kartice platformi NEMAJU cijenu. */
+    function renderMarketplaceGrid() {
       const grid = document.getElementById("cardsGrid");
-      const query = document.getElementById("searchQuery").value.trim() || "";
-
-      if (sourceFilter !== 'all' && sourceFilter !== 'ebay') {
-        const plat = PLATFORMS.find(p => p.key === sourceFilter);
-        const name = plat ? plat.name : sourceFilter;
-        const searchUrl = plat ? (plat.url + encodeURIComponent(query)) : '#';
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1;">
-            <div class="search-section" style="margin-bottom: 0;">
-              <p style="color: var(--text-main); font-weight: 700; margin-bottom: 6px;">${name}: Live data unavailable — API access required</p>
-              <p style="color: var(--text-muted); margin-bottom: 12px;">ResellWiseALL does not have authorized API access to ${name}. No price is shown for it. You can search directly on the platform instead.</p>
-              <a href="${searchUrl}" target="_blank" rel="noopener noreferrer" class="btn-card btn-primary-card" style="display:inline-block; width:auto; padding:10px 20px;">Search ${name} ↗</a>
-            </div>
-          </div>`;
-        return;
-      }
-
-      if (currentResults.length === 0) {
-        const message = currentErrorMessage || "Stvarni podaci trenutno nisu dostupni.";
-        const detail = !isWorkerConfigured()
-          ? 'Backend za dohvaćanje stvarnih eBay podataka još nije konfiguriran za ovu instalaciju. Dok se ne postavi, pretražite izravno preko poveznica platformi iznad.'
-          : 'Dohvaćanje stvarnih eBay oglasa nije uspjelo za ovaj upit. ResellWiseALL ne prikazuje izmišljenu ili procijenjenu cijenu. Pokušajte ponovno, izmijenite upit, ili pretražite izravno preko poveznica platformi iznad.';
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1;">
-            <div class="search-section" style="margin-bottom: 0;">
-              <p style="color: var(--text-main); font-weight: 700; margin-bottom: 6px;">${message}</p>
-              <p style="color: var(--text-muted); margin-bottom: 0;">${detail}</p>
-            </div>
-          </div>`;
-        return;
-      }
-
-      grid.innerHTML = currentResults.map(item => {
+      const query = document.getElementById("searchQuery").value.trim() || "iPhone 13 Pro";
+      const est = currentEstimate
+        ? `<div class="price-block"><div class="price-row"><span class="price-label">Ilustrativni raspon (${esc(currentEstimate.name)}):</span><span class="price-val highlight">${currentEstimate.min}–${currentEstimate.max} €</span></div></div>
+           <p class="category-text" style="margin-bottom:0;">${EST_SOURCE_NOTE} Ne odnosi se ni na jednu platformu ni na konkretan oglas.</p>`
+        : `<div class="price-block"><div class="price-row"><span class="price-label">Ilustrativni raspon:</span><span class="price-val highlight">--</span></div></div>
+           <p class="category-text" style="margin-bottom:0;">Indikativna procjena nije dostupna. Za ovaj proizvod nema referentnih podataka pa se broj ne prikazuje.</p>`;
+      const head = `
+        <div class="card" style="grid-column: 1 / -1;">
+          <div>
+            <div class="card-header"><span class="platform-tag">Indikativna procjena</span></div>
+            <div class="product-title">${esc(query)}</div>
+            <div class="category-text">${EST_NOTE}</div>
+            ${est}
+          </div>
+        </div>`;
+      const cards = currentResults.map(item => {
         const isFav = savedFavorites.some(f => f.platformUrl === item.platformUrl);
-        const priceText = formatPrice(item.price, item.currency);
-        const conditionText = item.condition ? `<div class="category-text">Condition: ${item.condition}</div>` : '';
-        const imageHtml = item.image
-          ? `<img src="${item.image}" alt="" style="width:100%; max-height:160px; object-fit:cover; border-radius:10px; margin-bottom:0.8rem;" onerror="this.remove();">`
-          : '';
         return `
           <div class="card">
             <div>
               <div class="card-header">
-                <span class="platform-tag">Source: ${item.source}</span>
-                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${item.id}')">★</button>
+                <span class="platform-tag">${esc(item.source)}</span>
+                <button class="fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${esc(item.id)}')">★</button>
               </div>
-              ${imageHtml}
-              <div class="product-title">${item.title}</div>
-              ${conditionText}
-
-              <div class="price-block">
-                <div class="price-row">
-                  <span class="price-label">Live Price:</span>
-                  <span class="price-val highlight">${priceText}</span>
-                </div>
-              </div>
-
-              <div class="ai-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Fetched: just now
-              </div>
+              <div class="product-title">Pretraga: ${esc(item.title)}</div>
+              <div class="category-text">Poveznica za stvarnu pretragu na stranici platforme. ResellWiseALL ne prikazuje cijene ni oglase ove platforme.</div>
             </div>
-
             <div class="card-actions">
-              <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${item.source}'})" class="btn-card btn-primary-card" style="grid-column: 1 / -1;">Open original listing ↗</a>
+              <a href="${esc(item.platformUrl)}" target="_blank" rel="noopener noreferrer" onclick="trackGAEvent('resellwiseall_platform_click', {platform:'${esc(item.source)}'})" class="btn-card btn-primary-card" style="grid-column: 1 / -1;">Pretraži na ${esc(item.source)} ↗</a>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join('');
+      grid.innerHTML = head + cards;
     }
 
-    /* updateMetrics(): svi brojevi računati ISKLJUČIVO iz currentResults (stvarno dohvaćeni eBay
-       oglasi). Bez stvarnih podataka, svaki metrika-card prikazuje "--". Kalkulator Profita se
-       ne popunjava automatski nikakvom generiranom cijenom — korisnik unosi vlastite stvarne
-       brojeve. */
+    /* updateMetrics(): brojevi dolaze isključivo iz indikativne procjene; bez referentnih podataka "--". */
     function updateMetrics() {
-      const totalEl = document.getElementById("statTotalItems");
-      const totalSubEl = document.getElementById("statTotalSub");
-      const avgEl = document.getElementById("statAvgPrice");
-      const lowEl = document.getElementById("statProfit");
-      const lowSubEl = document.getElementById("statRoiSub");
-      const highEl = document.getElementById("statBestPlatform");
-      const highSubEl = document.getElementById("statBestSub");
-
-      if (currentResults.length === 0) {
-        totalEl.innerText = "--";
-        totalSubEl.innerText = "Real data currently unavailable.";
-        avgEl.innerText = "--";
-        lowEl.innerText = "--";
-        lowSubEl.innerText = "Real data currently unavailable.";
-        highEl.innerText = "--";
-        highSubEl.innerText = "Real data currently unavailable.";
+      const set = (id, v) => { document.getElementById(id).innerText = v; };
+      set("statTotalItems", currentResults.length);
+      set("statTotalSub", "Poveznice za pretragu");
+      if (!currentEstimate) {
+        set("statAvgPrice", "--"); set("statProfit", "--"); set("statBestPlatform", "--");
+        set("statRoiSub", "Indikativna procjena nije dostupna."); set("statBestSub", "Indikativna procjena nije dostupna.");
         return;
       }
-
-      const prices = currentResults.map(i => i.price);
-      const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      const cur = currentResults[0].currency;
-
-      totalEl.innerText = currentResults.length;
-      totalSubEl.innerText = "Source: eBay";
-      avgEl.innerText = formatPrice(avgPrice, cur);
-      lowEl.innerText = formatPrice(minPrice, cur);
-      lowSubEl.innerText = "Source: eBay";
-      highEl.innerText = formatPrice(maxPrice, cur);
-      highSubEl.innerText = "Source: eBay";
+      set("statAvgPrice", formatPrice((currentEstimate.min + currentEstimate.max) / 2, 'EUR'));
+      set("statProfit", formatPrice(currentEstimate.min, 'EUR'));
+      set("statRoiSub", "Ilustrativno, nije tržišna cijena");
+      set("statBestPlatform", formatPrice(currentEstimate.max, 'EUR'));
+      set("statBestSub", "Ilustrativno, nije tržišna cijena");
     }
 
-    /* updateAIDashboard(): prikazuje isključivo stvarnu min/prosj./maks. cijenu iz stvarno
-       dohvaćenih eBay oglasa. Ne izračunava i ne prikazuje izmišljenu "AI ocjenu isplativosti",
-       potražnju, brzinu prodaje niti ROI — ti podaci zahtijevaju stvarnu nabavnu/prodajnu cijenu
-       koju korisnik unosi ručno u Kalkulator Profita / ROI Kalkulator. */
+    /* updateAIDashboard(): sažetak indikativne procjene. Ne prikazuje potražnju, brzinu prodaje ni ROI. */
     function updateAIDashboard() {
-      const scoreEl = document.getElementById("aiScoreVal");
-      const gaugeEl = document.getElementById("aiGauge");
+      const rangeEl = document.getElementById("aiRangeVal");
       const verdictEl = document.getElementById("aiVerdict");
       const summaryEl = document.getElementById("aiSummaryText");
       const minEl = document.getElementById("aiMinPrice");
       const avgEl = document.getElementById("aiAvgPrice");
       const maxEl = document.getElementById("aiMaxPrice");
-
-      if (currentResults.length === 0) {
-        scoreEl.innerText = "--";
-        gaugeEl.style.background = `conic-gradient(rgba(255,255,255,0.12) 0% 100%)`;
-        verdictEl.innerText = "Stvarni podaci trenutno nisu dostupni.";
-        summaryEl.innerText = "Dohvaćanje stvarnih eBay oglasa nije uspjelo za ovu pretragu, pa AI izvještaj cijena nije dostupan. ResellWiseALL ne prikazuje izmišljenu ili procijenjenu cijenu u ovom slučaju.";
-        minEl.innerText = "--";
-        avgEl.innerText = "--";
-        maxEl.innerText = "--";
+      const spreadEl = document.getElementById("aiSpread");
+      if (!currentEstimate) {
+        rangeEl.innerText = "--";
+        verdictEl.innerText = "Indikativna procjena nije dostupna.";
+        summaryEl.innerText = "Za ovaj proizvod nema referentnih podataka, pa se procjena ne prikazuje. ResellWiseALL ne izmišlja broj.";
+        minEl.innerText = "--"; avgEl.innerText = "--"; maxEl.innerText = "--"; spreadEl.innerText = "-- €";
         return;
       }
-
-      const prices = currentResults.map(i => i.price);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
-      const cur = currentResults[0].currency;
-
-      scoreEl.innerText = currentResults.length;
-      gaugeEl.style.background = `conic-gradient(var(--accent-cyan) 0% 100%, rgba(255,255,255,0.1) 100% 100%)`;
-      verdictEl.innerText = "Stvarni podaci dohvaćeni s eBay-a";
-
-      minEl.innerText = formatPrice(minPrice, cur);
-      avgEl.innerText = formatPrice(avgPrice, cur);
-      maxEl.innerText = formatPrice(maxPrice, cur);
-
-      summaryEl.innerText =
-        `Na temelju ${currentResults.length} stvarno dohvaćenih eBay oglasa, cijene se kreću od ${formatPrice(minPrice, cur)} do ${formatPrice(maxPrice, cur)}, uz prosjek od ${formatPrice(avgPrice, cur)}. Za profit i ROI unesite stvarnu nabavnu i prodajnu cijenu u Kalkulator Profita ili ROI Kalkulator.`;
+      const mid = (currentEstimate.min + currentEstimate.max) / 2;
+      rangeEl.innerText = `${currentEstimate.min}–${currentEstimate.max} €`;
+      verdictEl.innerText = "Ilustrativna vrijednost iz interne tablice — nije stvarna cijena oglasa.";
+      minEl.innerText = formatPrice(currentEstimate.min, 'EUR');
+      avgEl.innerText = formatPrice(mid, 'EUR');
+      maxEl.innerText = formatPrice(currentEstimate.max, 'EUR');
+      spreadEl.innerText = formatPrice(currentEstimate.max - currentEstimate.min, 'EUR');
+      summaryEl.innerText = `Za "${currentEstimate.name}" interna tablica sadrži ilustrativni raspon od ${formatPrice(currentEstimate.min, 'EUR')} do ${formatPrice(currentEstimate.max, 'EUR')} (sredina ${formatPrice(mid, 'EUR')}). ${EST_SOURCE_NOTE} To nije cijena nijedne platforme ni konkretnog oglasa. Za profit i ROI unesite stvarnu nabavnu i prodajnu cijenu u Kalkulator Profita ili ROI Kalkulator.`;
     }
 
     /* Profit Calculator */
@@ -2859,7 +1681,6 @@
       tbody.innerHTML = "";
 
       inventory.forEach((item, index) => {
-        // Profit i ROI po artiklu (added) — izračunato prilikom prikaza, ne mijenja spremljenu strukturu podataka.
         const profit = item.target - item.buy;
         const roiVal = item.buy > 0 ? (profit / item.buy) * 100 : null;
         const roiDisplay = roiVal === null ? 'N/A' : `${roiVal.toFixed(1)} %`;
@@ -2867,7 +1688,7 @@
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td><strong>${item.name}</strong></td>
+          <td><strong>${esc(item.name)}</strong></td>
           <td>${item.buy.toFixed(2)} €</td>
           <td>${item.target.toFixed(2)} €</td>
           <td style="color:${profitColor}; font-weight:700;">${profit >= 0 ? '+' : ''}${profit.toFixed(2)} €</td>
@@ -2910,16 +1731,13 @@
       renderInsights();
     }
 
-    /* ================= ROI Calculator (added) =================
-       Separate from the existing Profit Calculator — does not touch its code or results.
-       Runs entirely locally in the browser, with no external API, backend or database.
-       Formulas:
-         Total Investment = Purchase Price + Additional Costs
-         Net Profit       = Selling Price − Purchase Price − Additional Costs
-         ROI (%)          = (Net Profit / Total Investment) × 100
-         Payback (months) = Total Investment / Expected Monthly Profit
-       Verified against the example: €450 purchase, €680 selling price, €30 additional costs
-         → Total Investment €480, Net Profit €200, ROI 41.67%; with €100/month → Payback 4.8 months. */
+    /* ================= ROI Calculator (separate from the Profit Calculator, runs locally) =================
+       Total Investment = Purchase Price + Additional Costs
+       Net Profit       = Selling Price − Purchase Price − Additional Costs
+       ROI (%)          = (Net Profit / Total Investment) × 100
+       Payback (months) = Total Investment / Expected Monthly Profit
+       Check: €450 purchase, €680 sale, €30 costs → investment €480, profit €200, ROI 41.67%;
+       with €100/month → payback 4.8 months. */
     function formatEUR(value) {
       return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
     }
@@ -2955,15 +1773,12 @@
       errorBox.style.display = 'none';
       errorBox.innerText = '';
 
-      // Guard against text instead of numbers: parseFloat + Number.isFinite catches both NaN and Infinity.
       const buy = parseFloat(buyRaw);
       const sell = parseFloat(sellRaw);
-      // Additional costs are optional — an empty field is treated as 0.
       const costs = costsRaw.trim() === '' ? 0 : parseFloat(costsRaw);
       const monthlyEntered = monthlyRaw.trim() !== '';
       const monthlyProfit = monthlyEntered ? parseFloat(monthlyRaw) : 0;
 
-      // Guard against empty / invalid / negative input.
       if (buyRaw.trim() === '' || sellRaw.trim() === '' || !Number.isFinite(buy) || !Number.isFinite(sell)) {
         showROIError('Please enter a valid Purchase Price and Selling Price (numbers, not text).');
         return;
@@ -2986,10 +1801,6 @@
       }
 
       const totalInvestment = buy + costs;
-
-      // Guard against division by zero: Purchase Price > 0 is already checked above, so
-      // totalInvestment (purchase + costs, both ≥ 0 with purchase > 0) is always greater than 0.
-      // This extra check remains as a final safeguard against NaN/Infinity results.
       if (!Number.isFinite(totalInvestment) || totalInvestment <= 0) {
         showROIError('Total Investment must be greater than €0 to calculate ROI.');
         return;
@@ -3008,13 +1819,9 @@
       document.getElementById('roiPercent').innerText = `${roiPercent.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} %`;
       document.getElementById('roiMonthlyDisplay').innerText = monthlyEntered ? formatEUR(monthlyProfit) : 'Not entered';
 
-      const profitColor = netProfit >= 0 ? 'var(--success)' : 'var(--danger)';
-      const roiColor = roiPercent >= 0 ? 'var(--success)' : 'var(--danger)';
-      document.getElementById('roiNetProfit').style.color = profitColor;
-      document.getElementById('roiPercent').style.color = roiColor;
+      document.getElementById('roiNetProfit').style.color = netProfit >= 0 ? 'var(--success)' : 'var(--danger)';
+      document.getElementById('roiPercent').style.color = roiPercent >= 0 ? 'var(--success)' : 'var(--danger)';
 
-      // Payback Period: if monthly profit is not entered or is 0/negative, avoid dividing by zero —
-      // show a clear message instead of an infinite or incorrect result.
       const paybackEl = document.getElementById('roiPayback');
       if (!monthlyEntered || !Number.isFinite(monthlyProfit) || monthlyProfit <= 0) {
         paybackEl.classList.add('calc-msg');
@@ -3031,64 +1838,46 @@
 
       trackGAEvent('resellwiseall_calc_roi', {
         buy, sell, costs,
-        roiPercent: Number.isFinite(roiPercent) ? Math.round(roiPercent * 100) / 100 : null
+        roiPercent: Math.round(roiPercent * 100) / 100
       });
     }
 
-    /* ================= ResellWise Insights (added) =================
-       Separate section within the existing Analytics tab. Does not touch drawPlatformChart/drawTrendChart.
-       Average purchase/selling price and margin are computed from the local Inventory (localStorage).
-       ROI trend and platform comparison are computed from the current search results (currentResults) —
-       this data is an estimate/demo value, clearly labeled as such in the UI, never shown as real market data. */
+    /* ================= ResellWise Insights ================= */
     function renderInsights() {
       const avgBuyEl = document.getElementById('insAvgBuy');
       const avgSellEl = document.getElementById('insAvgSell');
       const avgMarginEl = document.getElementById('insAvgMargin');
       const totalProfitEl = document.getElementById('insTotalProfit');
-      const roiTrendEl = document.getElementById('insRoiTrend');
-      const bestPlatformEl = document.getElementById('insBestPlatform');
-
-      if (!avgBuyEl || !roiTrendEl) return; // Insights DOM not ready yet
+      const midEl = document.getElementById('insRoiTrend');
+      const lowEl = document.getElementById('insBestPlatform');
+      if (!avgBuyEl || !midEl) return;
 
       if (inventory.length > 0) {
         const avgBuy = inventory.reduce((acc, i) => acc + i.buy, 0) / inventory.length;
         const avgSell = inventory.reduce((acc, i) => acc + i.target, 0) / inventory.length;
         const margins = inventory.map(i => i.target > 0 ? ((i.target - i.buy) / i.target) * 100 : 0);
         const avgMargin = margins.reduce((a, b) => a + b, 0) / margins.length;
-        const totalPotentialProfit = inventory.reduce((acc, i) => acc + (i.target - i.buy), 0);
-
-        avgBuyEl.innerText = formatEUR(avgBuy);
-        avgBuyEl.classList.remove('calc-msg');
-        avgSellEl.innerText = formatEUR(avgSell);
-        avgSellEl.classList.remove('calc-msg');
+        const total = inventory.reduce((acc, i) => acc + (i.target - i.buy), 0);
+        avgBuyEl.innerText = formatEUR(avgBuy); avgBuyEl.classList.remove('calc-msg');
+        avgSellEl.innerText = formatEUR(avgSell); avgSellEl.classList.remove('calc-msg');
         avgMarginEl.innerText = `${avgMargin.toFixed(1)} %`;
-        totalProfitEl.innerText = formatEUR(totalPotentialProfit);
-        totalProfitEl.style.color = totalPotentialProfit >= 0 ? 'var(--success)' : 'var(--danger)';
+        totalProfitEl.innerText = formatEUR(total);
+        totalProfitEl.style.color = total >= 0 ? 'var(--success)' : 'var(--danger)';
       } else {
-        avgBuyEl.innerText = 'Add an item to Inventory';
-        avgBuyEl.classList.add('calc-msg');
-        avgSellEl.innerText = 'Add an item to Inventory';
-        avgSellEl.classList.add('calc-msg');
-        avgMarginEl.innerText = '--';
-        totalProfitEl.innerText = '--';
+        avgBuyEl.innerText = 'Add an item to Inventory'; avgBuyEl.classList.add('calc-msg');
+        avgSellEl.innerText = 'Add an item to Inventory'; avgSellEl.classList.add('calc-msg');
+        avgMarginEl.innerText = '--'; totalProfitEl.innerText = '--';
       }
 
-      if (currentResults.length > 0) {
-        const prices = currentResults.map(i => i.price);
-        const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
-        const minPrice = Math.min(...prices);
-        const cur = currentResults[0].currency;
-        roiTrendEl.innerText = formatPrice(avgPrice, cur);
-        bestPlatformEl.innerText = formatPrice(minPrice, cur);
+      if (currentEstimate) {
+        midEl.innerText = formatPrice((currentEstimate.min + currentEstimate.max) / 2, 'EUR');
+        lowEl.innerText = formatPrice(currentEstimate.min, 'EUR');
       } else {
-        roiTrendEl.innerText = '--';
-        bestPlatformEl.innerText = '--';
+        midEl.innerText = '--'; lowEl.innerText = '--';
       }
     }
 
-    /* ================= ResellWise Knowledge Center (added) =================
-       Opens the matching collapsible <details> card when the user clicks a table-of-contents
-       anchor, so a jump-to-section link never lands on a collapsed card. */
+    /* Knowledge Center: otvara pripadajući <details> kad se klikne poveznica u sadržaju. */
     function initKnowledgeCenterAnchors() {
       document.querySelectorAll('.kc-toc a').forEach(link => {
         link.addEventListener('click', () => {
@@ -3101,18 +1890,14 @@
       });
     }
 
-    /* Favorites Tracker.
-       Matching uses platformUrl (the real listing link), since it's the one field that uniquely
-       identifies a specific real listing across searches. toggleFavorite() checks both
-       currentResults (card clicked on the main grid) and savedFavorites (star clicked on the
-       Saved tab, where the item may no longer be in currentResults after a new search). */
+    /* Favorites: pamte se poveznice za pretragu (platformUrl je jedinstven po platformi i upitu). */
     function toggleFavorite(itemId) {
       let item = currentResults.find(i => i.id === itemId);
       if (!item) item = savedFavorites.find(i => i.id === itemId);
-      if(!item) return;
+      if (!item) return;
 
       const idx = savedFavorites.findIndex(f => f.platformUrl === item.platformUrl);
-      if(idx >= 0) {
+      if (idx >= 0) {
         savedFavorites.splice(idx, 1);
         showToast("Uklonjeno iz omiljenih.");
       } else {
@@ -3132,28 +1917,33 @@
 
     function renderSavedItems() {
       const grid = document.getElementById("savedGrid");
-      if(savedFavorites.length === 0) {
+      if (savedFavorites.length === 0) {
         grid.innerHTML = `<div style="grid-column:1/-1; color: var(--text-muted);">Nemate spremljenih artikala. Kliknite na zvjezdicu na bilo kojoj kartici.</div>`;
         return;
       }
 
-      grid.innerHTML = savedFavorites.map(item => `
+      grid.innerHTML = savedFavorites.map(item => {
+        const est = lookupEstimate(item.title || '', 'all');
+        const estText = est ? `${est.min}–${est.max} €` : '--';
+        const estNote = est ? EST_SOURCE_NOTE : 'Indikativna procjena nije dostupna.';
+        return `
         <div class="card">
-          <div class="card-header">
-            <span class="platform-tag">Source: ${item.source || item.platform || 'eBay'}</span>
-            <button class="fav-btn active" onclick="toggleFavorite('${item.id}')">★</button>
-          </div>
-          <div class="product-title">${item.title}</div>
-          <div class="price-block">
-            <div class="price-row">
-              <span class="price-label">Live Price (at time saved):</span>
-              <span class="price-val highlight">${formatPrice(item.price, item.currency || 'EUR')}</span>
+          <div>
+            <div class="card-header">
+              <span class="platform-tag">Poveznica · ${esc(item.source || '')}</span>
+              <button class="fav-btn active" onclick="toggleFavorite('${esc(item.id)}')">★</button>
             </div>
+            <div class="product-title">Spremljena pretraga: ${esc(item.title)}</div>
+            <div class="category-text">Samo poveznica prema pretrazi na platformi. Nije oglas i nema cijenu.</div>
+            <a href="${esc(item.platformUrl)}" target="_blank" rel="noopener noreferrer" class="btn-card btn-primary-card" style="display:block; margin-bottom:1rem;">Otvori pretragu na ${esc(item.source || 'platformi')} ↗</a>
           </div>
-          <a href="${item.platformUrl}" target="_blank" rel="noopener noreferrer" class="btn-card btn-primary-card">Open original listing ↗</a>
-        </div>
-      `).join('');
-
+          <div style="border:1px dashed var(--border-glass); border-radius:10px; padding:10px 14px;">
+            <div class="price-label">Ilustrativna procjena proizvoda (nije cijena oglasa)</div>
+            <div style="font-weight:700; color: var(--text-muted); margin:4px 0;">${estText}</div>
+            <div class="category-text" style="margin-bottom:0;">${estNote}</div>
+          </div>
+        </div>`;
+      }).join('');
     }
 
     /* Canvas Charts Renderer */
@@ -3162,9 +1952,6 @@
       drawTrendChart();
     }
 
-    /* Both charts now plot ONLY real per-listing eBay prices from currentResults — nothing is
-       computed, multiplied or invented to fill the chart. If there's no real data (or not enough
-       of it), the canvas shows a plain text message instead of a fabricated shape. */
     function drawNoDataMessage(ctx, canvas, text) {
       ctx.fillStyle = '#94a3b8';
       ctx.font = '13px sans-serif';
@@ -3175,87 +1962,45 @@
 
     function drawPlatformChart() {
       const canvas = document.getElementById("chartPlatforms");
-      if(!canvas) return;
+      if (!canvas) return;
       const ctx = canvas.getContext("2d");
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = 250;
-
+      canvas.width = canvas.parentElement.clientWidth; canvas.height = 250;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const data = currentResults.slice(0, 8);
-      if(data.length === 0) {
-        drawNoDataMessage(ctx, canvas, "Stvarni podaci trenutno nisu dostupni.");
-        return;
-      }
-
-      const barWidth = (canvas.width - 50) / data.length;
-      const maxVal = Math.max(...data.map(d => d.price)) * 1.2 || 100;
-
-      data.forEach((d, i) => {
-        const barHeight = (d.price / maxVal) * (canvas.height - 50);
-        const x = 30 + i * barWidth;
-        const y = canvas.height - 30 - barHeight;
-
+      if (!currentEstimate) { drawNoDataMessage(ctx, canvas, "Indikativna procjena nije dostupna."); return; }
+      const data = [['Min', currentEstimate.min], ['Sredina', Math.round((currentEstimate.min + currentEstimate.max) / 2)], ['Max', currentEstimate.max]];
+      const barWidth = (canvas.width - 50) / data.length, maxVal = currentEstimate.max * 1.2;
+      data.forEach(([label, v], i) => {
+        const h = (v / maxVal) * (canvas.height - 50), x = 30 + i * barWidth, y = canvas.height - 30 - h;
         const grad = ctx.createLinearGradient(0, y, 0, canvas.height - 30);
-        grad.addColorStop(0, '#38bdf8');
-        grad.addColorStop(1, '#0284c7');
-
-        ctx.fillStyle = grad;
-        ctx.fillRect(x + 4, y, barWidth - 8, barHeight);
-
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '10px sans-serif';
-        ctx.fillText(`#${i + 1}`, x + 4, canvas.height - 10);
-        ctx.fillStyle = '#fff';
-        ctx.fillText(`${d.price}€`, x + 4, y - 5);
+        grad.addColorStop(0, '#38bdf8'); grad.addColorStop(1, '#0284c7');
+        ctx.fillStyle = grad; ctx.fillRect(x + 4, y, barWidth - 8, h);
+        ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.fillText(label, x + 4, canvas.height - 10);
+        ctx.fillStyle = '#fff'; ctx.fillText(`${v}€`, x + 4, y - 5);
       });
     }
 
     function drawTrendChart() {
       const canvas = document.getElementById("chartTrend");
-      if(!canvas) return;
+      if (!canvas) return;
       const ctx = canvas.getContext("2d");
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = 250;
-
+      canvas.width = canvas.parentElement.clientWidth; canvas.height = 250;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (currentResults.length < 2) {
-        drawNoDataMessage(ctx, canvas, currentResults.length === 0
-          ? "Stvarni podaci trenutno nisu dostupni."
-          : "Premalo stvarnih oglasa za prikaz raspodjele.");
-        return;
-      }
-
-      // Real prices only, sorted ascending — no synthetic multipliers or invented points.
-      const points = currentResults.map(i => i.price).sort((a, b) => a - b);
-
-      const step = (canvas.width - 60) / (points.length - 1);
-      const maxP = Math.max(...points) * 1.2 || 100;
-
-      ctx.beginPath();
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 3;
-
-      points.forEach((p, i) => {
-        const x = 30 + i * step;
-        const y = canvas.height - 40 - (p / maxP) * (canvas.height - 70);
-        if(i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-
-      points.forEach((p, i) => {
-        const x = 30 + i * step;
-        const y = canvas.height - 40 - (p / maxP) * (canvas.height - 70);
-        ctx.fillStyle = '#8b5cf6';
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, Math.PI * 2);
-        ctx.fill();
+      const data = inventory.slice(0, 8);
+      if (data.length === 0) { drawNoDataMessage(ctx, canvas, "Dodajte artikle u Inventar za prikaz."); return; }
+      const vals = data.map(i => i.target - i.buy);
+      const maxAbs = Math.max(...vals.map(Math.abs), 1) * 1.2, base = canvas.height / 2, bw = (canvas.width - 50) / data.length;
+      ctx.strokeStyle = '#334155'; ctx.beginPath(); ctx.moveTo(20, base); ctx.lineTo(canvas.width - 10, base); ctx.stroke();
+      vals.forEach((v, i) => {
+        const h = (Math.abs(v) / maxAbs) * (canvas.height / 2 - 30), x = 30 + i * bw;
+        ctx.fillStyle = v >= 0 ? '#10b981' : '#ef4444';
+        ctx.fillRect(x + 4, v >= 0 ? base - h : base, bw - 8, h);
+        ctx.fillStyle = '#fff'; ctx.font = '10px sans-serif';
+        ctx.fillText(`${v.toFixed(0)}€`, x + 4, v >= 0 ? base - h - 4 : base + h + 12);
       });
     }
 
     window.addEventListener('resize', () => {
-      if(document.getElementById('tab-analytics').classList.contains('active')) {
+      if (document.getElementById('tab-analytics').classList.contains('active')) {
         renderCharts();
       }
     });
