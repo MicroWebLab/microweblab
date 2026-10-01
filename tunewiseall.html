@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TuneWiseALL — glazbeni player za YouTube</title>
-<meta name="description" content="TuneWiseALL — slušaj glazbu s YouTubea u vidljivom ugrađenom playeru. Favoriti, playliste, red čekanja, shuffle i repeat. Uključuje Knowledge Center.">
+<meta name="description" content="TuneWiseALL — pretraži stvarne YouTube rezultate unutar aplikacije i slušaj ih u vidljivom ugrađenom playeru. Favoriti, playliste, red čekanja, shuffle i repeat.">
 <script>
 /* Google Consent Mode: sve je zabranjeno PRIJE korisnikova izbora. */
 window.dataLayer = window.dataLayer || [];
@@ -96,7 +96,10 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
 
   .search-card{background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:16px;margin-bottom:12px;line-height:1.55;font-size:14px;color:var(--text-dim);}
   .search-card strong{color:var(--text);}
-  .search-card a.yt-link{display:inline-block;margin:10px 0 6px;background:linear-gradient(135deg,var(--accent),#ff8a5f);color:#1a0d08;font-weight:700;padding:11px 18px;border-radius:12px;text-decoration:none;}
+  .search-card.loading{border-color:var(--border);}
+  .search-card.success{border-color:var(--mint);}
+  .search-card.error{border-color:var(--danger);}
+  .search-card .status-note{margin-top:6px;}
   .results-grid{display:grid;grid-template-columns:1fr;gap:10px;}
   .result-card{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius);padding:9px;transition:.15s;}
   .result-card:hover{border-color:var(--accent);transform:translateY(-1px);}
@@ -276,9 +279,9 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
 
   <div class="hero-empty" id="heroEmpty">
     <div class="wave-big"><span></span><span></span><span></span><span></span><span></span></div>
-    <h1>Pronađi na YouTubeu, slušaj ovdje.</h1>
-    <p>Upiši pojam i otvori stvarnu YouTube pretragu. Kad pronađeš pjesmu, zalijepi njezinu YouTube poveznicu u polje iznad i dodaj je u player, favorite ili playlistu.</p>
-    <p>TuneWiseALL ne izmišlja rezultate: pretraga se odvija na YouTubeu, a reprodukciju uvijek pokrećeš ti.</p>
+    <h1>Pretraži YouTube, slušaj ovdje.</h1>
+    <p>Upiši izvođača, pjesmu ili žanr. TuneWiseALL dohvaća stvarne rezultate putem YouTube Data API v3 i prikazuje ih ovdje u aplikaciji.</p>
+    <p>Klikni rezultat za reprodukciju u ugrađenom YouTube playeru. Možeš i zalijepiti izravnu YouTube poveznicu.</p>
     <div class="example-chips">
       <button data-ex="Jelena Rozga Bižuterija">Jelena Rozga – Bižuterija</button>
       <button data-ex="Đurđevdan Bijelo Dugme">Đurđevdan – Bijelo Dugme</button>
@@ -300,13 +303,13 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
     <article id="kc-how">
       <h3>Kako radi TuneWiseALL</h3>
       <p>TuneWiseALL je web aplikacija koja radi u tvom pregledniku i ne zahtijeva registraciju. Sastoji se od tri dijela: <strong>polja za pretragu</strong>, <strong>ugrađenog YouTube playera</strong> i <strong>lokalnih popisa</strong> (favoriti, playliste, red čekanja).</p>
-      <p>Aplikacija nema vlastiti poslužitelj ni bazu glazbe. Glazba dolazi s YouTubea i reproducira se u službenom YouTube playeru. Pretragu obavlja sam YouTube, a u TuneWiseALL dovodiš pjesme tako da zalijepiš njihovu poveznicu.</p>
+      <p>Aplikacija nema vlastiti poslužitelj ni bazu glazbe. Kad pokreneš pretragu, upit se iz tvog preglednika šalje izravno YouTube Data API v3, a stvarni rezultati prikazuju se unutar TuneWiseALL-a. Glazba se reproducira u službenom YouTube playeru.</p>
       <p>Što aplikacija <strong>trenutno ne radi</strong>: ne prepoznaje pjesme iz zvuka, ne generira preporuke umjetnom inteligencijom, ne preuzima glazbu i ne sluša u pozadini. Takve funkcije nisu dio ove verzije.</p>
     </article>
 
     <article id="kc-search">
       <h3>Kako učinkovito tražiti glazbu</h3>
-      <p>Kad upišeš pojam i pošalješ pretragu, TuneWiseALL ti nudi vezu na stvarnu YouTube pretragu za taj pojam. Nekoliko savjeta za bolje rezultate:</p>
+      <p>Kad upišeš pojam i pošalješ pretragu, TuneWiseALL dohvaća stvarne YouTube video rezultate putem YouTube Data API v3 i prikazuje ih u aplikaciji. Nekoliko savjeta za bolje rezultate:</p>
       <ul>
         <li><strong>Izvođač + naslov:</strong> „Oliver Dragojević Cesarica" gotovo uvijek daje točniji rezultat od samog naslova.</li>
         <li><strong>Službeni kanali:</strong> pogledaj oznake poput „Official", „VEVO" ili „Topic" i kanal izvođača ili izdavača kuće. Kvaliteta zvuka je obično bolja.</li>
@@ -314,12 +317,12 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
         <li><strong>Razdoblje i žanr:</strong> upiti poput „rock 80-ih" ili „klapa" pomažu u otkrivanju novih izvođača.</li>
         <li><strong>Duljina:</strong> provjeri trajanje videa; dugi videi često su kompilacije, a ne jedna pjesma.</li>
       </ul>
-      <p>Kad pronađeš pravu pjesmu na YouTubeu, kopiraj poveznicu iz adresne trake (ili gumbom „Dijeli") i zalijepi je u polje za pretragu u TuneWiseALL. Podržani su oblici poput <em>youtube.com/watch?v=…</em>, <em>youtu.be/…</em>, <em>youtube.com/shorts/…</em> i <em>youtube.com/embed/…</em>.</p>
+      <p>Možeš i izravno zalijepiti YouTube poveznicu u polje za pretragu. Podržani su oblici poput <em>youtube.com/watch?v=…</em>, <em>youtu.be/…</em>, <em>youtube.com/shorts/…</em> i <em>youtube.com/embed/…</em>.</p>
     </article>
 
     <article id="kc-voice">
       <h3>Korištenje glasovne pretrage</h3>
-      <p>Gumb s mikrofonom koristi Web Speech API tvog preglednika. Klikni na mikrofon, dopusti pristup kad preglednik zatraži i izgovori pojam, npr. „Jelena Rozga Bižuterija". Prepoznati tekst upisuje se u polje za pretragu kao običan upit, nakon čega možeš otvoriti YouTube pretragu.</p>
+      <p>Gumb s mikrofonom koristi Web Speech API tvog preglednika. Klikni na mikrofon, dopusti pristup kad preglednik zatraži i izgovori pojam, npr. „Jelena Rozga Bižuterija". Prepoznati tekst upisuje se u polje za pretragu i pokreće istu internu YouTube Data API pretragu.</p>
       <ul>
         <li>Mikrofon se uključuje <strong>isključivo kad ga ti kliknješ</strong>, i to za jedan upit. Nema stalnog slušanja.</li>
         <li>Glasovna pretraga radi u preglednicima koji podržavaju Speech Recognition (npr. Chrome i Edge, te Safari u novijim inačicama). Ako tvoj preglednik to ne podržava, gumb je onemogućen, a pojam možeš upisati tipkovnicom.</li>
@@ -363,12 +366,12 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
 
     <article id="kc-privacy">
       <h3>Privatnost i lokalna pohrana</h3>
-      <p>TuneWiseALL nema korisničke račune i ne šalje tvoje favorite, playliste ili upite na vlastiti poslužitelj jer ga nema. Sve se sprema u <strong>LocalStorage</strong> tvog preglednika: favoriti, playliste, glasnoća i (ako je ikad uključen oglasni izbor) tvoj izbor privola.</p>
+      <p>TuneWiseALL nema korisničke račune ni vlastiti poslužitelj. Favoriti, playliste, glasnoća i (ako je ikad uključen oglasni izbor) tvoj izbor privola spremaju se u <strong>LocalStorage</strong> tvog preglednika. Tekst pretrage šalje se izravno Google/YouTube Data API-ju kako bi se dohvatili stvarni rezultati.</p>
       <ul>
         <li>Favoriti i playliste brišu se automatski nakon 30 dana.</li>
         <li>Sve lokalne podatke možeš odmah obrisati u Postavke → „Obriši sve lokalne podatke" ili brisanjem podataka preglednika.</li>
         <li>Kad koristiš YouTube player, Google/YouTube mogu obrađivati podatke prema svojim pravilima (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>).</li>
-        <li>Kad otvoriš YouTube pretragu, ti napuštaš TuneWiseALL i na snazi su pravila YouTubea.</li>
+        <li>Kad pokreneš pretragu, Google/YouTube prima tekst upita i tehničke podatke potrebne za obradu API zahtjeva prema svojim pravilima.</li>
       </ul>
       <p>Cjelovit tekst nalazi se u poveznici „Pravila privatnosti" u podnožju.</p>
     </article>
@@ -414,8 +417,8 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
       <dl>
         <dt>Je li TuneWiseALL besplatan?</dt>
         <dd>Da, korištenje je besplatno. Moguće je da će se u budućnosti prikazivati oglasi; to će biti jasno označeno i ovisit će o tvojem izboru privola.</dd>
-        <dt>Zašto nema rezultata unutar aplikacije?</dt>
-        <dd>Da bi se rezultati pretrage prikazivali u aplikaciji, potreban je YouTube API ključ i poslužitelj. Umjesto izmišljanja rezultata, aplikacija te vodi na stvarnu YouTube pretragu.</dd>
+        <dt>Kako se dobivaju rezultati pretrage?</dt>
+        <dd>TuneWiseALL iz preglednika izravno poziva YouTube Data API v3 i prikazuje stvarne video rezultate unutar aplikacije. Ako API ključ nije konfiguriran ili Google vrati grešku, aplikacija ne izmišlja zamjenske rezultate nego prikazuje jasnu poruku.</dd>
         <dt>Može li aplikacija prepoznati pjesmu iz zvuka?</dt>
         <dd>Ne u ovoj verziji. Prepoznavanje traži vanjski servis koji nije povezan pa je funkcija označena kao nedostupna.</dd>
         <dt>Može li aplikacija slušati cijelo vrijeme?</dt>
@@ -462,7 +465,7 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
     </div>
     <div class="track-meta">
       <div class="track-title" id="npTitle">Nema aktivne pjesme</div>
-      <div class="track-artist" id="npArtist">Zalijepi YouTube poveznicu pa odaberi pjesmu</div>
+      <div class="track-artist" id="npArtist">Odaberi rezultat pretrage ili zalijepi YouTube poveznicu</div>
     </div>
     <button class="heart-btn" id="npFavBtn" aria-label="Favorit"></button>
     <button class="icon-btn small" id="queueBtn" aria-label="Red čekanja"></button>
@@ -493,7 +496,7 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
     <div class="modal-handle"></div>
     <div class="modal-head"><h3>Postavke</h3><button class="icon-btn small" id="closeSettings" aria-label="Zatvori"></button></div>
     <div class="field-label">O aplikaciji</div>
-    <div class="field-hint">TuneWiseALL reproducira javno dostupan YouTube sadržaj u vidljivom, ugrađenom YouTube playeru. Pretraga se obavlja na YouTubeu. Aplikacija ne pohranjuje niti distribuira audio/video datoteke i nema vlastiti poslužitelj.</div>
+    <div class="field-hint">TuneWiseALL pretražuje javno dostupan YouTube sadržaj izravnim pozivom YouTube Data API v3 iz preglednika i reproducira odabrani video u vidljivom, ugrađenom YouTube playeru. Aplikacija ne pohranjuje niti distribuira audio/video datoteke i nema vlastiti poslužitelj.</div>
     <button class="ghost-btn" id="openPrivacyBtn">Pravila privatnosti</button>
     <button class="ghost-btn" id="openTermsBtn">Uvjeti korištenja</button>
     <button class="ghost-btn" id="openLegalBtn">Pravne informacije</button>
@@ -511,7 +514,7 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
       <p>TuneWiseALL je web aplikacija koja u jedinstvenom sučelju reproducira javno dostupan glazbeni sadržaj s YouTubea. Aplikacija nema vlastiti poslužitelj, korisničke račune ni bazu podataka.</p>
 
       <p><strong>Pretraga</strong></p>
-      <p>Pojam koji upišeš ne šalje se na poslužitelj ove aplikacije. Kad klikneš vezu na YouTube pretragu, otvara se YouTube u novoj kartici i tada vrijede pravila YouTubea i Googlea. Poveznicu koju zalijepiš aplikacija obrađuje lokalno u pregledniku kako bi izvukla oznaku videa.</p>
+      <p>Pojam koji upišeš ne šalje se na poslužitelj ove aplikacije jer ga TuneWiseALL nema. Kad pokreneš pretragu, preglednik šalje tekst upita izravno Google/YouTube Data API-ju radi dohvaćanja stvarnih rezultata. Poveznicu koju zalijepiš aplikacija obrađuje lokalno kako bi izvukla oznaku videa.</p>
 
       <p><strong>Glasovna pretraga i mikrofon</strong></p>
       <p>Mikrofon se aktivira isključivo tvojim klikom na gumb za glasovnu pretragu i služi samo za jedan upit. Koristi se Speech Recognition API (Web Speech API) tvog preglednika. Neki preglednici obradu govora izvode putem servisa proizvođača preglednika, pa obrada nije nužno isključivo lokalna. Aplikacija ne snima niti pohranjuje zvuk. Dobiveni tekst koristi se samo kao običan upit u polju za pretragu.</p>
@@ -657,6 +660,13 @@ var ADSENSE_CLIENT = "";
 var ADSENSE_SLOT_TOP = "";
 var ADSENSE_SLOT_BOTTOM = "";
 
+/* ============================= YOUTUBE DATA API =============================
+   Upiši svoj postojeći Google Cloud browser API ključ na mjesto placeholdera.
+   Ključ je namijenjen klijentskoj web-aplikaciji i mora ostati ograničen na
+   https://microweblab.github.io/* i samo na YouTube Data API v3. */
+const YOUTUBE_API_KEY = "PASTE_YOUTUBE_API_KEY_HERE";
+const YOUTUBE_SEARCH_MAX_RESULTS = 12;
+
 /* ============================= IKONE ============================= */
 var ICONS = {
   search:'<path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="m21 21-4.35-4.35"/>',
@@ -741,14 +751,15 @@ function fmtTime(sec){
 }
 
 /* ============================= PRETRAGA =============================
-   Nema backenda, API ključa ni izmišljenih rezultata. Tekstualni upit vodi na pravu
-   YouTube pretragu (korisnik sam klikne vezu). Ako korisnik zalijepi YouTube poveznicu,
-   iz nje se izvlači ID videa i pjesma se dodaje u popis. */
+   Nema backenda ni izmišljenih rezultata. Tekstualni upit iz preglednika ide
+   izravno na YouTube Data API v3. Zalijepljena YouTube poveznica i dalje radi lokalno. */
 var resultsGrid = $('resultsGrid');
 var heroEmpty = $('heroEmpty');
 var sectionHead = $('sectionHead');
 var searchCard = $('searchCard');
 var currentResults = [];
+var lastSearchQuery = '';
+var searchSerial = 0;
 
 function parseYouTubeId(text){
   var s = (text||'').trim();
@@ -759,25 +770,33 @@ function parseYouTubeId(text){
   return m ? m[1] : null;
 }
 function thumbFor(id){ return 'https://i.ytimg.com/vi/'+id+'/mqdefault.jpg'; }
-
+function decodeHtml(str){
+  var t = document.createElement('textarea');
+  t.innerHTML = str || '';
+  return t.value;
+}
+function apiKeyConfigured(){
+  return !!YOUTUBE_API_KEY && YOUTUBE_API_KEY !== 'PASTE_YOUTUBE_API_KEY_HERE' && YOUTUBE_API_KEY.length > 20;
+}
 function isFav(id){ return State.favorites.some(function(f){ return f.id===id; }); }
 
-function renderSearchCard(query){
+function renderSearchStatus(query, message, type){
   searchCard.innerHTML = '';
-  if(!query) return;
+  if(!query && !message) return;
   var box = document.createElement('div');
-  box.className = 'search-card';
-  var p1 = document.createElement('div');
-  var st = document.createElement('strong'); st.textContent = 'Tražiš: ';
-  p1.appendChild(st); p1.appendChild(document.createTextNode('„'+query+'"'));
-  var a = document.createElement('a');
-  a.className = 'yt-link';
-  a.href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(query);
-  a.target = '_blank'; a.rel = 'noopener';
-  a.textContent = 'Otvori YouTube pretragu ↗';
-  var p2 = document.createElement('div');
-  p2.textContent = 'TuneWiseALL nema vlastitu bazu pjesama ni API pretragu, pa rezultate prikazuje YouTube. Kad pronađeš pjesmu, kopiraj njezinu poveznicu i zalijepi je u polje za pretragu iznad.';
-  box.appendChild(p1); box.appendChild(a); box.appendChild(p2);
+  box.className = 'search-card' + (type ? ' '+type : '');
+  if(query){
+    var p1 = document.createElement('div');
+    var st = document.createElement('strong'); st.textContent = 'Tražiš: ';
+    p1.appendChild(st); p1.appendChild(document.createTextNode('„'+query+'"'));
+    box.appendChild(p1);
+  }
+  if(message){
+    var p2 = document.createElement('div');
+    p2.className = 'status-note';
+    p2.textContent = message;
+    box.appendChild(p2);
+  }
   searchCard.appendChild(box);
 }
 
@@ -791,7 +810,7 @@ function renderResults(){
   }
   heroEmpty.style.display = 'none';
   sectionHead.style.display = 'flex';
-  $('sectionTitle').textContent = 'Tvoje pjesme';
+  $('sectionTitle').textContent = lastSearchQuery ? 'Rezultati pretrage' : 'Tvoje pjesme';
   currentResults.forEach(function(item, index){
     var card = document.createElement('div');
     card.className = 'result-card';
@@ -838,12 +857,61 @@ function markPlayingCard(){
   });
 }
 
-function runSearch(raw){
+function youtubeApiErrorMessage(status, body){
+  var reason = '';
+  try{
+    if(body && body.error && Array.isArray(body.error.errors) && body.error.errors[0]) reason = body.error.errors[0].reason || '';
+  }catch(e){}
+  if(status===400) return 'YouTube API je odbio zahtjev. Provjeri konfiguraciju API ključa.';
+  if(status===403){
+    if(reason==='quotaExceeded' || reason==='dailyLimitExceeded' || reason==='rateLimitExceeded') return 'YouTube API ograničenje je trenutno dosegnuto. Pokušaj ponovno kasnije.';
+    return 'YouTube API nije dopustio pretragu. Provjeri da je ključ ograničen na ovu web-lokaciju i YouTube Data API v3.';
+  }
+  if(status===429) return 'Previše API zahtjeva u kratkom vremenu. Pokušaj ponovno malo kasnije.';
+  return 'YouTube pretraga trenutno nije dostupna. Pokušaj ponovno.';
+}
+
+async function searchYouTube(query, serial){
+  var params = new URLSearchParams();
+  params.set('part','snippet');
+  params.set('type','video');
+  params.set('q',query);
+  params.set('maxResults',String(YOUTUBE_SEARCH_MAX_RESULTS));
+  params.set('videoEmbeddable','true');
+  var url = 'https://www.googleapis.com/youtube/v3/search?' + params.toString();
+  var response = await fetch(url, {
+    method:'GET',
+    mode:'cors',
+    credentials:'omit',
+    headers:{ 'Accept':'application/json', 'X-Goog-Api-Key':YOUTUBE_API_KEY }
+  });
+  var body = null;
+  try{ body = await response.json(); }catch(e){ body = null; }
+  if(serial !== searchSerial) return null;
+  if(!response.ok) throw { status:response.status, body:body };
+  var items = body && Array.isArray(body.items) ? body.items : [];
+  return items.filter(function(x){ return x && x.id && x.id.videoId && x.snippet; }).map(function(x){
+    var thumbs = x.snippet.thumbnails || {};
+    var thumb = (thumbs.medium && thumbs.medium.url) || (thumbs.high && thumbs.high.url) || (thumbs.default && thumbs.default.url) || thumbFor(x.id.videoId);
+    return {
+      id:x.id.videoId,
+      title:decodeHtml(x.snippet.title || 'YouTube video'),
+      channel:decodeHtml(x.snippet.channelTitle || 'YouTube'),
+      thumbnail:thumb,
+      duration:0,
+      generic:false
+    };
+  });
+}
+
+async function runSearch(raw){
   var query = (raw||'').trim();
   if(!query){ toast('Upiši pojam ili zalijepi YouTube poveznicu.'); return; }
   $('searchInput').value = query;
   var id = parseYouTubeId(query);
   if(id){
+    searchSerial++;
+    lastSearchQuery = '';
     var exists = currentResults.filter(function(r){ return r.id===id; })[0];
     if(!exists){
       currentResults.unshift({ id:id, title:'YouTube video', channel:'Naslov se prikazuje nakon reprodukcije', thumbnail:thumbFor(id), duration:0, generic:true });
@@ -858,8 +926,38 @@ function runSearch(raw){
     toast('To nije podržana YouTube poveznica videa.', 'err');
     return;
   }
-  renderSearchCard(query);
+  if(!apiKeyConfigured()){
+    currentResults = [];
+    lastSearchQuery = query;
+    renderSearchStatus(query, 'YouTube pretraga još nije konfigurirana. U kod upiši svoj ograničeni YouTube Data API v3 ključ.', 'error');
+    renderResults();
+    toast('Nedostaje YouTube API ključ.', 'err');
+    return;
+  }
+
+  var serial = ++searchSerial;
+  lastSearchQuery = query;
+  currentResults = [];
+  renderSearchStatus(query, 'Tražim stvarne YouTube rezultate…', 'loading');
   renderResults();
+  try{
+    var found = await searchYouTube(query, serial);
+    if(found===null || serial !== searchSerial) return;
+    currentResults = found;
+    if(found.length){
+      renderSearchStatus(query, 'Pronađeno '+found.length+' rezultata. Klikni pjesmu za reprodukciju u playeru.', 'success');
+    } else {
+      renderSearchStatus(query, 'Nema rezultata za ovaj upit. Pokušaj s drugim nazivom izvođača ili pjesme.', 'error');
+    }
+    renderResults();
+  }catch(err){
+    if(serial !== searchSerial) return;
+    currentResults = [];
+    var msg = youtubeApiErrorMessage(err && err.status, err && err.body);
+    renderSearchStatus(query, msg, 'error');
+    renderResults();
+    toast(msg, 'err');
+  }
 }
 
 /* ============================= FAVORITI ============================= */
@@ -1069,7 +1167,7 @@ function setQueue(list, index){
 }
 function updateNowPlayingMeta(item){
   $('npTitle').textContent = item ? item.title : 'Nema aktivne pjesme';
-  $('npArtist').textContent = item ? item.channel : 'Zalijepi YouTube poveznicu pa odaberi pjesmu';
+  $('npArtist').textContent = item ? item.channel : 'Odaberi rezultat pretrage ili zalijepi YouTube poveznicu';
   $('curTime').textContent = '0:00';
   $('durTime').textContent = '0:00';
   var bar = $('progressBar'); bar.value = 0; bar.style.setProperty('--pct','0%');
@@ -1101,7 +1199,7 @@ function togglePlayPause(){
   if(!State.current){
     var queued = State.queueIndex>-1 ? State.queue[State.queueIndex] : null;
     if(queued){ loadAndPlay(queued); return; }
-    toast('Nema odabrane pjesme. Dodaj pjesmu putem YouTube poveznice.');
+    toast('Nema odabrane pjesme. Odaberi rezultat pretrage ili zalijepi YouTube poveznicu.');
     return;
   }
   if(State.ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) State.ytPlayer.pauseVideo();
@@ -1240,7 +1338,7 @@ function wireEvents(){
     btn.addEventListener('click', function(){ runSearch(btn.getAttribute('data-ex')); });
   });
   $('clearResultsBtn').addEventListener('click', function(){
-    currentResults = []; searchCard.innerHTML=''; renderResults();
+    searchSerial++; currentResults = []; lastSearchQuery = ''; searchCard.innerHTML=''; renderResults();
   });
 
   $('playPauseBtn').addEventListener('click', togglePlayPause);
