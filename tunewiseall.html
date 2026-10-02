@@ -54,6 +54,10 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
   .icon-btn.small{width:34px;height:34px;}
   .icon-btn.small svg{width:15px;height:15px;}
 
+  /* Night Drive: isti dizajn i boje, samo smanjena svjetlina cijelog sučelja. */
+  .icon-btn.drive-active{color:var(--accent-2);border-color:var(--accent);box-shadow:0 0 0 1px rgba(255,107,74,.16),0 0 18px rgba(255,107,74,.16);}
+  body.drive-mode::after{content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;background:rgba(0,0,0,.46);transition:background .2s ease;}
+
   .search-wrap{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid var(--border);border-radius:999px;padding:6px 6px 6px 18px;width:100%;box-shadow:var(--shadow-lg);transition:border-color .15s;}
   .search-wrap:focus-within{border-color:var(--accent);}
   .search-wrap input{flex:1;min-width:0;background:none;border:none;color:var(--text);font-size:16px;font-family:var(--font-body);padding:10px 0;}
@@ -251,6 +255,7 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
     <div class="brand-actions">
       <button class="icon-btn" id="favBtn" title="Favoriti" aria-label="Favoriti"></button>
       <button class="icon-btn" id="plBtn" title="Playliste" aria-label="Playliste"></button>
+      <button class="icon-btn" id="driveModeBtn" title="Night Drive — zatamni zaslon" aria-label="Night Drive" aria-pressed="false"></button>
       <button class="icon-btn" id="settingsBtn" title="Postavke" aria-label="Postavke"></button>
     </div>
   </div>
@@ -664,7 +669,7 @@ var ADSENSE_SLOT_BOTTOM = "";
    Upiši svoj postojeći Google Cloud browser API ključ na mjesto placeholdera.
    Ključ je namijenjen klijentskoj web-aplikaciji i mora ostati ograničen na
    https://microweblab.github.io/* i samo na YouTube Data API v3. */
-const YOUTUBE_API_KEY = "AIzaSyCU3ECvlwG1GtHSj0q1CklitAwdX5WwSIM";
+const YOUTUBE_API_KEY = "PASTE_YOUTUBE_API_KEY_HERE";
 const YOUTUBE_SEARCH_MAX_RESULTS = 12;
 
 /* ============================= IKONE ============================= */
@@ -679,6 +684,7 @@ var ICONS = {
   shuffle:'<path d="m18 4 3 3-3 3"/><path d="M2 7h4.9a3 3 0 0 1 2.6 1.5L11 11"/><path d="m18 20 3-3-3-3"/><path d="M2 17h4.9a3 3 0 0 0 2.6-1.5l4.9-8a3 3 0 0 1 2.6-1.5H21"/><path d="M13.5 13.5 15 16a3 3 0 0 0 2.6 1.5H21"/>',
   repeat:'<path d="m17 2 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/>',
+  moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>',
   list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>',
   waveform:'<path d="M2 12h2M6 8v8M10 5v14M14 8v8M18 5v14M22 12h-2"/>',
   x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
@@ -716,7 +722,7 @@ function normalizeTrack(t){
 
 var State = {
   favorites:[], playlists:[],
-  settings: loadJSON(LS.settings, {volume:80}),
+  settings: loadJSON(LS.settings, {volume:80, driveMode:false}),
   queue:[], queueIndex:-1, current:null,
   shuffle:false, repeat:'off',
   ytPlayer:null, ytReady:false, pendingLoad:null, progressTimer:null, activePlaylistId:null
@@ -728,10 +734,25 @@ var State = {
   pls.forEach(function(pl){ if(!Array.isArray(pl.tracks)) pl.tracks = []; });
   State.playlists = pls;
   saveJSON(LS.pl, State.playlists);
-  if(!State.settings || typeof State.settings !== 'object') State.settings = {volume:80};
+  if(!State.settings || typeof State.settings !== 'object') State.settings = {volume:80, driveMode:false};
   if(typeof State.settings.volume !== 'number') State.settings.volume = 80;
+  if(typeof State.settings.driveMode !== 'boolean') State.settings.driveMode = false;
   try{ localStorage.removeItem(LS.history); }catch(e){}
 })();
+
+/* ============================= NIGHT DRIVE ============================= */
+function applyDriveMode(enabled, persist){
+  enabled = !!enabled;
+  State.settings.driveMode = enabled;
+  document.body.classList.toggle('drive-mode', enabled);
+  var btn = $('driveModeBtn');
+  if(btn){
+    btn.classList.toggle('drive-active', enabled);
+    btn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+    btn.title = enabled ? 'Night Drive — vrati normalnu svjetlinu' : 'Night Drive — zatamni zaslon';
+  }
+  if(persist !== false) saveJSON(LS.settings, State.settings);
+}
 
 /* ============================= TOAST ============================= */
 function toast(msg, type){
@@ -1318,7 +1339,7 @@ function setConsentChoice(granted){
 
 /* ============================= INIT ============================= */
 function initIcons(){
-  setIcon($('favBtn'),'heart'); setIcon($('plBtn'),'list'); setIcon($('settingsBtn'),'gear');
+  setIcon($('favBtn'),'heart'); setIcon($('plBtn'),'list'); setIcon($('driveModeBtn'),'moon'); setIcon($('settingsBtn'),'gear');
   setIcon($('micBtn'),'mic');
   document.querySelector('#searchForm .go-btn').innerHTML = svg('search');
   setIcon($('recognizeIcon'),'waveform');
@@ -1400,6 +1421,11 @@ function wireEvents(){
     persistPlaylists(); renderPlaylists(); closeModal('plDetailModal'); toast('Playlista obrisana');
   });
 
+  $('driveModeBtn').addEventListener('click', function(){
+    applyDriveMode(!State.settings.driveMode, true);
+    toast(State.settings.driveMode ? 'Night Drive uključen — zaslon je zatamnjen.' : 'Night Drive isključen — normalna svjetlina.');
+  });
+
   $('settingsBtn').addEventListener('click', function(){ openModal('settingsModal'); });
   $('closeSettings').addEventListener('click', function(){ closeModal('settingsModal'); });
   $('clearDataBtn').addEventListener('click', function(){
@@ -1428,6 +1454,7 @@ function wireEvents(){
 }
 function boot(){
   initIcons(); wireEvents();
+  applyDriveMode(State.settings.driveMode, false);
   applyVolume(State.settings.volume);
   $('volumeBar').value = State.settings.volume;
   renderFavorites(); renderPlaylists(); renderQueue(); renderResults();
