@@ -740,7 +740,35 @@ var State = {
   try{ localStorage.removeItem(LS.history); }catch(e){}
 })();
 
-/* ============================= NIGHT DRIVE ============================= */
+/* ============================= NIGHT DRIVE + KEEP AWAKE ============================= */
+var playbackWakeLock = null;
+var playbackActive = false;
+
+async function requestPlaybackWakeLock(){
+  if(!playbackActive || document.visibilityState !== 'visible') return;
+  if(!('wakeLock' in navigator)) return;
+  try{
+    if(playbackWakeLock && !playbackWakeLock.released) return;
+    playbackWakeLock = await navigator.wakeLock.request('screen');
+    playbackWakeLock.addEventListener('release', function(){ playbackWakeLock = null; });
+  }catch(e){
+    playbackWakeLock = null;
+  }
+}
+
+async function releasePlaybackWakeLock(){
+  try{
+    if(playbackWakeLock && !playbackWakeLock.released) await playbackWakeLock.release();
+  }catch(e){}
+  playbackWakeLock = null;
+}
+
+function setPlaybackActive(active){
+  playbackActive = !!active;
+  if(playbackActive) requestPlaybackWakeLock();
+  else releasePlaybackWakeLock();
+}
+
 function applyDriveMode(enabled, persist){
   enabled = !!enabled;
   State.settings.driveMode = enabled;
@@ -749,10 +777,14 @@ function applyDriveMode(enabled, persist){
   if(btn){
     btn.classList.toggle('drive-active', enabled);
     btn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
-    btn.title = enabled ? 'Night Drive — vrati normalnu svjetlinu' : 'Night Drive — zatamni zaslon';
+    btn.title = enabled ? 'Night Drive — zatamnjeni prikaz' : 'Night Drive — zatamni zaslon';
   }
   if(persist !== false) saveJSON(LS.settings, State.settings);
 }
+
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible' && playbackActive) requestPlaybackWakeLock();
+});
 
 /* ============================= TOAST ============================= */
 function toast(msg, type){
@@ -1114,8 +1146,9 @@ function updateTrackMeta(id, title, author){
 }
 
 /* ============================= YOUTUBE PLAYER =============================
-   autoplay:0, vidljiv player ≥200x200, reprodukcija samo iz korisničke akcije,
-   onStateChange nikad ne pokreće drugu pjesmu, API skripta se učitava jednom. */
+   autoplay:0 pri prvom učitavanju, vidljiv player ≥200x200. Nakon što korisnik
+   pokrene red čekanja, završetak pjesme može automatski pokrenuti sljedeću dok
+   je TuneWiseALL otvoren i player vidljiv. API skripta se učitava jednom. */
 window.onYouTubeIframeAPIReady = function(){
   State.ytPlayer = new YT.Player('ytPlayer', {
     height:'100%', width:'100%',
@@ -1127,7 +1160,10 @@ window.onYouTubeIframeAPIReady = function(){
         if(State.pendingLoad){ var p = State.pendingLoad; State.pendingLoad = null; loadAndPlay(p); }
       },
       onStateChange:onPlayerStateChange,
-      onError:onPlayerError
+      onError:onPlayerError,
+      onAutoplayBlocked:function(){
+        toast('Preglednik je blokirao automatsku reprodukciju. Dodirni Play jednom.', 'err');
+      }
     }
   });
 };
@@ -1142,16 +1178,29 @@ window.onYouTubeIframeAPIReady = function(){
 function onPlayerStateChange(e){
   var playBtn = $('playPauseBtn');
   if(e.data === YT.PlayerState.PLAYING){
+    setPlaybackActive(true);
     setIcon(playBtn,'pause'); hideNotice('endedNotice'); startProgressTimer();
     try{
       var vd = State.ytPlayer.getVideoData();
       if(vd && State.current) updateTrackMeta(State.current.id, vd.title, vd.author);
     }catch(err){}
   } else if(e.data === YT.PlayerState.PAUSED){
+    setPlaybackActive(false);
     setIcon(playBtn,'play'); stopProgressTimer();
   } else if(e.data === YT.PlayerState.ENDED){
-    stopProgressTimer(); setIcon(playBtn,'play'); showNotice('endedNotice'); /* bez automatske sljedeće pjesme */
+    setPlaybackActive(false);
+    stopProgressTimer();
+    if(State.repeat==='one' && State.current){
+      loadAndPlay(State.current);
+    } else if(State.queue.length && State.queueIndex>-1 &&
+              (State.shuffle || State.queueIndex < State.queue.length-1 || State.repeat==='all')){
+      playNext();
+    } else {
+      setIcon(playBtn,'play');
+      showNotice('endedNotice');
+    }
   } else if(e.data === YT.PlayerState.CUED){
+    setPlaybackActive(false);
     setIcon(playBtn,'play');
   }
 }
@@ -1193,7 +1242,7 @@ function updateNowPlayingMeta(item){
   $('durTime').textContent = '0:00';
   var bar = $('progressBar'); bar.value = 0; bar.style.setProperty('--pct','0%');
 }
-/* loadAndPlay se poziva ISKLJUČIVO iz korisničke akcije. */
+/* loadAndPlay se poziva iz korisničke akcije ili za automatski prijelaz na sljedeću pjesmu nakon korisnički pokrenutog reda čekanja. */
 function loadAndPlay(item){
   if(!item || !item.id) return;
   hideNotice('endedNotice');
@@ -1423,7 +1472,7 @@ function wireEvents(){
 
   $('driveModeBtn').addEventListener('click', function(){
     applyDriveMode(!State.settings.driveMode, true);
-    toast(State.settings.driveMode ? 'Night Drive uključen — zaslon je zatamnjen.' : 'Night Drive isključen — normalna svjetlina.');
+    toast(State.settings.driveMode ? 'Night Drive uključen — zatamnjen prikaz; zaslon ostaje uključen dok glazba svira.' : 'Night Drive isključen — normalna svjetlina.');
   });
 
   $('settingsBtn').addEventListener('click', function(){ openModal('settingsModal'); });
