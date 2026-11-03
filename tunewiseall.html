@@ -340,8 +340,8 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
       <h3>Kako radi YouTube player</h3>
       <p>Reprodukcija se odvija u službenom YouTube IFrame playeru koji je uvijek vidljiv i ima najmanju veličinu 200×200 piksela. Player se ne skriva, ne prekriva i ne zamjenjuje, a YouTube oglasi (ako ih prikaže) ostaju nepromijenjeni.</p>
       <ul>
-        <li><strong>Reprodukciju pokrećeš ti:</strong> klikom na pjesmu u popisu, na Play ili na Sljedeća/Prethodna. Aplikacija nikad ne pokreće glazbu sama od sebe.</li>
-        <li>Kad pjesma završi, player staje. Za nastavak dodirni Sljedeća.</li>
+        <li><strong>Prvu pjesmu pokrećeš ti:</strong> klikom na pjesmu u popisu ili na Play. Nakon toga aplikacija može automatski nastaviti s idućom pjesmom iz reda čekanja.</li>
+        <li>Kad pjesma završi, TuneWiseALL automatski pokreće sljedeću pjesmu iz reda čekanja, ako je dostupna. Na ponašanje utječu Shuffle i Repeat, a preglednik ili YouTube mogu ograničiti automatsku reprodukciju.</li>
         <li>Možeš povećati player na cijeli zaslon gumbom u kutu playera.</li>
         <li>Glasnoća i traka napretka upravljaju istim playerom. Glasnoća se pamti u pregledniku.</li>
         <li>Neke pjesme nositelji prava ne dopuštaju za ugrađenu reprodukciju. U tom slučaju aplikacija prikaže poruku, a ti odabireš drugu pjesmu.</li>
@@ -364,7 +364,7 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
         <li><strong>Sljedeća / Prethodna:</strong> prelaze po redu čekanja.</li>
         <li><strong>Shuffle:</strong> Sljedeća bira nasumičnu pjesmu iz reda.</li>
         <li><strong>Repeat:</strong> klik mijenja način: isključeno → cijeli red → jedna pjesma. Repeat utječe na tipke Sljedeća/Prethodna: na kraju reda „cijeli red" vraća na početak, a „jedna pjesma" ponovno pušta trenutnu pjesmu kad klikneš Prethodna.</li>
-        <li>Na kraju pjesme player ne nastavlja sam; nastavak pokrećeš ti.</li>
+        <li>Na kraju pjesme player automatski prelazi na sljedeću stavku u redu čekanja, ako postoji, uz postavke Shuffle i Repeat. Na kraju reda bez ponavljanja reprodukcija staje.</li>
       </ul>
       <p>Red čekanja se ne sprema trajno i briše se kad zatvoriš ili osvježiš stranicu.</p>
     </article>
@@ -475,7 +475,7 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
     <button class="heart-btn" id="npFavBtn" aria-label="Favorit"></button>
     <button class="icon-btn small" id="queueBtn" aria-label="Red čekanja"></button>
   </div>
-  <button id="endedNotice" class="player-notice" type="button">Pjesma je završila — dodirni Sljedeća za nastavak</button>
+  <button id="endedNotice" class="player-notice" type="button">Kraj reda čekanja — dodirni Sljedeća za nastavak</button>
   <div class="player-progress">
     <span id="curTime">0:00</span>
     <input type="range" id="progressBar" min="0" max="1000" value="0" aria-label="Napredak reprodukcije">
@@ -763,8 +763,45 @@ async function releasePlaybackWakeLock(){
   playbackWakeLock = null;
 }
 
+/* Android Bluetooth/autoradio: Media Session ne mijenja YouTube iframe ni izgled. */
+function updateMediaSessionTrack(){
+  if(!('mediaSession' in navigator) || !State.current) return;
+  try{
+    if('MediaMetadata' in window){
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title:State.current.title || 'YouTube video',
+        artist:State.current.channel || 'TuneWiseALL',
+        album:'TuneWiseALL'
+      });
+    }
+  }catch(e){}
+}
+function setupMediaSession(){
+  if(!('mediaSession' in navigator)) return;
+  var actions = {
+    'nexttrack':function(){ playNext(); },
+    'previoustrack':function(){ playPrev(); },
+    'play':function(){
+      if(State.ytPlayer && State.ytReady){
+        try{ State.ytPlayer.playVideo(); }catch(e){}
+      }
+    },
+    'pause':function(){
+      if(State.ytPlayer && State.ytReady){
+        try{ State.ytPlayer.pauseVideo(); }catch(e){}
+      }
+    }
+  };
+  Object.keys(actions).forEach(function(action){
+    try{ navigator.mediaSession.setActionHandler(action, actions[action]); }catch(e){}
+  });
+}
+setupMediaSession();
 function setPlaybackActive(active){
   playbackActive = !!active;
+  if('mediaSession' in navigator){
+    try{ navigator.mediaSession.playbackState = active ? 'playing' : 'paused'; }catch(e){}
+  }
   if(playbackActive) requestPlaybackWakeLock();
   else releasePlaybackWakeLock();
 }
@@ -1139,7 +1176,7 @@ function updateTrackMeta(id, title, author){
   State.playlists.forEach(function(pl){ pl.tracks.forEach(function(t){
     if(t.id===id && t.generic){ t.title=title; t.channel=author||''; t.generic=false; plChanged=true; }
   }); });
-  if(State.current && State.current.id===id){ State.current.title=title; State.current.channel=author||''; State.current.generic=false; $('npTitle').textContent=title; $('npArtist').textContent=author||''; }
+  if(State.current && State.current.id===id){ State.current.title=title; State.current.channel=author||''; State.current.generic=false; $('npTitle').textContent=title; $('npArtist').textContent=author||''; updateMediaSessionTrack(); }
   if(changed) saveJSON(LS.fav, State.favorites);
   if(plChanged) persistPlaylists();
   renderResults(); renderQueue();
@@ -1247,6 +1284,7 @@ function loadAndPlay(item){
   if(!item || !item.id) return;
   hideNotice('endedNotice');
   State.current = normalizeTrack(item);
+  updateMediaSessionTrack();
   updateNowPlayingMeta(State.current);
   refreshFavButtons(); markPlayingCard(); renderQueue();
   if(!State.ytReady || !State.ytPlayer || !State.ytPlayer.loadVideoById){
