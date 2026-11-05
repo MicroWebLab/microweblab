@@ -1523,7 +1523,13 @@
       } else if (tabId === 'saved') {
         renderSavedItems();
       } else if (tabId === 'knowledge') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const knowledgeSection = document.getElementById('tab-knowledge');
+        if (knowledgeSection) {
+          const header = document.querySelector('header');
+          const headerHeight = header ? header.getBoundingClientRect().height : 0;
+          const targetY = knowledgeSection.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        }
       }
     }
 
